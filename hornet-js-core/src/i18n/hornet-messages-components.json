@@ -1,0 +1,201 @@
+{
+  "applicationTitle": "Titre de l'Application",
+  "errorsTitle": "Une erreur est survenue",
+  "authError": "Authentification refusée: l'utilisateur ne possède pas les droits suffisants pour accéder cette page",
+  "form": {
+    "valid": "Valider",
+    "validTitle": "Valider la saisie du formulaire",
+    "cancel": "Annuler",
+    "cancelTitle": "Annuler la saisie du formulaire",
+    "reinit": "Réinitialiser",
+    "reinitTitle": "Réinitialiser les champs de saisie du formulaire",
+    "search": "Rechercher",
+    "searchTitle": "Rechercher à partir des données du formulaire",
+    "fillField": "Les champs marqués d'un astérisque (*) doivent être renseignés.",
+    "submitData": "Données soumises:"
+  },
+  "dialog": {
+    "closeSymbole": "X",
+    "closeLabel": "Abandonner la saisie",
+    "title": "Boîte de dialogue"
+  },
+  "notification": {
+    "errorsTitle": "Erreurs",
+    "infosTitle": "Messages d'information"
+  },
+  "spinner": {
+    "loadingTitle": "Chargement...",
+    "loadingText": "Action en cours, veuillez patienter ..."
+  },
+  "menu": {
+    "mainMenu": "Menu principal"
+  },
+  "breadcrumb": {
+    "arialabel": "Fil d'ariane"
+  },
+  "table": {
+    "filterValid": "Filtrer",
+    "filterValidTitle": "Filtrer",
+    "filterCancel": "Annuler",
+    "filterCancelTitle": "Annuler",
+    "hideFiltering": "Cacher le filtre en cours",
+    "hideFilteringTitle": "Cacher le filtre en cours",
+    "hideFilter": "Cacher le filtrage",
+    "hideFilterTitle": "Cacher le filtrage",
+    "showFilter": "Afficher le filtrage",
+    "showFiltering": "Afficher le filtre en cours",
+    "emptyResult": "Aucune information à présenter.",
+    "addTitle": "Ajouter",
+    "selectedTitle": "Sélectionner",
+    "selectedAllTitle": "Tout sélectionner",
+    "deselectedAllTitle": "Tout désélectionner",
+    "deleteAllConfirmation": "Etes-vous sûr(e) de vouloir supprimer ce(s) élément(s)",
+    "deleteAllTitle": "Supprimer ce(s) élément(s)",
+    "deleteAllActionTitle":"Suppression multiple",
+    "sortedByTitle": "Trier par {columnTitle} {sortTitle}",
+    "descending": "dans l'ordre décroissant",
+    "ascending": "dans l'ordre croissant",
+    "rowNumber": "Lignes : ",
+    "pageFooter": "Page :",
+    "pageFooterOn": "sur",
+    "exportTitle": "Exporter au format {format}",
+    "exportExcelTitle": "Excel",
+    "exportPdfTitle": "PDF",
+    "exportCsvTitle": "CSV",
+    "firstPage": "<<",
+    "prevPage": "< Précédent",
+    "nextPage": "Suivant >",
+    "lastPage": ">>",
+    "displayAll": "Afficher tout"
+  },
+  "calendar": {
+    "agendaTitle": "Calendrier",
+    "choiceDate": "Choisir une date",
+    "today": "Aujourd'hui",
+    "clear": "Effacer",
+    "hourPanelTitle": "Choisir une heure",
+    "minutePanelTitle": "Choisir une minute",
+    "secondPanelTitle": "Choisir une seconde",
+    "monthSelect": "Choisir un mois",
+    "yearSelect": "Choisir une année",
+    "decadeSelect": "Choisir une décade",
+    "yearFormat": "yyyy",
+    "dateFormat": "dd/MM/yyyy",
+    "monthYearFormat": "MMMM yyyy",
+    "previousMonth": "Mois précédent (PageHaut)",
+    "nextMonth": "Mois suivant (PageBas)",
+    "hourInput": "Heure précédente(Haut), Heure suivante(Bas)",
+    "minuteInput": "Minute précédente(Haut), Minute suivante(Bas)",
+    "secondInput": "Seconde précédente(Haut), Seconde suivante(Bas)",
+    "previousYear": "Année précédente (Ctrl + gauche)",
+    "nextYear": "Année suivante (Ctrl + droite)",
+    "previousDecade": "Décennie précédente",
+    "nextDecade": "Décennie suivante",
+    "previousCentury": "Siècle précédent",
+    "nextCentury": "Siècle suivant",
+    "timezoneOffset": 60,
+    "firstDayOfWeek": 1,
+    "minimalDaysInFirstWeek": 1,
+    "format": {
+      "eras": [
+        "BC",
+        "AD"
+      ],
+      "months": [
+        "Janvier",
+        "Février",
+        "Mars",
+        "Avril",
+        "Mai",
+        "Juin",
+        "Juillet",
+        "Août",
+        "Septembre",
+        "Octobre",
+        "Novembre",
+        "Decembre"
+      ],
+      "shortMonths": [
+        "Jan",
+        "Fev",
+        "Mar",
+        "Avr",
+        "Mai",
+        "Jun",
+        "Jul",
+        "Aou",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
+      "weekdays": [
+        "Dimanche",
+        "Lundi",
+        "Mardi",
+        "Mercredi",
+        "Jeudi",
+        "Vendredi",
+        "Samedi"
+      ],
+      "shortWeekdays": [
+        "Dim",
+        "Lun",
+        "Mar",
+        "Mer",
+        "Jeu",
+        "Ven",
+        "Sam"
+      ],
+      "veryShortWeekdays": [
+        "D",
+        "L",
+        "M",
+        "M",
+        "J",
+        "V",
+        "S"
+      ],
+      "ampms": [
+        "AM",
+        "PM"
+      ],
+      "datePatterns": [
+        "EEEE, MMMM d, yyyy",
+        "MMMM d, yyyy",
+        "MMM d, yyyy",
+        "M/d/yy"
+      ],
+      "timePatterns": [
+        "h:mm:ss a 'GMT'Z",
+        "h:mm:ss a",
+        "h:mm:ss a",
+        "h:mm a"
+      ],
+      "dateTimePattern": "{date} {time}"
+    }
+  },
+  "header": {
+    "logoTitle": "Accueil - ",
+    "contentTitle": "Aller au contenu de l' ",
+    "menuTitle": "Aller au menu de l' ",
+    "planTitle": "Plan de l'application l' ",
+    "accessTitle": "Politique d'accessibilité de l' ",
+    "content": "Aller au contenu",
+    "menu": "Aller au menu",
+    "plan": "Plan de l'application",
+    "access": "Accessibilité",
+    "help": "Aide",
+    "contact": "Contact"
+  },
+  "navigation": {
+    "welcome": "Accueil",
+    "accessibility": "Accessibilité",
+    "contact": "Contact",
+    "plan": "Plan de l'application",
+    "help": "Aide",
+    "connect": "Connexion",
+    "disconnect": "{userLogin} (Déconnexion)",
+    "submenu": "Sous-menu de "
+  }
+}

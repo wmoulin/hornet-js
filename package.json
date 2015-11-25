@@ -1,0 +1,8 @@
+{
+  "name": "hornet-js",
+  "version": "5.0.0",
+  "description": "Projet permettant de builder les modules de hornet-js",
+  "buildAndTestDependencies": {
+  },
+  "author": "MAEDI"
+}

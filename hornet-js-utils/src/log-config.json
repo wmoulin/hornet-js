@@ -1,0 +1,11 @@
+{
+  "appenders": [
+    {
+      "type": "console",
+      "layout": {
+        "type": "pattern",
+        "pattern": "%[%d{yyyy:MM:dd:hh:mm:ss,SSS}|%p|%c|%h|%m%n%]"
+      }
+    }
+  ]
+}

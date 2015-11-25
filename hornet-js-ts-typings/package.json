@@ -1,0 +1,11 @@
+{
+  "name": "hornet-js-ts-typings",
+  "version": "5.0.0",
+  "description": "Fichiers de définition des modules TypeScript d'hornet-js",
+  "appDependencies": {},
+  "buildAndTestDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MAEDI"
+}

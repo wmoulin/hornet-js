@@ -1,0 +1,120 @@
+{
+  "contextPath": "applitutoriel-5.0.0",
+  "server": {
+    "port": 8888,
+    "keepAlive": true,
+    "maxConnections": 100,
+    "timeout": 300000,
+    "uploadFileSize": 1000000
+  },
+  "themeUrl": "http://localhost:7777/5.0.0/default",
+  "security": {
+    "enabled": false,
+    "hpp": true,
+    "csrf": {
+      "activated": true,
+      "maxTokensPerSession": 10
+    },
+    "url": {
+      "defaultSrc": [
+        "'self'",
+        "http://localhost:7777"
+      ],
+      "scriptSrc": [
+        "'self'",
+        "'unsafe-inline'",
+        "'unsafe-eval'"
+      ],
+      "styleSrc": [
+        "'self'",
+        "'unsafe-inline'",
+        "http://localhost:7777"
+      ],
+      "fontSrc": [
+        "'self'",
+        "http://localhost:7777"
+      ],
+      "imgSrc": [
+        "'self'",
+        "http://localhost:7777"
+      ]
+    },
+    "reportOnly": false,
+    "setAllHeaders": false,
+    "disableAndroid": false,
+    "safari5": false,
+    "frameguard": {
+      "mode": "deny",
+      "allowFromPattern": ""
+    },
+    "hpkp": {
+      "activated": false,
+      "maxAge": 7776000000,
+      "sha256s": [
+        "AbCdEf123=",
+        "ZyXwVu456="
+      ],
+      "includeSubdomains": true,
+      "reportUri": null
+    }
+    //      "hsts": {
+    //        "activated": false,
+    //        "maxAge": 10886400000,
+    //        "includeSubdomains": true,
+    //        "preload": false
+    //      }
+  },
+  "log": {
+    "levels": {
+      "[all]": "INFO"
+      //        "hornet-js.core": "DEBUG"
+    },
+    "appenders": [
+      {
+        "type": "console",
+        "layout": {
+          "type": "pattern",
+          "pattern": "%[%d{yyyy:MM:dd:hh:mm:ss,SSS}|%p|%c|%h|%m%]"
+        }
+      }
+      //        {
+      //          "type": "dateFile",
+      //          "filename": "log/app.log",
+      //          "pattern": "-yyyy-MM-dd",
+      //          "layout": {
+      //            "type": "pattern",
+      //            "pattern": "%d{yyyy:MM:dd:hh:mm:ss,SSS}|%p|%c|%h|%m%"
+      //          }
+      //        }
+    ]
+  },
+  "services": {
+    "host": "http://localhost:8080/",
+    "name": "applitutoriel-service/"
+  },
+  "mock": {
+    "enabled": true,
+    "routes": "/mock/routes"
+  },
+  "cookie": {
+    "httpOnly": true,
+    "secure": false,
+    "maxAge": 3600000,
+    "secrets": [
+      "091f95daa79f4f6897862b375eaccb1b13e83adb5323e6572f953dfdc1d9878313a0d7bd3d69165f1a9414d2cc18be40",
+      "7af130afdb95da51499eec413fe792240f8936ba3032fb37e353653ceb098a777b64aada6d7673aff01899b3b1f5184d"
+    ]
+  },
+  "fullSpa": {
+    "enabled": false,
+    "host": "",
+    "name": "/services"
+  },
+  "authentication": {
+    "loginUrl": "/login"
+  },
+  "cache": {
+    "enabled": true,
+    "timetolive": 60
+  }
+}

