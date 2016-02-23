@@ -1,30 +1,28 @@
-/// <reference path="../../../hornet-js-ts-typings/definition.d.ts" />
 "use strict";
-import utils = require('hornet-js-utils');
+import utils = require("hornet-js-utils");
 
-import RouterData = require('src/routes/router-data');
-import matcher = require('src/routes/route-matcher');
-import routerInterfaces = require('src/routes/router-interfaces');
-import TestUtils = require('hornet-js-utils/src/test-utils');
+import RouterData = require("src/routes/router-data");
+import matcher = require("src/routes/route-matcher");
+import routerInterfaces = require("src/routes/router-interfaces");
+import TestUtils = require("hornet-js-utils/src/test-utils");
 
 var expect = TestUtils.chai.expect;
 var sinon = TestUtils.sinon;
-var logger = TestUtils.getLogger("hornet-js-core.test.routes.router-data-spec")
+var logger = TestUtils.getLogger("hornet-js-core.test.routes.router-data-spec");
 
 //mock pour la config
 utils.setConfigObj({
-
-    "services": {
-        "host": "",
-        "name": "test"
+    services: {
+        host: "",
+        name: "test"
     }
 });
 
-describe('RouteMatcher', () => {
+describe("RouteMatcher", () => {
     var matchFn:routerInterfaces.MatchFn;
     var matcherBuilder:matcher.RouteMatcher;
     var buildRouteHandlerMock:any;
-    var mockRouteHandler
+    var mockRouteHandler;
 
     beforeEach(() => {
         matcherBuilder = new matcher.RouteMatcher();
@@ -40,7 +38,7 @@ describe('RouteMatcher', () => {
     });
 
 
-    it('should build get route by default', () => {
+    it("should build get route by default", () => {
         // Arrange
         var path = TestUtils.randomString();
 
@@ -50,11 +48,11 @@ describe('RouteMatcher', () => {
         // Assert
         var route = matcherBuilder.routes[path];
         expect(route).to.exist;
-        expect(route['get']).to.be.equals(mockRouteHandler);
+        expect(route["get"]).to.be.equals(mockRouteHandler);
         expect(buildRouteHandlerMock).to.have.been.calledOnce;
     });
 
-    it('should not accept same route multiple times', () => {
+    it("should not accept same route multiple times", () => {
         // Arrange
         var path = TestUtils.randomString();
         // Act
@@ -69,7 +67,7 @@ describe('RouteMatcher', () => {
         expect(buildRouteHandlerMock).to.have.been.calledOnce;
     });
 
-    it('should build get route on client by default', () => {
+    it("should build get route on client by default", () => {
         // Arrange
         var path = TestUtils.randomString();
         utils.isServer = false;
@@ -83,7 +81,7 @@ describe('RouteMatcher', () => {
         expect(buildRouteHandlerMock).to.have.been.calledOnce;
     });
 
-    it('should build lazy route on server', () => {
+    it("should build lazy route on server", () => {
         // Arrange
         var path = TestUtils.randomString();
         var fileToLoad = TestUtils.randomString();
@@ -98,7 +96,7 @@ describe('RouteMatcher', () => {
         expect(routes[0].fileToLoad).to.be.equals(fileToLoad);
     });
 
-    it('should build lazy route on client', () => {
+    it("should build lazy route on client", () => {
         // Arrange
         var path = TestUtils.randomString();
         var fileToLoad = TestUtils.randomString();
@@ -108,37 +106,36 @@ describe('RouteMatcher', () => {
         matchFn.lazy(path, fileToLoad);
 
         // Assert
-        var routeFn = matcherBuilder.routes[path + '/?((\w|.)*)'];
+        var routeFn = matcherBuilder.routes[path + "/?((\w|.)*)"];
         expect(matcherBuilder.lazyRoutes).to.have.length(0);
         expect(routeFn).to.exist;
         var route = routeFn();
-        expect(route.composant).to.be.equals('NOTHING');
+        expect(route.composant).to.be.equals("NOTHING");
         expect(route.lazyRoutesParam).to.exist;
         expect(route.lazyRoutesParam.path).to.be.equals(path);
         expect(route.lazyRoutesParam.fileToLoad).to.be.equals(fileToLoad);
     });
 });
 
-describe('Router getUrlParameters', () => {
+describe("Router getUrlParameters", () => {
 
     beforeEach(() => {
         utils.isServer = true;
     });
 
-
-    it('should get empty parameter if url without parameters', () => {
+    it("should get empty parameter if url without parameters", () => {
         // Arrange
         var url = TestUtils.randomString();
         var expected = {};
 
-        //Act
+        // Act
         var result = RouterData.getUrlParameters(url);
 
-        //Assert
+        // Assert
         expect(result).to.deep.equal(expected);
     });
 
-    it('should get empty parameter if no url', () => {
+    it("should get empty parameter if no url", () => {
         // Arrange
         var url = '';
         var expected = {};
@@ -150,30 +147,30 @@ describe('Router getUrlParameters', () => {
         expect(result).to.deep.equal(expected);
     });
 
-    it('should get one parameter', () => {
+    it("should get one parameter", () => {
         // Arrange
         var param1 = TestUtils.randomString(10);
         var param1Value = TestUtils.randomString(10);
-        var url = TestUtils.randomString(5) + '?' + param1 + '=' + param1Value;
+        var url = TestUtils.randomString(5) + "?" + param1 + "=" + param1Value;
 
         var expected = {};
         expected[param1] = param1Value;
 
-        //Act
+        // Act
         var result = RouterData.getUrlParameters(url);
 
-        //Assert
+        // Assert
         expect(result).to.deep.equal(expected);
     });
 
-    it('should get two parameters', () => {
+    it("should get two parameters", () => {
         // Arrange
         var param1 = TestUtils.randomString(10);
         var param1Value = TestUtils.randomString(10);
 
         var param2 = TestUtils.randomString(10);
         var param2Value = TestUtils.randomString(10);
-        var url = TestUtils.randomString(5) + '??' + param1 + '=' + param1Value + "&" + param2 + '=' + param2Value;
+        var url = TestUtils.randomString(5) + "??" + param1 + "=" + param1Value + "&" + param2 + '=' + param2Value;
 
         var expected = {};
         expected[param1] = param1Value;
@@ -186,10 +183,10 @@ describe('Router getUrlParameters', () => {
         expect(result).to.deep.equal(expected);
     });
 
-    it('should not get no value parameter', () => {
+    it("should not get no value parameter", () => {
         // Arrange
         var param1 = TestUtils.randomString(10);
-        var url = TestUtils.randomString(5) + '?' + param1;
+        var url = TestUtils.randomString(5) + "?" + param1;
 
         var expected = {};
 
@@ -202,9 +199,9 @@ describe('Router getUrlParameters', () => {
 });
 
 
-describe('Router loadLazyRoutesRecursively', () => {
+describe("Router loadLazyRoutesRecursively", () => {
 
-    it('should load one lazy route', () => {
+    it("should load one lazy route", () => {
         // Arrange
         var routerStub = <any>{};
         routerStub.configuration = {};
@@ -214,7 +211,7 @@ describe('Router loadLazyRoutesRecursively', () => {
         routerStub.directorRouter.mount = sinon.stub();
         routerStub.loadLazyRoutesRecursively = (<any>RouterData.prototype).loadLazyRoutesRecursively;
 
-        var lazyRoutesInfos = [{'path': TestUtils.randomString(), 'fileToLoad': TestUtils.randomString()}];
+        var lazyRoutesInfos = [{path: TestUtils.randomString(), fileToLoad: TestUtils.randomString()}];
 
         //First Call
         routerStub.configuration.routesLoaderfn.onFirstCall().returns(sinon.stub());
@@ -230,7 +227,7 @@ describe('Router loadLazyRoutesRecursively', () => {
     });
 
 
-    it('should load two lazy routes recursively', () => {
+    it("should load two lazy routes recursively", () => {
         // Arrange
         var routerStub = <any>{};
         routerStub.configuration = {};
@@ -240,115 +237,109 @@ describe('Router loadLazyRoutesRecursively', () => {
         routerStub.directorRouter.mount = sinon.stub();
         routerStub.loadLazyRoutesRecursively = (<any>RouterData.prototype).loadLazyRoutesRecursively;
 
-        var lazyRoutesInfos = [{'path': TestUtils.randomString(), 'fileToLoad': TestUtils.randomString()}];
-        var secondLazyRoutesInfos = [{'path': TestUtils.randomString(), 'fileToLoad': TestUtils.randomString()}];
+        var lazyRoutesInfos = [{path: TestUtils.randomString(), fileToLoad: TestUtils.randomString()}];
+        var secondLazyRoutesInfos = [{path: TestUtils.randomString(), fileToLoad: TestUtils.randomString()}];
 
-        //First Call
+        // First Call
         routerStub.configuration.routesLoaderfn.onFirstCall().returns(sinon.stub());
         var parseRoutesFirstCall = <any>{};
         parseRoutesFirstCall.routes = TestUtils.randomString();
         parseRoutesFirstCall.lazyRoutes = secondLazyRoutesInfos;
         routerStub.parseRoutes.onFirstCall().returns(parseRoutesFirstCall);
 
-        //Second Call
+        // Second Call
         routerStub.configuration.routesLoaderfn.onSecondCall().returns(sinon.stub());
         var parseRoutesSecondCall = <any>{};
         parseRoutesSecondCall.routes = TestUtils.randomString();
         routerStub.parseRoutes.onSecondCall().returns(parseRoutesSecondCall);
 
-        //Act
+        // Act
         (<any>RouterData.prototype).loadLazyRoutesRecursively.call(routerStub, lazyRoutesInfos);
 
-        //Assert
+        // Assert
         expect(routerStub.directorRouter.mount).to.have.been.calledWithExactly(parseRoutesFirstCall.routes, lazyRoutesInfos[0].path);
         expect(routerStub.directorRouter.mount).to.have.been.calledWithExactly(parseRoutesSecondCall.routes, secondLazyRoutesInfos[0].path);
 
     });
 
-    describe('Router Data getUrlParameters', () => {
+    describe("Router Data getUrlParameters", () => {
 
         beforeEach(() => {
             utils.isServer = true;
         });
 
-
-        it('should get empty parameter if url without parameters', () => {
+        it("should get empty parameter if url without parameters", () => {
             // Arrange
             var url = TestUtils.randomString();
             var expected = {};
 
-            //Act
+            // Act
             var result = RouterData.getUrlParameters(url);
 
-            //Assert
+            // Assert
             expect(result).to.deep.equal(expected);
         });
 
-        it('should get empty parameter if no url', () => {
+        it("should get empty parameter if no url", () => {
             // Arrange
-            var url = '';
+            var url = "";
             var expected = {};
 
-            //Act
+            // Act
             var result = RouterData.getUrlParameters(url);
 
-            //Assert
+            // Assert
             expect(result).to.deep.equal(expected);
         });
 
-        it('should get one parameter', () => {
+        it("should get one parameter", () => {
             // Arrange
             var param1 = TestUtils.randomString(10);
             var param1Value = TestUtils.randomString(10);
-            var url = TestUtils.randomString(5) + '?' + param1 + '=' + param1Value;
+            var url = TestUtils.randomString(5) + "?" + param1 + "=" + param1Value;
 
             var expected = {};
             expected[param1] = param1Value;
 
-            //Act
+            // Act
             var result = RouterData.getUrlParameters(url);
 
-            //Assert
+            // Assert
             expect(result).to.deep.equal(expected);
         });
 
-        it('should get two parameters', () => {
+        it("should get two parameters", () => {
             // Arrange
             var param1 = TestUtils.randomString(10);
             var param1Value = TestUtils.randomString(10);
 
             var param2 = TestUtils.randomString(10);
             var param2Value = TestUtils.randomString(10);
-            var url = TestUtils.randomString(5) + '??' + param1 + '=' + param1Value + "&" + param2 + '=' + param2Value;
+            var url = TestUtils.randomString(5) + "??" + param1 + "=" + param1Value + "&" + param2 + "=" + param2Value;
 
             var expected = {};
             expected[param1] = param1Value;
             expected[param2] = param2Value;
 
-            //Act
+            // Act
             var result = RouterData.getUrlParameters(url);
 
-            //Assert
+            // Assert
             expect(result).to.deep.equal(expected);
         });
 
-        it('should not get no value parameter', () => {
+        it("should not get no value parameter", () => {
             // Arrange
             var param1 = TestUtils.randomString(10);
-            var url = TestUtils.randomString(5) + '?' + param1;
+            var url = TestUtils.randomString(5) + "?" + param1;
 
             var expected = {};
 
-            //Act
+            // Act
             var result = RouterData.getUrlParameters(url);
 
-            //Assert
+            // Assert
             expect(result).to.deep.equal(expected);
         });
     });
-
 });
-
-
-
-

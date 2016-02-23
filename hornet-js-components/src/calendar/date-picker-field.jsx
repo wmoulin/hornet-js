@@ -18,34 +18,31 @@ var DatePickerField = newforms.DateField.extend({
         }
         kwargs.controlled = true;
 
-        var widgetArgs;
+        var widgetArgs = {attrs: {}};
 
-        /* Si un ou plusieurs formats d'entrée sont spécifiés pour le champ, on utilise le premier pour le rendu dans le widget */
+        // Si un ou plusieurs formats d'entrée sont spécifiés pour le champ, on utilise le premier pour le rendu dans le widget
         if (kwargs.inputFormats instanceof Array && kwargs.inputFormats[0]) {
             widgetArgs = {format: kwargs.inputFormats[0], attrs: {inputFormats: kwargs.inputFormats}};
         }
+
         /* Prise en compte de l'année par défaut éventuelle */
         if (isFinite(kwargs.defaultYear)) {
-            if(!widgetArgs) {
-                widgetArgs = {};
-            }
-            if (widgetArgs.attrs) {
-                widgetArgs.attrs.defaultYear = kwargs.defaultYear;
-            } else {
-                widgetArgs.attrs = {defaultYear: kwargs.defaultYear};
-            }
+            widgetArgs.attrs.defaultYear = kwargs.defaultYear;
         }
 
-        /* Prise en compte du titre éventuel */
-        if(kwargs.title) {
-            if(!widgetArgs) {
-                widgetArgs = {};
-            }
-            if (widgetArgs.attrs) {
-                widgetArgs.attrs.title = kwargs.title;
-            } else {
-                widgetArgs.attrs = {title: kwargs.title};
-            }
+        if (kwargs.imgFilePath) {
+            widgetArgs.attrs.imgFilePath = kwargs.imgFilePath;
+        }
+
+        if (kwargs.isDatePicker === undefined) {
+            widgetArgs.attrs.isDatePicker = true; // valeur par défaut
+        } else {
+            widgetArgs.attrs.isDatePicker = kwargs.isDatePicker;
+        }
+
+        // Prise en compte du titre éventuel
+        if (kwargs.title) {
+            widgetArgs.attrs.title = kwargs.title;
         }
 
         kwargs.widget = DatePickerInput(widgetArgs);
@@ -60,21 +57,21 @@ var DatePickerField = newforms.DateField.extend({
  */
 function formatHasYear(format) {
     var result = false;
-    if(utils._.isString(format)) {
+    if (utils._.isString(format)) {
         result = format.indexOf("%y") >= 0 || format.indexOf("%Y") >= 0;
     }
     return result;
 }
 
 /**
- * Surcharge de DateField.toJavaScript(value) pour les cas où le format du widget n"inclut pas l"année.
+ * Surcharge de DateField.toJavaScript(value) pour les cas où le format du widget n'inclut pas l'année.
  * @param {?(string|Date)} value user input.
  * @return {?Date} a with its year, month and day attributes set, or null for
  *   empty values when they are allowed.
  * @throws {ValidationError} if the input is invalid.
  */
 DatePickerField.prototype.toJavaScript = function (value) {
-    /* Le premier format n"inclut pas l"année : on utilise l"année par défaut si celle-ci est définie ou alors l"année en cours */
+    /* Le premier format n'inclut pas l"année : on utilise l'année par défaut si celle-ci est définie ou alors l'année en cours */
     if (this.widget && this.widget.format && !formatHasYear(this.widget.format) && utils._.isString(value)) {
         logger.debug("DatePickerField.toJavaScript surchargée");
         if (this.isEmptyValue(value)) {

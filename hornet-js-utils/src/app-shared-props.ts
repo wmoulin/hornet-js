@@ -1,10 +1,9 @@
-///<reference path="../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 
 class AppSharedProps {
     static appSharedPropsObject = {};
-    static test:string;
+
     /**
      * Method to set a custom key/value shared between the server and the browser
      * @param key

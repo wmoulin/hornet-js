@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 
 "use strict";
 import utils = require("hornet-js-utils");
@@ -9,6 +8,7 @@ import PropTypesNs = require("src/notification/notification-props");
 var logger = utils.getLogger("hornet-js-components.basic.notification");
 
 @HornetComponent.ApplyMixins()
+@HornetComponent.Error()
 class MessageItem extends HornetComponent<PropTypesNs.MessageItemProps,any> {
 
     static displayName:string = "MessageItem";

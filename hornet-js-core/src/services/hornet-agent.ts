@@ -1,25 +1,44 @@
-///<reference path='../../../hornet-js-ts-typings/definition.d.ts'/>
 "use strict";
 import superagent = require("superagent");
 import HornetSuperAgentRequest = require("src/services/hornet-superagent-request");
 import utils = require("hornet-js-utils");
-import HornetCache = require("src/cache/hornet-cache");
 
 import superAgentPlugins = require("src/services/superagent-hornet-plugins");
 
-var WError = utils.werror;
 var _ = utils._;
 var logger = utils.getLogger("hornet-js-core.services.hornet-agent");
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// wrap http & https afin de sécuriser l'utilisation de "continuation-local-storage" (perte ou mix de contexte) //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var http = require("http");
+var https = require("https");
+
+var _old_http_request = http.request;
+var _old_https_request = https.request;
+
+http.request = function() {
+    var req = _old_http_request.apply(http, arguments);
+    utils.getContinuationStorage().bindEmitter(req);
+    return req;
+};
+
+https.request = function() {
+    var req = _old_https_request.apply(https, arguments);
+    utils.getContinuationStorage().bindEmitter(req);
+    return req;
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Cette classe sert à encapsuler les appels à SuperAgent pour ajouter des plugins au besoin
  */
 class HornetAgent<T extends HornetSuperAgentRequest> {
 
-    //enable\disable le cache pour cette requête
+    // enable\disable le cache pour cette requête
     private enableCache:boolean = false;
 
-    //défini le temps de mis en cache
+    // défini le temps de mis en cache
     private timetoliveInCache:number;
 
     /**
@@ -58,13 +77,20 @@ class HornetAgent<T extends HornetSuperAgentRequest> {
 
         if (this.enableCache) {
             // Ce plugin doit être en première position car il redéfini des méthodes (set par exemple) qui sont utilisées par les plugins suivants et la méthode 'accept'
-            superAgentRequest.use(superAgentPlugins.MiseEnCachePlugin(this.timetoliveInCache));
+            superAgentRequest.use(superAgentPlugins.CachePlugin(this.timetoliveInCache));
         }
 
         superAgentRequest.accept("json");
 
-        superAgentRequest.use(superAgentPlugins.CsrfPlugin);
-        superAgentRequest.use(superAgentPlugins.RedirectToLoginPagePlugin);
+        if (!utils.isServer) {
+            superAgentRequest.set("X-Requested-With", "XMLHttpRequest");
+            // Correction Bug IE Afin de pallier au problème de cache sur les services:
+            superAgentRequest.use(superAgentPlugins.noCacheIEPlugin);
+
+            superAgentRequest.use(superAgentPlugins.CsrfPlugin);
+            superAgentRequest.use(superAgentPlugins.RedirectToLoginPagePlugin);
+        }
+
         superAgentRequest.use(superAgentPlugins.addParamFromLocalStorage("tid"));
         superAgentRequest.use(superAgentPlugins.addParamFromLocalStorage("user"));
 
@@ -78,7 +104,20 @@ class HornetAgent<T extends HornetSuperAgentRequest> {
      * @param callback  callback
      */
     protected _callSuperAgentMethod(method:string, url:string, callback?:any):T {
-        return superagent[method].call(superagent, url, callback);
+        var req = superagent[method].call(superagent, url, callback);
+        // Surcharge préventive de superagent afin de lancer "abort()" avant de lever une erreur afin d'éviter l'erreur "double callback"
+        var _oldEndFn = req.end;
+        req.end = function(fn) {
+            return _oldEndFn.call(req, function(err, res) {
+                try {
+                    fn.call(req, err, res);
+                } catch (err) {
+                    req.abort();
+                    throw err;
+                }
+            });
+        };
+        return req;
     }
 
     /**

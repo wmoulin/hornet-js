@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 var cookie = require("cookie");
@@ -23,7 +22,9 @@ var logger = utils.getLogger("hornet-js-core.session.session-manager");
 /* istanbul ignore next */
 var defer = typeof setImmediate === "function" ?
     setImmediate :
-    function (fn, a?, b?) { process.nextTick(fn.bind.apply(fn, arguments)) };
+    function (fn, a?, b?) {
+        process.nextTick(fn.bind.apply(fn, arguments))
+    };
 
 /**
  * Generate a session ID for a new session.
@@ -167,7 +168,8 @@ function setcookie(res, name, val, secret, options, route) {
 class SessionManager {
     private static STORE:Store;
 
-    static invalidate(session:Session, fn:Function) {}
+    static invalidate(session:Session, fn:Function) {
+    }
 
     /**
      * Setup session middleware with the given `options`.
@@ -196,7 +198,7 @@ class SessionManager {
             , secret = options.secret || ""
             , sessionTimeout = options.sessionTimeout || 1800000
             , route = cookie.route || null
-        ;
+            ;
 
         var cookieDestroy = {
             expires: new Date("01/01/1970 GMT"),
@@ -207,7 +209,7 @@ class SessionManager {
         };
 
         // implementation dynamique pour accès à la conf
-        SessionManager.invalidate = function(session:Session, fn:Function) {
+        SessionManager.invalidate = function (session:Session, fn:Function) {
             var res = session["currentResponse"];
             onHeaders(res, () => {
                 setcookie(res, name, "", "", cookieDestroy, null);
@@ -238,7 +240,7 @@ class SessionManager {
 
         if (!saveUnmodifiedSession && saveUnmodifiedSession !== false) {
             saveUnmodifiedSession = !store.isTouchImplemented();
-            logger.warn("undefined saveUnmodifiedSession option; default = !store.isTouchImplemented() = " + saveUnmodifiedSession);
+            logger.debug("undefined saveUnmodifiedSession option; default = !store.isTouchImplemented() = " + saveUnmodifiedSession);
         }
 
         return function session(req, res, next) {
@@ -247,7 +249,7 @@ class SessionManager {
 
             if (!store.isReady()) return logger.debug("store is not ready"), next();
 
-            if (0 != parseUrl.original(req).pathname.indexOf(cookie.path || "/")) return next();
+            if (0 !== parseUrl.original(req).pathname.indexOf(cookie.path || "/")) return next();
 
             // get the session ID from the cookie
             var sessionId = getcookie(req, name, secret, route);
@@ -303,8 +305,16 @@ class SessionManager {
 
             // proxy end() to commit the session
             var _end = res.end;
-            var _write = res.write;
             var ended = false;
+
+            // prevent writing to closed response
+            var error = false;
+            ["close", "abort", "end"].forEach((event) => {
+                res.once(event, () => {
+                    error = true;
+                });
+            });
+
             res.end = function end(chunk, encoding) {
                 if (ended) return false;
                 ended = true;
@@ -315,6 +325,8 @@ class SessionManager {
                 hashAfterRequest = hash(session);
 
                 function writeend() {
+                    if (error) return false;
+
                     if (sync) {
                         ret = _end.call(res, chunk, encoding);
                         sync = false;
@@ -340,7 +352,7 @@ class SessionManager {
                 //
                 //  - otherwise touch the session
                 if (sessionId !== session.getId() || hashBeforeRequest !== hashAfterRequest || saveUnmodifiedSession) {
-                    logger.trace("session will be saved into the store : (cookieSessionId="+sessionId+", sessionId="+session.getId()+", hashBefore="+hashBeforeRequest+", hashAfter="+hashAfterRequest+", saveUnmodified="+saveUnmodifiedSession + ")");
+                    logger.trace("session will be saved into the store : (cookieSessionId=" + sessionId + ", sessionId=" + session.getId() + ", hashBefore=" + hashBeforeRequest + ", hashAfter=" + hashAfterRequest + ", saveUnmodified=" + saveUnmodifiedSession + ")");
                     store.set(session, function onSaveCallback(err) {
                         if (err) defer(next, err);
                         writeend();

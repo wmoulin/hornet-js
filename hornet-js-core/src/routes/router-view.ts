@@ -1,22 +1,13 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import utils = require("hornet-js-utils");
-import Action = require("src/actions/action");
 
 import NotificationStore = require("src/stores/notification-store");
-import PageInformationsStore = require('src/stores/page-informations-store');
-import express = require("express");
+import PageInformationsStore = require("src/stores/page-informations-store");
 import ExtendedPromise = require("hornet-js-utils/src/promise-api");
 import ActionExtendedPromise = require("src/routes/action-extended-promise");
-import director = require("director");
-import MediaType = require("src/protocol/media-type");
 import RouterAbstract = require("src/routes/router-abstract");
 import Matcher = require("src/routes/route-matcher");
 import Session = require("src/session/session");
-
-import N = require('src/routes/notifications');
-
-var WError = utils.werror;
 
 import react = require("react");
 var logger = utils.getLogger("hornet-js-core.routes.router-view");
@@ -53,7 +44,7 @@ class RouterView extends RouterAbstract {
         var params = [routeContext].concat(parameters);
         var locales:Array<string> = [];
         if (utils.isServer) {
-            //var requete:any = "fr-FR";//this.req; voir routeContext.req.header("local")
+            // var requete:any = "fr-FR";//this.req; voir routeContext.req.header("local")
             var languagesReq:any = routeContext.req;
             locales = languagesReq.acceptsLanguages();
         }
@@ -80,7 +71,7 @@ class RouterView extends RouterAbstract {
                 req: routeContext.req
             });
 
-            //Appel du handler associé à cette route
+            // Appel du handler associé à cette route
             var routeInfos:I.IRoutesInfos = handler.apply(routeContext, params);
 
             var currentPromise:ExtendedPromise<any> = ExtendedPromise.resolve(true);
@@ -88,18 +79,18 @@ class RouterView extends RouterAbstract {
             logger.debug("CurrentPath:", currentPath);
 
             if (routeInfos.lazyRoutesParam) {
-                // Cette partie de code n"est possible que sur le navigateur car sur NodeJS les routes lazy sont chargées au démarrage
+                // Cette partie de code n'est possible que sur le navigateur car sur NodeJS les routes lazy sont chargées au démarrage
                 logger.debug("Chargement des routes en mode lazy");
                 currentPromise = this.loadRoutes(currentPromise, routeInfos, routeContext, fluxibleContext.getActionContext());
                 currentPromise.fail(this.handleErrBuilder(routeContext));
                 return;
             } else {
 
-                // On initialise l"objet qui sera transmis d"Action en Action, avant toute action
+                // On initialise l'objet qui sera transmis d"Action en Action, avant toute action
                 logger.debug("Initialisation du ActionChainData");
                 currentPromise = this.initActionChainData(currentPromise, routeInfos.chainData, routeContext.req);
 
-                // On insert l"url actuelle dans le store
+                // On insert l'url actuelle dans le store
                 currentPromise = currentPromise.then(function (actionsChainData) {
                     return new SimpleAction(SimpleAction.CHANGE_URL)
                         .withContext(fluxibleContext.getActionContext())
@@ -113,7 +104,7 @@ class RouterView extends RouterAbstract {
                     var themeSplit = router.configuration.themeUrl.split("/");
                     var themeNameConfiguration:string = themeSplit[themeSplit.length - 1];
 
-                    if (themeNameSession != themeNameConfiguration) {
+                    if (themeNameSession !== themeNameConfiguration) {
                         var themeName = _.defaults(themeNameSession, themeNameConfiguration);
                         currentPromise = currentPromise.then(function (actionsChainData) {
                             return new SimpleAction(SimpleAction.CHANGE_THEME)
@@ -133,12 +124,12 @@ class RouterView extends RouterAbstract {
                     }
                 }
 
-                // On vérifie que l"utilisateur à le droit d"accéder à cette page
+                // On vérifie que l'utilisateur à le droit d'accéder à cette page
                 currentPromise = this.validateUserAccess(currentPromise, fluxibleContext, routeInfos, routeContext);
 
                 if (firstRender && !fullSpa) {
-                    // Sur le premier rendu client on bypass l"exécution des actions et on fait confiance
-                    // au mécanisme de déshydratation/réhydratation des stores pour fournir l"état courant
+                    // Sur le premier rendu client on bypass l'exécution des actions et on fait confiance
+                    // au mécanisme de déshydratation/réhydratation des stores pour fournir l'état courant
                     // >> uniquement en mode isomorphique !!
                     firstRender = false;
                 } else {
@@ -176,7 +167,7 @@ class RouterView extends RouterAbstract {
     }
 
     /**
-     * Ajoute à currentPromise une 'promise" déclenchant le chargement du composant page correspondant à la route indiquée
+     * Ajoute à currentPromise une "promise" déclenchant le chargement du composant page correspondant à la route indiquée
      * @param currentPromise promise correspondant à la chaîne d'actions de la route
      * @param fluxibleContext contexte fluxible
      * @param routeInfos configuration de la route
@@ -192,9 +183,9 @@ class RouterView extends RouterAbstract {
             var component:any = routeInfos.composant;
 
             /* Le composant à rendre est la page d'erreur générique dans le cas où la route fait un changement de page et qu'une erreur est survenue dans la chaine d'actions */
-            if (!notificationStore.canRenderComponent()|| actionsChainData.lastError || actionsChainData.isAccessForbidden) {
+            if (!notificationStore.canRenderComponent() || actionsChainData.lastError || actionsChainData.isAccessForbidden) {
                 var pageInfosStore = fluxibleContext.getActionContext().getStore(PageInformationsStore);
-                if(component && component != pageInfosStore.getCurrentPageComponent()) {
+                if (component && component !== pageInfosStore.getCurrentPageComponent()) {
                     logger.trace("Rendu de la page d'erreur générique");
                     component = this.configuration.errorComponent;
                 }
@@ -221,7 +212,8 @@ class RouterView extends RouterAbstract {
         return currentPromise;
     }
 
-    protected manageResultType(currentPromise:ExtendedPromise<any>, fluxibleContext:FluxibleContext, routeInfos:I.IRoutesInfos, routeContext:I.IRouteContext):ActionExtendedPromise {
+    protected manageResultType(currentPromise:ExtendedPromise<any>, fluxibleContext:FluxibleContext,
+                               routeInfos:I.IRoutesInfos, routeContext:I.IRouteContext):ActionExtendedPromise {
         currentPromise = currentPromise.then((actionsChainData:ActionsChainData) => {
             logger.trace("Gestion du rendu côté serveur");
 
@@ -229,16 +221,17 @@ class RouterView extends RouterAbstract {
 
             var composant:any = routeInfos.composant;
 
-            /* Le composant à rendre est la page d'erreur générique dans le cas où la route fait un changement de page et qu'une erreur est survenue dans la chaine d'actions */
-            if (!notificationStore.canRenderComponent()|| actionsChainData.lastError || actionsChainData.isAccessForbidden) {
+            /* Le composant à rendre est la page d'erreur générique dans le cas où la route fait un
+             changement de page et qu'une erreur est survenue dans la chaine d'actions */
+            if (!notificationStore.canRenderComponent() || actionsChainData.lastError || actionsChainData.isAccessForbidden) {
                 var pageInfosStore = fluxibleContext.getActionContext().getStore(PageInformationsStore);
-                if(composant && composant != pageInfosStore.getCurrentPageComponent()) {
+                if (composant && composant !== pageInfosStore.getCurrentPageComponent()) {
                     logger.trace("Rendu de la page d'erreur générique");
                     composant = this.configuration.errorComponent;
                 }
             }
 
-            //Maintenant on termine le rendu si possible
+            // Maintenant on termine le rendu si possible
             if (composant) {
                 logger.trace("Rendu d'un composant en réponse");
                 if (_.isString(composant)) {
@@ -246,11 +239,11 @@ class RouterView extends RouterAbstract {
                     composant = this.configuration.componentLoaderFn(composant);
                 }
 
-                //On expose la sérialisation des stores aux clients
+                // On expose la sérialisation des stores aux clients
                 logger.trace("expose fluxibleContext.dehydrate");
                 routeContext.res.expose(fluxibleContext.dehydrate(), "App");
 
-                //On expose la sérialisation de la conf aux clients
+                // On expose la sérialisation de la conf aux clients
                 var clientConfig = {
                     shared: utils.config.getOrDefault("shared", ""),
                     themeUrl: utils.config.getOrDefault("themeUrl", ""),
@@ -260,17 +253,16 @@ class RouterView extends RouterAbstract {
                         "name": "/services"
                     }),
                     contextPath: utils.config.getOrDefault("contextPath", ""),
-                    services: utils.config.getOrDefault("services", {}),
-                    cache: utils.config.getOrDefault("cache", {enabled:false}),
-                    log: utils.config.getOrDefault("logClient", {})
+                    cache: utils.config.getOrDefault("cache", {enabled: false}),
+                    logClient: utils.config.getOrDefault("logClient", {}),
+                    welcomePage: utils.config.getOrDefault("welcomePage", "/")
                 };
                 routeContext.res.expose(clientConfig, "Config");
 
-                //On envoi au client le tokken csrf
-                if (_.isFunction(routeContext.req.generateNewCsrfTokken)) {
-                    var newCsrfToken = routeContext.req.generateNewCsrfTokken();
-                    logger.trace("Génération d'un token CSRF:", newCsrfToken);
-                    routeContext.res.expose(newCsrfToken, "CsrfTokken");
+                // On envoi au client le token csrf
+                if (_.isFunction(routeContext.req.generateCsrfToken)) {
+                    var csrfToken = routeContext.req.generateCsrfToken();
+                    routeContext.res.expose(csrfToken, "CsrfToken");
                 }
 
                 // On expose au client les informations de l"application courante
@@ -281,6 +273,10 @@ class RouterView extends RouterAbstract {
 
                 // On rend le composant appComponent
                 var currentFluxibleContext = fluxibleContext.getComponentContext();
+
+                // change "null" > <noscript> en "null" > <script> pour éviter les violations de DOM !
+                require("react/lib/ReactInjection").EmptyComponent.injectEmptyComponent("script");
+
                 logger.trace("renderToString");
                 var htmlApp:string = react.renderToString(this.configuration.appComponent({
                     composantPage: composant,
@@ -293,7 +289,8 @@ class RouterView extends RouterAbstract {
                         composantApp: htmlApp,
                         context: currentFluxibleContext,
                         state: routeContext.res.locals.state
-                    }));
+                    })
+                );
                 routeContext.res.send("<!DOCTYPE html>" + html);
                 routeContext.res.end();
             } else {
@@ -304,7 +301,7 @@ class RouterView extends RouterAbstract {
         return currentPromise;
     }
 
-    protected parseRoutes(routes:I.IRoutesBuilder, basePath ?:string):Matcher.RouteMatcher {
+    protected parseRoutes(routes:I.IRoutesBuilder, basePath?:string):Matcher.RouteMatcher {
         logger.debug("basePath:", basePath);
         var matcher = RouterAbstract.routeMatcherFactory();
         routes.buildViewRoutes(matcher.getMatcher(this, basePath));

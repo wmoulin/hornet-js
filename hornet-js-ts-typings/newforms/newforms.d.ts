@@ -11,6 +11,8 @@ declare class HiddenInput {
 }
 declare class ChoiceField {
 }
+declare class FileField {
+}
 declare class RadioSelect {
 }
 declare class BooleanField {
@@ -55,7 +57,7 @@ declare module "newforms" {
         static EmailField(kwargs:{}):EmailField;
         static Textarea(kwargs:{}):Textarea;
         static HiddenInput(kwargs:{}):HiddenInput;
-
+        static FileField(kwargs:{}):FileField;
         static ChoiceField(kwargs:{}):ChoiceField;
         static RadioSelect(kwargs:{}):RadioSelect;
         static BooleanField(kwargs:{}):BooleanField;

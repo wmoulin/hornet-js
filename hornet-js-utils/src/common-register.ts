@@ -1,4 +1,3 @@
-/// <reference path="../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import logger = require("src/logger");
 
@@ -11,7 +10,7 @@ class Register {
             Register.global[paramName] = value;
         }
 
-        //Dans tous les cas on remonte la variable globale
+        // Dans tous les cas on remonte la variable globale
         return Register.global[paramName];
     }
 }
@@ -21,7 +20,7 @@ export = Register;
 // Création de la variable Globale
 //
 if (Register.isServer) {
-    //Sur le serveur on utilise le global de node.js
+    // Sur le serveur on utilise le global de node.js
     if (!(global as any).hornetClient) {
         (global as any).hornetClient = {};
     }

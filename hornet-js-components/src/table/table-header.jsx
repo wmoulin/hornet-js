@@ -17,8 +17,10 @@ var TableHeader = React.createClass({
     propTypes: ({
         tableName: React.PropTypes.string,
         columns: React.PropTypes.shape({
-            title: React.PropTypes.string,
-
+            title: React.PropTypes.oneOfType([
+                React.PropTypes.string,
+                React.PropTypes.object
+            ]),
             sort: React.PropTypes.oneOfType([
                 React.PropTypes.string,
                 React.PropTypes.object
@@ -56,7 +58,11 @@ var TableHeader = React.createClass({
         }),
 
         actionMassEnabled: React.PropTypes.bool,
-        actionMassChecked: React.PropTypes.bool
+        actionMassChecked: React.PropTypes.bool,
+        imgFilePath: React.PropTypes.string,
+        options: React.PropTypes.object,
+        selectedItems: React.PropTypes.array,
+        captionText: React.PropTypes.string
     }),
 
 

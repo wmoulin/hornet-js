@@ -13,7 +13,10 @@ var TableRows = React.createClass({
     propTypes: {
         tableName: React.PropTypes.string.isRequired,
         columns: React.PropTypes.shape({
-            title: React.PropTypes.string,
+            title: React.PropTypes.oneOfType([
+                React.PropTypes.string,
+                React.PropTypes.object
+            ]),
             sort: React.PropTypes.oneOfType([
                 React.PropTypes.string,
                 React.PropTypes.object
@@ -30,7 +33,12 @@ var TableRows = React.createClass({
         selectedItems: React.PropTypes.array,
         onChangeSelectedItems: React.PropTypes.func,
         messages: React.PropTypes.object,
-        actionMassEnabled: React.PropTypes.bool
+        actionMassEnabled: React.PropTypes.bool,
+        imgFilePath: React.PropTypes.string,
+        store: React.PropTypes.func.isRequired,
+        onChangeSortData: React.PropTypes.func,
+        captionText: React.PropTypes.string,
+        actionMassChecked: React.PropTypes.bool
     },
 
     getInitialState: function () {
@@ -43,6 +51,7 @@ var TableRows = React.createClass({
         logger.trace("render : ", (this.props.items) ? this.props.items.length : "");
         try {
             var render = [];
+            var selectKey = this.props.options && this.props.options.selectedKey || "id";
             if (this.props.items && this.props.items.length > 0) {
 
                 this.props.items.forEach((item, idx) => {
@@ -51,7 +60,7 @@ var TableRows = React.createClass({
                     var selected = false;
                     if (this.props.selectedItems && this.props.selectedItems.length > 0) {
                         this.props.selectedItems.forEach((itemSelected)=> {
-                            if (itemSelected[this.props.options.selectedKey] === item[this.props.options.selectedKey]) {
+                            if (itemSelected[selectKey] === item[selectKey]) {
                                 classRow += "hornet-datatable-selectedItems "
                                 selected = true;
                                 return;
@@ -63,11 +72,17 @@ var TableRows = React.createClass({
 
                     render.push(
                         <TableRow
-                            {...this.props}
-                            key={this.props.tableName + "-row-" + idx}
+                            key={this.props.tableName + "-row-" + idx + "-" + item[selectKey]}
                             item={item}
                             classRow={classRow}
                             selected={selected}
+                            actionMassEnabled={this.props.actionMassEnabled}
+                            sort={this.props.sort}
+                            options={this.props.options}
+                            onChangeSelectedItems={this.props.onChangeSelectedItems}
+                            messages={this.props.messages}
+                            columns={this.props.columns}
+                            tableName={this.props.tableName}
                         />
                     );
                 });

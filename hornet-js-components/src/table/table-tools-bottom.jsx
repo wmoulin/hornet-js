@@ -29,11 +29,20 @@ var TableToolsBottom = React.createClass({
         actionMassEnabled: React.PropTypes.bool,
         actionAddEnabled: React.PropTypes.bool,
         actionPaginationEnabled: React.PropTypes.bool,
+        /** Choix de taille de page proposés */
+        pageSizeSelect: React.PropTypes.arrayOf(React.PropTypes.shape({
+            /** Taille de page */
+            value: React.PropTypes.number.isRequired,
+            /** Clé du libellé à rechercher dans messages ou dans le bloc de messages du composant "table" */
+            textKey: React.PropTypes.string.isRequired
+        })),
 
         children: React.PropTypes.oneOfType([
             React.PropTypes.object,
             React.PropTypes.array
-        ])
+        ]),
+        /** Path permettant de surcharger les pictogrammes/images **/
+        imgFilePath: React.PropTypes.string
     },
 
     getDefaultProps: function () {

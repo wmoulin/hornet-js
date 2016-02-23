@@ -21,7 +21,29 @@ var TableToolsActionExportButton = React.createClass({
         icoExport: React.PropTypes.string,
 
         mediaType: React.PropTypes.string,
-        mediaTypeTitle: React.PropTypes.string
+        mediaTypeTitle: React.PropTypes.string,
+        imgFilePath: React.PropTypes.string,
+
+        toggleFilters: React.PropTypes.func,
+        filtersVisible: React.PropTypes.bool,
+        filtersActive: React.PropTypes.bool,
+        criterias: React.PropTypes.object,
+        sort: React.PropTypes.object,
+        actionExportEnabled:React.PropTypes.bool,
+        actionFilterEnabled: React.PropTypes.bool,
+
+        options: React.PropTypes.object,
+        openDeleteAlert: React.PropTypes.func,
+        actionMassEnabled:React.PropTypes.bool,
+        actionAddEnabled:React.PropTypes.bool,
+        classAction: React.PropTypes.string,
+        classExport: React.PropTypes.string,
+        actionExcelExportEnabled:React.PropTypes.bool,
+        actionPdfExportEnabled:React.PropTypes.bool,
+        actionCsvExportEnabled:React.PropTypes.bool,
+        excelEnabled:React.PropTypes.bool,
+        pdfEnabled:React.PropTypes.bool,
+        csvEnabled:React.PropTypes.bool
     },
 
     getDefaultProps: function () {
@@ -68,9 +90,10 @@ var TableToolsActionExportButton = React.createClass({
     _getExportButton: function () {
         logger.trace("_getBoutonExport");
 
-        var exportTitle = this._getExportTitle();
-        var exportRoute = this.props.routes && this.props.routes.export;
-        var exportAction = this.props.actions && this.props.actions.export;
+        var exportTitle = this._getExportTitle(),
+            exportRoute = this.props.routes && this.props.routes.export,
+            exportAction = this.props.actions && this.props.actions.export,
+            urlTheme = this.props.imgFilePath || this.genUrlTheme();
 
         if (exportRoute || exportAction) {
             var classExportButton = "hornet-datatable-action "+this.props.classAction;
@@ -82,7 +105,7 @@ var TableToolsActionExportButton = React.createClass({
                         onClick={exportAction}
                         url={(exportRoute)? exportRoute + "?mediaType=" + this.props.mediaType : "#"}
                         name={this.props.tableName+"-export-"+ this.props.mediaType}
-                        src={this.genUrlTheme(this.props.icoExport + this.props.mediaType + ".png")}
+                        src={urlTheme + this.props.icoExport + this.props.mediaType + ".png"}
                     />
                 </div>
             );

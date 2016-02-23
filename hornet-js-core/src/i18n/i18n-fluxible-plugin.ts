@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import utils = require("hornet-js-utils");
@@ -15,7 +14,6 @@ var hornetMessages:any = require("../i18n/hornet-messages-components");
  * @returns {any} soit la chaîne de caractères trouvée, soit un objet contenant un ensemble de messages, soit la clé
  */
 function i18n(keysString:string):any {
-    var currentMessages = this.messages;
     return I18nFluxiblePlugin.getMessagesOrDefault(keysString, this.messages, hornetMessages);
 }
 
@@ -36,7 +34,7 @@ class I18nFluxiblePlugin {
          */
 
         return {
-            //CONFIGURATION DU PLUGIN (voir doc fluxible)
+            // CONFIGURATION DU PLUGIN (voir doc fluxible)
             // Required unique name property
             name: "InternationalisationPlugin",
             // Called after context creation to dynamically create a context plugin
@@ -52,7 +50,7 @@ class I18nFluxiblePlugin {
                         componentContext.i18n = I18nFluxiblePlugin.i18n(messages);
                     },
                     plugActionContext: function (actionContext) {
-                        //accessible dans l'action context
+                        // accessible dans l'action context
                         actionContext.locale = locale;
                         actionContext.i18n = i18n.bind(actionContext);
                         actionContext.formatMsg = formatMsg;
@@ -89,7 +87,8 @@ class I18nFluxiblePlugin {
     static i18n(messages:Object):(string)=>any {
 
         /**
-         * Retourne le(s) message(s) correspondant à la clé passée en paramètre contenu(s) dans 'messages' ou dans les messages par défaut du framework.
+         * Retourne le(s) message(s) correspondant à la clé passée en paramètre contenu(s) dans 'messages'
+         * ou dans les messages par défaut du framework.
          * Si la clé n'existe pas elle est retournée directement.
          * @param keysString clé recherchée
          * @param messages objet contenant les messages à utiliser
@@ -98,7 +97,7 @@ class I18nFluxiblePlugin {
          */
         return function (keysString):any {
             return I18nFluxiblePlugin.getMessagesOrDefault(keysString, messages, hornetMessages);
-        }
+        };
     }
 
     /**
@@ -111,17 +110,17 @@ class I18nFluxiblePlugin {
     static getMessages(keysString:string, messages:Object):any {
         logger.trace("I18N getMessages :", keysString);
         var currentMessages:any;
-        if(keysString) {
+        if (keysString) {
             currentMessages = messages;
 
-            var keyArray:string[] = keysString.split('.');
+            var keyArray:string[] = keysString.split(".");
 
             keyArray.every(function (key, index, array) {
-                //descend dans l'arborescence
+                // descend dans l'arborescence
                 currentMessages = currentMessages[key];
 
                 if (currentMessages === undefined) {
-                    return false; //non définit
+                    return false; // non définit
                 } else {
                     /* On continue la descente dans l'arborescence */
                     return true;
@@ -141,13 +140,27 @@ class I18nFluxiblePlugin {
      */
     static getMessagesOrDefault(keysString:string, messages:Object, defaultMessages:Object) {
         var result = I18nFluxiblePlugin.getMessages(keysString, messages);
-        if(result == keysString) {
+        if (result === keysString) {
             result = I18nFluxiblePlugin.getMessages(keysString, defaultMessages);
-            if(result == keysString) {
+            if (result === keysString && I18nFluxiblePlugin.isMessageKey(keysString)) {
                 logger.warn("Message non défini pour la clé :", keysString);
             }
         }
         return result;
+    }
+
+    /**
+     * Vérifie si la chaîne de caractères respecte le format commun pour une clé de message internationalisé :
+     * caractères alphanumériques non accentués, tiret ou tiret bas, séparation par des points.
+     * @param str chaîne de caractères à tester
+     * @returns {boolean} true lorsque keyString respecte le format habituel
+     */
+    static isMessageKey(str:string):boolean {
+        var res = false;
+        if (str) {
+            res = new RegExp("^\\w+([-_\\.]\\w+)*$").test(str);
+        }
+        return res;
     }
 
 }

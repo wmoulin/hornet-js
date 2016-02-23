@@ -1379,24 +1379,56 @@
          * @see Log4js.Appender#doAppend
          */
         doAppend: function (loggingEvent) {
-            var style;
-            if (loggingEvent.level.toString().search(/ERROR/) != -1) {
-                style = 'color:red';
-            } else if (loggingEvent.level.toString().search(/FATAL/) != -1) {
-                style = 'color:magenta';
-            } else if (loggingEvent.level.toString().search(/WARN/) != -1) {
-                style = 'color:orange';
-            } else if (loggingEvent.level.toString().search(/DEBUG/) != -1) {
-                style = 'color:DeepSkyBlue';
-            } else if (loggingEvent.level.toString().search(/INFO/) != -1) {
-                style = 'color:green';
-            } else if (loggingEvent.level.toString().search(/TRACE/) != -1) {
-                style = 'color:blue';
-            } else {
-                style = 'color:grey';
-            }
+        	 var style;
+             var func = null;
 
-            console.log("%c " + this.layout.format(loggingEvent), style);
+             if (loggingEvent.level.toString().search(/ERROR/) != -1) {
+                 style = "color:red";
+                 func = "error";
+             } else if (loggingEvent.level.toString().search(/FATAL/) != -1) {
+                 style = "color:magenta";
+                 func = "error";
+             } else if (loggingEvent.level.toString().search(/WARN/) != -1) {
+                 style = "color:orange";
+                 func = "warn";
+             } else if (loggingEvent.level.toString().search(/DEBUG/) != -1) {
+                 style = "color:DeepSkyBlue";
+                 func = "debug";
+             } else if (loggingEvent.level.toString().search(/INFO/) != -1) {
+                 style = "color:green";
+                 func = "info";
+             } else if (loggingEvent.level.toString().search(/TRACE/) != -1) {
+                 style = "color:blue";
+                 func = "debug";
+             } else {
+                 style = "color:grey";
+                 func = "log";
+             }
+
+             //le test sur firefox est nécessaire car par défaut groupCollapsed est considéré comme group
+             //ce qui rend la lecture des logs illisibles
+             var stack = new Error().stack;
+             if(stack && console.groupCollapsed && navigator.userAgent.indexOf("Firefox/") == -1) {
+                 var callLine = "";
+
+                 var stackStr = stack.split("\n");
+                 var callCountTotal = 20;
+                 var callCount = 0;
+                 for(var i in stackStr) {
+                     var call = stackStr[i];
+                     if(call.indexOf("Error") != 0  && call.indexOf("Log4js") == -1 && call.indexOf("Logger") == -1) {
+                         callLine += call + "\n";
+                         callCount++;
+                         if(callCount == callCountTotal)
+                             break;
+                     }
+                 }
+                 console.groupCollapsed("%c " + this.layout.format(loggingEvent), style);
+                 console.log(callLine);
+                 console.groupEnd();
+             }else{
+                 console[func].apply(console, ["%c "+this.layout.format(loggingEvent), style]);
+             }
         },
 
         /**

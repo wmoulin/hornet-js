@@ -18,7 +18,7 @@
     "secure": false
     //"alwaysSetCookie": false
   },
-  "themeUrl": "http://localhost:7777/5.0.0/default",
+  "themeUrl": "http://localhost:7777/5.0.1/default",
   "security": {
     "enabled": true,
     "hpp": true,
@@ -91,13 +91,20 @@
       //        }
     ]
   },
-  "services": {
+  "defaultServices": {
     "host": "http://localhost:8080/",
     "name": "applitutoriel-service"
   },
   "mock": {
     "enabled": false,
-    "routes": "/mock/routes"
+    "routes": "/mock/routes",
+    "defaultServices": { // service mock par defaut : le contexte est toujours "applitutoriel/hornet-mock"
+      "host": "http://localhost:${server.port}/" //default localhost:8888
+    },
+    "secteursServices": { // configuration multi-service : exemple de definition d'un mock specifique pour les secteurs
+      "host": "http://localhost:${server.port}/",
+      "name": "applitutoriel/hornet-mock"
+    }
   },
   "fullSpa": {
     "enabled": false,

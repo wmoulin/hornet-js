@@ -2,6 +2,7 @@
   "applicationTitle": "Titre de l'Application",
   "errorsTitle": "Une erreur est survenue",
   "authError": "Authentification refusée: l'utilisateur ne possède pas les droits suffisants pour accéder cette page",
+  "techError": "Une erreur technique est survenue",
   "form": {
     "valid": "Valider",
     "validTitle": "Valider la saisie du formulaire",
@@ -66,7 +67,11 @@
     "prevPage": "< Précédent",
     "nextPage": "Suivant >",
     "lastPage": ">>",
-    "displayAll": "Afficher tout"
+    "10": "10",
+    "50": "50",
+    "100": "100",
+    "displayAll": "Afficher tout",
+    "formatDateInvalid": "Le format du champ « {title} » est incorrect."
   },
   "calendar": {
     "agendaTitle": "Calendrier",

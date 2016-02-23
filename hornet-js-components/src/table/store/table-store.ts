@@ -1,4 +1,3 @@
-///<reference path='../../../../hornet-js-ts-typings/definition.d.ts'/>
 "use strict";
 
 import utils = require("hornet-js-utils");
@@ -16,22 +15,32 @@ class TableStore extends BaseStore {
 
     private tableStoreData:{ [key:string]:I.TableStoreData; };
 
-    static handlers:any = {
-        "RECEIVE_UPDATE_DATA": function (data) {
-            logger.trace("RECEIVE_UPDATE_DATA, key :", data.key, ", emit :", data.emit);
+    static RECEIVE_UPDATE_DATA:string = "RECEIVE_UPDATE_DATA";
+    static RESET_TABLE_DATA:string = "RESET_TABLE_DATA";
+
+    /**
+     * @returns {Object} les fonctions 'handler' indexées par nom d'évènement
+     */
+    static initHandlers():any {
+        var handlers:any = {};
+        handlers[TableStore.RECEIVE_UPDATE_DATA] = function (data) {
+            logger.trace(TableStore.RECEIVE_UPDATE_DATA + ", key :", data.key, ", emit :", data.emit);
             this.updateData(data.key, data);
             if (data.emit) {
                 this.emitChange();
             }
-        },
-        "RESET_TABLE_DATA": function (data) {
-            logger.trace("RESET_TABLE_DATA, key :", data.key, ", emit :", data.emit);
+        };
+        handlers[TableStore.RESET_TABLE_DATA] = function (data) {
+            logger.trace(TableStore.RESET_TABLE_DATA + ", key :", data.key, ", emit :", data.emit);
             this.tableStoreData[data.key] = new I.TableStoreData();
             if (data.emit) {
                 this.emitChange();
             }
-        }
+        };
+        return handlers;
     }
+
+    static handlers:any = TableStore.initHandlers();
 
     constructor(dispatcher) {
         super(dispatcher);
@@ -83,7 +92,7 @@ class TableStore extends BaseStore {
         if (value.selectedItems) {
             var stateChange = !_.isEqual(data.selectedItems, value.selectedItems);
             if (stateChange) {
-                logger.trace("updateData -> Changement filter");
+                logger.trace("updateData -> Changement selected items");
                 data.selectedItems = _.clone(value.selectedItems);
             }
         }
@@ -98,8 +107,11 @@ class TableStore extends BaseStore {
         return value;
     }
 
-    getPaginationNewData(key:string):I.TableStoreBasePagination {
-        return new I.TableStoreDataPagination();
+    getPaginationPageIndexReseted(key:string):I.TableStoreBasePagination {
+        var value = this._getTableStoreData(key).pagination;
+        value.pageIndex = 1;
+        logger.trace("getPaginationPageIndexReseted[", key, "]", value);
+        return value;
     }
 
     getSortData(key:string):I.TableStoreBaseSort {
@@ -126,7 +138,7 @@ class TableStore extends BaseStore {
         }
         if (!this.tableStoreData[key]) {
             this.tableStoreData[key] = new I.TableStoreData();
-            logger.warn("TABLESTORE NOT DEFINED FOR KEY :",key);
+            logger.trace("TABLESTORE NOT DEFINED FOR KEY :",key);
         }
         return this.tableStoreData[key];
     }
@@ -137,7 +149,7 @@ class TableStore extends BaseStore {
 
     dehydrate():any {
         return {
-            paginationData: this.tableStoreData,
+            paginationData: this.tableStoreData
         };
     }
 }

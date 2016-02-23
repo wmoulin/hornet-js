@@ -1,11 +1,30 @@
 {
   "name": "hornet-js-ts-typings",
-  "version": "5.0.0",
+  "version": "5.0.1",
+  "license": "CECILL-2.1",
   "description": "Fichiers de définition des modules TypeScript d'hornet-js",
+  "bugs": {
+    "url": "https://github.com/diplomatiegouvfr/hornet-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diplomatiegouvfr/hornet-js.git"
+  },
   "appDependencies": {},
   "buildAndTestDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "MAEDI"
+  "author": "MAEDI",
+
+
+
+
+
+  "____HORNET-BUILDER____DO_NOT_MODIFY_THIS_OBJECT____": {
+    "current": "0426c65f9613a523407c71497c3795ae931bf5cc",
+    "history": {
+      "0426c65f9613a523407c71497c3795ae931bf5cc": {
+        "date": "2016-01-29T10:53:42.610Z",
+        "deps": {}
+      }
+    }
+  }
 }

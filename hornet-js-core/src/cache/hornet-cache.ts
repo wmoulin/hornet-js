@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import utils = require("hornet-js-utils");
 import Bluebird = require("bluebird");
@@ -45,7 +44,7 @@ class HornetCache {
      * @param data données à mettre en cache
      * @param timetoliveInCache temps de sauvegarde de la données
      */
-    miseEnCacheAsynchrone(key:string, data:any, timetoliveInCache?:number):Bluebird<any> {
+    setCacheAsynchrone(key:string, data:any, timetoliveInCache?:number):Bluebird<any> {
         return this.pool.getItem(key).set(data, timetoliveInCache);
     }
 }

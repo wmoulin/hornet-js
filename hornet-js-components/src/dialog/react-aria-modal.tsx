@@ -1,8 +1,8 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 var tabbable = require("tabbable");
 var noScroll = require("no-scroll");
+
 import React = require("react");
 import HornetComponent = require("src/hornet-component");
 import utils = require("hornet-js-utils");
@@ -40,18 +40,21 @@ class ModalManager {
         document.addEventListener("click", ModalManager.checkClick, true);
         document.addEventListener("touchend", ModalManager.checkClick, true);
         document.addEventListener("keydown", ModalManager.checkKey, true);
+        noScroll.on();
     }
     static leave() {
         document.removeEventListener("focus", ModalManager.checkFocus, true);
         document.removeEventListener("click", ModalManager.checkClick, true);
         document.removeEventListener("touchend", ModalManager.checkClick, true);
         document.removeEventListener("keydown", ModalManager.checkKey, true);
+        noScroll.off();
     }
 
     static register(modal, opts) {
         if (ModalManager.modals.length === 0) ModalManager.listen();
         var oModal = {
             modal: modal,
+            idx: modal.props.idx,
             node: React.findDOMNode(modal),
             initialFocus: opts.initialFocus,
             escapeKeyFn: opts.escapeKeyFn,
@@ -84,11 +87,20 @@ class ModalManager {
     static unregister(modal) {
         if (ModalManager.modals.length === 1) ModalManager.leave();
 
-        var oModal = ModalManager.modals.pop(); // TODO: gérer le paramètre !
-        ModalManager.active = ModalManager.modals[ModalManager.modals.length - 1];
+        var oModal = _.remove(ModalManager.modals, (obj) => { return obj.modal === modal; });
+        if (ModalManager.modals.length > 0) {
+            var maxIdx = -1;
+            ModalManager.modals.forEach((mObj) => { maxIdx = Math.max(maxIdx, mObj.idx); });
+            var modalPos = _.findIndex(ModalManager.modals, (mObj) => { return mObj.idx === maxIdx; });
+            ModalManager.active = ModalManager.modals[modalPos];
+        }
 
         setTimeout(function() {
-            oModal.prevFocusedNode.focus();
+            /* L'attribut prevFocusedNode n'est pas forcément valorisé : en particulier sous IE, au moment de l'appel à
+            * register(), document.activeElement peut être indéfini */
+            if(oModal[0].prevFocusedNode) {
+                oModal[0].prevFocusedNode.focus();
+            }
         }, 0);
     }
 
@@ -136,12 +148,13 @@ class ModalManager {
 }
 
 @HornetComponent.ApplyMixins()
+@HornetComponent.Error()
 class ReactAriaModalUnderlay extends HornetComponent<any,any> {
     static displayName:string = "ReactAriaModalUnderlay";
     static propTypes = Props;
 
     render() {
-        var style = { position: "fixed", top: 0, left: 0, bottom: 0, right: 0, zIndex: 1000 + ModalManager.modals.length + 1, overflowX: "hidden", overflowY: "auto", WebkitOverflowScrolling: "touch" };
+        var style = { position: "fixed", top: 0, left: 0, bottom: 0, right: 0, zIndex: 1000 + this.props.idx, overflowX: "hidden", overflowY: "auto", WebkitOverflowScrolling: "touch" };
         if (this.props.underlayColor) style["background"] = this.props.underlayColor;
         if (this.props.underlayClickExits) style["cursor"] = "pointer";
 
@@ -155,6 +168,7 @@ class ReactAriaModalUnderlay extends HornetComponent<any,any> {
 
 
 @HornetComponent.ApplyMixins()
+@HornetComponent.Error()
 class ReactAriaModalDialog extends HornetComponent<any,any> {
     static displayName:string = "ReactAriaModalDialog";
     static propTypes = Props;
@@ -192,6 +206,7 @@ class ReactAriaModalDialog extends HornetComponent<any,any> {
 }
 
 @HornetComponent.ApplyMixins()
+@HornetComponent.Error()
 class ReactAriaModal extends HornetComponent<any,any> {
     static displayName:string = "ReactAriaModal";
     static propTypes = Props;
@@ -205,9 +220,13 @@ class ReactAriaModal extends HornetComponent<any,any> {
     static number = 0;
 
     renderModal() {
-        noScroll.on();
-        this.state.container = document.createElement("div");
+        if (!this.state.container) this.state.container = document.createElement("div");
         if (!this.state.idx) this.state.idx = ++ReactAriaModal.number;
+        this.props.idx = this.state.idx;
+        if (!this.state.firstRender) {
+            document.body.appendChild(this.state.container);
+            this.state.firstRender = true;
+        }
         React.render(
             (
                 <ReactAriaModalUnderlay {...this.props}>
@@ -216,7 +235,7 @@ class ReactAriaModal extends HornetComponent<any,any> {
                     </ReactAriaModalDialog>
                 </ReactAriaModalUnderlay>
             ),
-            document.body.appendChild(this.state.container) as HTMLElement
+            this.state.container as HTMLElement
         );
     }
 
@@ -224,8 +243,8 @@ class ReactAriaModal extends HornetComponent<any,any> {
         if (this.state.container) {
             React.unmountComponentAtNode(this.state.container);
             this.state.container.parentNode.removeChild(this.state.container);
+            this.state.firstRender = false;
             delete this.state.container;
-            noScroll.off();
         }
     }
 

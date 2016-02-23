@@ -1,10 +1,10 @@
 "use strict";
 
-var React = require('react');
+var React = require("react");
 
 var ReactDummyComponentMock = React.createClass({
     render: () => {
-        return (<div id='ReactDummyComponentMock'>{this.props.children}</div>);
+        return (<div id="ReactDummyComponentMock">{this.props.children}</div>);
     }
 });
 

@@ -1,14 +1,11 @@
-/// <reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 var BoundField = require("newforms/BoundField");
-
+var originAsWidgetFn:Function = BoundField.prototype.asWidget;
 /**
  * Etend newforms de façon à ajouter si nécessaire les balises aria aria-required et aria-invalid aux champs de saisie.
  */
 export = function () {
-
-    var originAsWidgetFn:Function = BoundField.prototype.asWidget;
     /**
      * Surcharge la fonction asWidget : ajoute l'état aria-invalid lorsque le champ contient des erreurs,
      * et la propriété aria-required lorsque le champ est obligatoire.
@@ -28,7 +25,7 @@ export = function () {
                 kwargs = {attrs: {"aria-invalid": true}}
             }
         }
-        if (this.field.required) {
+        if (this.field && this.field.required) {
             if (kwargs) {
                 if (kwargs.attrs) {
                     kwargs.attrs["aria-required"] = true;

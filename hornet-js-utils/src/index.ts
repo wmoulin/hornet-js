@@ -1,10 +1,9 @@
-///<reference path="../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 // Inclusion du polyfill pour faire fonctionner firefox et IE
 require("src/extended/capture_stack_trace_polyfill");
 
 // propagation dynamique de la variable NODE_ENV vers le client
-if (typeof window != "undefined" && (<any>window).Mode) {
+if (typeof window !== "undefined" && (<any>window).Mode) {
     process.env.NODE_ENV = (<any>window).Mode;
 }
 
@@ -12,15 +11,15 @@ import Register = require("src/common-register");
 import Logger = require("src/logger");
 import ApplyMixins = require("src/apply-mixins");
 import DateUtils = require("src/date-utils");
-import promiseApi = require("src/promise-api");
 import ConfigLib = require("src/config-lib");
 import AppSharedProps = require("src/app-shared-props");
+import ContinuationLocalStorage = require("src/continuation-local-storage");
 import _ = require("lodash");
 import memorystreamNS = require("memorystream");
 
 var newFormsAriaModifications = require("src/extended/new-forms-aria-modifications");
-import VerrorNS = require("verror");
-import keyEvent = require("src/keyevent");
+import Verror = require("verror");
+import KeyEvent = require("src/key-event");
 
 class Utils {
     static newFormsAriaModifications:any = newFormsAriaModifications;
@@ -28,26 +27,24 @@ class Utils {
     static getLogger:(category:any, buildLoggerFn?:(category:string)=>void)=>Logger = Register.getLogger;
     static _:_.LoDashStatic;
 
-    static verror:typeof VerrorNS = VerrorNS;
-    static werror:typeof VerrorNS.WError = VerrorNS.WError;
+    static verror = Verror;
+    static werror:typeof Verror.WError = Verror.WError;
 
-    static dateUtils:typeof DateUtils = DateUtils;
-    static promise:typeof promiseApi = promiseApi;
+    static dateUtils = DateUtils;
 
-    static appSharedProps:typeof AppSharedProps = AppSharedProps;
+    static appSharedProps = AppSharedProps;
     private static _config:ConfigLib;
     private static _contextPath:string;
     static csrf:string;
-    static keyEvent:typeof keyEvent = keyEvent;
+    static keyEvent = KeyEvent;
 
-    static memorystream:typeof memorystreamNS = memorystreamNS;
+    static memorystream = memorystreamNS;
 
-    static mixins:typeof ApplyMixins = ApplyMixins;
+    static mixins = ApplyMixins;
 
     static CONTENT_JSON = "application/json";
 
     static log4js:any;
-    static callbacksLocalStorage:any;
 
     static registerGlobal<T>(paramName:string, value:T):T {
         return Register.registerGlobal(paramName, value);
@@ -75,7 +72,7 @@ class Utils {
                 context = "/" + context;
             }
             if (_.endsWith(context, "/")) {
-                //On enlève le slash de fin si présent
+                // On enlève le slash de fin si présent
                 context = context.substr(0, context.length - 1);
             }
             Utils._contextPath = context;
@@ -111,7 +108,7 @@ class Utils {
      * @param path
      * @return {string}
      */
-    static buildStaticPath(path) {
+    static buildStaticPath(path:string) {
         var retour = path;
 
         var contextPath = Utils.getContextPath();
@@ -130,9 +127,21 @@ class Utils {
     }
 
     static getStaticPath() {
-        var staticpath = "/static";
-        if (process.env.NODE_ENV === "production") {
-            staticpath += "-" + AppSharedProps.get("appVersion");
+        var staticpath = "";
+
+        // mantis 53394 - Pour le mode full spa :
+        // tout ce qui est dans /static est en fait déployé directement a la racine du serveur web
+        // => pas besoin de prefixer les requetes par /static
+        // Solution : utiliser une proprieté de configuration pour ce préfixe : "fullSpa.staticPath"
+        // Mode fullSpa actif : utiliser la propriété fullSpa.staticPath, qui doit être configurée à vide ou à "/"
+        // Mode avec serveur node : on utilise le prefixe "/static"
+        if (!Utils.isServer && Utils.config.getOrDefault("fullSpa.enabled", false)) {
+            staticpath = Utils.config.getOrDefault("fullSpa.staticPath", "");
+        } else {
+            staticpath = "/static";
+            if (process.env.NODE_ENV === "production") {
+                staticpath += "-" + AppSharedProps.get("appVersion");
+            }
         }
         return staticpath;
     }
@@ -141,6 +150,15 @@ class Utils {
         var config:ConfigLib = new ConfigLib();
         config.setConfigObj(theConfig);
         Utils.config = config;
+    }
+
+    /**
+     * Fonction retournant le continuationlocalstorage hornet ou un storage applicatif
+     * @param localStorageName Nom du localStorage, par défaut HornetContinuationLocalStorage
+     * @return {any}
+     */
+    static getContinuationStorage(localStorageName?:string):any {
+        return ContinuationLocalStorage.getContinuationStorage(localStorageName);
     }
 }
 
@@ -152,9 +170,7 @@ if (Utils.isServer) {
 
 Utils._ = Utils.registerGlobal("lodash", _);
 
-if (Utils.isServer) {
-    Utils.callbacksLocalStorage = require("src/callbacks-local-storage");
-}else{
+if (!Utils.isServer) {
     Utils.log4js = Utils.registerGlobal("log4js", require("src/extended/log4js"));
 }
 

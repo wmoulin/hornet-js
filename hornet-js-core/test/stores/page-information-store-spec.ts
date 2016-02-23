@@ -1,20 +1,18 @@
-///<reference path='../../../hornet-js-ts-typings/definition.d.ts'/>
 "use strict";
 
 import utils = require("hornet-js-utils");
-import TestUtils = require('hornet-js-utils/src/test-utils');
-import chai = require('chai');
+import TestUtils = require("hornet-js-utils/src/test-utils");
+import chai = require("chai");
 var expect = chai.expect;
 
 // initialisation du logger
 var logger = TestUtils.getLogger("hornet-js-core.test.store.page-informations-store-spec");
-import PageInformationsStore = require('src/stores/page-informations-store');
+import PageInformationsStore = require("src/stores/page-informations-store");
 
-process.env.HORNET_CONFIG_DIR_APPLI = __dirname + '/config';
+process.env.HORNET_CONFIG_DIR_APPLI = __dirname + "/config";
 
-describe('PageInformationStore', () => {
+describe("PageInformationStore", () => {
     var target;
-
 
     beforeEach(() => {
         utils.setConfigObj({
@@ -24,17 +22,16 @@ describe('PageInformationStore', () => {
         target = new PageInformationsStore(null);
     });
 
-
-    it('should change page component', () => {
-        //Arrange
-        var myComponent = {'test': 'dummy'};
+    it("should change page component", () => {
+        // Arrange
+        var myComponent = {test: "dummy"};
 
         var emitDone = false;
         target.addChangeListener(() => {
             emitDone = true;
         });
 
-        //Act
+        // Act
         var changePageFn = (PageInformationsStore.handlers.CHANGE_PAGE_COMPONENT).bind(target);
         changePageFn(myComponent);
         var firstEmitDone = emitDone;
@@ -42,43 +39,16 @@ describe('PageInformationStore', () => {
         changePageFn(myComponent);
         var secondEmitDone = emitDone;
 
-        //Act
+        // Act
         var storeComponent = target.getCurrentPageComponent();
 
-        //Assert
+        // Assert
         expect(storeComponent).to.be.equal(myComponent);
-        expect(firstEmitDone, 'firstEmitDone').to.be.true;
-        expect(secondEmitDone, 'secondEmitDone').to.be.false;
+        expect(firstEmitDone, "firstEmitDone").to.be.true;
+        expect(secondEmitDone, "secondEmitDone").to.be.false;
     });
 
-    it('should store current url', () => {
-        //Arrange
-        var currentUrl = 'http://dummy';
-
-        var emitDone = false;
-        target.addChangeListener(() => {
-            emitDone = true;
-        });
-
-        //Act
-        var changeUrlFn = (PageInformationsStore.handlers.CHANGE_URL).bind(target);
-        changeUrlFn(currentUrl);
-        var firstEmitDone = emitDone;
-        emitDone = false;
-        changeUrlFn(currentUrl);
-        var secondEmitDone = emitDone;
-
-        //Act
-        var storeUrl = target.getCurrentUrl();
-
-        //Assert
-        expect(storeUrl).to.be.equal(currentUrl);
-        expect(firstEmitDone, 'firstEmitDone').to.be.true;
-        expect(secondEmitDone, 'secondEmitDone').to.be.false;
-    });
-
-
-    it('should dehydrate store with informations', () => {
+    it("should dehydrate store with informations", () => {
         //Arrange
         var myTheme = "dummy";
 
@@ -89,14 +59,14 @@ describe('PageInformationStore', () => {
         var dehydratation = target.dehydrate();
 
         //Assert
-        expect(dehydratation).to.exist.to.have.keys('themeName', 'currentUser');
+        expect(dehydratation).to.exist.to.have.keys("themeName", "currentUser");
         expect(dehydratation.themeName).to.be.equals(myTheme);
     });
 
-    it('should rehydrate store with informations', () => {
+    it("should rehydrate store with informations", () => {
         //Arrange
         var myTheme = TestUtils.randomString();
-        var myUser = {'name': TestUtils.randomString()};
+        var myUser = {name: TestUtils.randomString()};
 
         //Act
         target.rehydrate({
@@ -108,5 +78,4 @@ describe('PageInformationStore', () => {
         expect(target.getThemeName()).to.be.equals(myTheme);
         expect(target.getCurrentUser()).to.be.equals(myUser);
     });
-
 });

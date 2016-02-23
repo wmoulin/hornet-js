@@ -23,7 +23,9 @@ var MenuItem = React.createClass({
             submenu: React.PropTypes.array,
             visibleDansMenu: React.PropTypes.boolean
         }),
-        isSubMenu: React.PropTypes.bool
+        isSubMenu: React.PropTypes.bool,
+        /** Path permettant de surcharger les pictogrammes/images **/
+        imgFilePath: React.PropTypes.string
     },
 
     getDefaultProps: function () {
@@ -90,14 +92,22 @@ var MenuItem = React.createClass({
 
             var subMenu = null;
             if (item.submenu) {
-                subMenu = <MenuNavigation items={item.submenu}
-                                          level={item.level + 1}
-                                          isVisible={this.state.isSubMenuVisible}
-                                          idParent={item.id}/>
+                subMenu =
+                    <MenuNavigation
+                        items={item.submenu}
+                        level={item.level + 1}
+                        isVisible={this.state.isSubMenuVisible}
+                        idParent={item.id}
+                        imgFilePath={this.props.imgFilePath}
+                    />
             }
             return (
                 <li {...attributesLi}>
-                    <MenuLink item={item} setSubmenuVisibleHandler={this._setSubMenuVisibile}/>
+                    <MenuLink
+                        item={item}
+                        setSubmenuVisibleHandler={this._setSubMenuVisibile}
+                        imgFilePath={this.props.imgFilePath}
+                    />
                     {subMenu}
                 </li>
             )
@@ -121,7 +131,9 @@ var MenuNavigation = React.createClass({
         level: React.PropTypes.number,
         isVisible: React.PropTypes.bool,
         idParent: React.PropTypes.string,
-        infosComplementaires: React.PropTypes.object
+        infosComplementaires: React.PropTypes.object,
+        /** Path permettant de surcharger les pictogrammes/images **/
+        imgFilePath: React.PropTypes.string
     },
 
     getDefaultProps: function () {
@@ -141,10 +153,11 @@ var MenuNavigation = React.createClass({
             infoComplementaires = this.props.infosComplementaires;
         }
 
-        var isSubMenu = (this.props.level != 0);
+        var isSubMenu = (this.props.level != 0),
+            imgFilePath = this.props.imgFilePath;
         var items = this.props.items.map(function (item) {
             if (item.visibleDansMenu) {
-                return <MenuItem item={item} isSubMenu={isSubMenu} key={item.text + item.url}/>;
+                return <MenuItem item={item} isSubMenu={isSubMenu} key={item.text + item.url} imgFilePath={imgFilePath} />;
             }
         });
 

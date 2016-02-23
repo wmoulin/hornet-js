@@ -1,43 +1,43 @@
 "use strict";
 
-var React = require('react');
-var TestUtils = require('hornet-js-utils/src/test-utils');
+var React = require("react");
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var logger = TestUtils.getLogger("hornet-js-components.test.form.hornet-form-spec");
 var render = TestUtils.render;
 
-var Newforms = require('newforms');
-var HornetForm = require('src/form/form');
-var GridForm = require('src/form/grid-form');
+var Newforms = require("newforms");
+var HornetForm = require("src/form/form");
+var GridForm = require("src/form/grid-form");
 var Grid = GridForm.GridForm;
 var Section = GridForm.Section;
 var Row = GridForm.Row;
 var Field = GridForm.Field;
 
-var i18n = require('hornet-js-core/src/i18n/i18n-fluxible-plugin').i18n;
+var i18n = require("hornet-js-core/src/i18n/i18n-fluxible-plugin").i18n;
 
-describe('HornetForm', () => {
+describe("HornetForm", () => {
 
     var messages = {
-        "form": {
-            "valid": "Valider",
-            "cancel": "Annuler",
-            "reinit": "Réinitialiser",
-            "search": "Rechercher",
-            "fillField": "Les champs marqués d'un astérisque (*) doivent être renseignés.",
-            "submitData": "Données soumises:"
+        form: {
+            valid: "Valider",
+            cancel: "Annuler",
+            reinit: "Réinitialiser",
+            search: "Rechercher",
+            fillField: "Les champs marqués d'un astérisque (*) doivent être renseignés.",
+            submitData: "Données soumises:"
         },
-        "notification": {
-            "errorsTitle": "Erreurs"
+        notification: {
+            errorsTitle: "Erreurs"
         }
     };
     var i18nfunc = i18n(messages);
 
     var formConf = {
-            autoId: '{name}',
+            autoId: "{name}",
             labelSuffix: ''
         },
-        subTitle = 'Sous-titre formulaire',
+        subTitle = "Sous-titre formulaire",
         context = {
             locale: "fr-FR",
             i18n: function (keysString) {
@@ -54,7 +54,7 @@ describe('HornetForm', () => {
                     getErrorNotifications() {
                         return {}
                     },
-                    getThemeCss() {
+                    getThemeUrl() { // correction suite "Modification de la gestion des urls de thème" (revision 149439)
                         return "";
                     }
                 };
@@ -72,10 +72,10 @@ describe('HornetForm', () => {
     function prepareForm(fieldConf) {
         var fieldsConf = Array.isArray(fieldConf) ? fieldConf : [fieldConf],
             form = {
-                labelSuffix: '',
-                errorCssClass: 'error',
-                requiredCssClass: 'required',
-                validCssClass: 'valid'
+                labelSuffix: "",
+                errorCssClass: "error",
+                requiredCssClass: "required",
+                validCssClass: "valid"
             };
 
         for (var i = 0; i < fieldsConf.length; i++) {
@@ -88,7 +88,7 @@ describe('HornetForm', () => {
         return Newforms.Form.extend(form);
     }
 
-    it('doit afficher les éléments par défaut', () => {
+    it("doit afficher les éléments par défaut", () => {
         // Arrange
 
         var fieldConf = [],
@@ -100,24 +100,24 @@ describe('HornetForm', () => {
                     <HornetForm
                         subTitle={subTitle}
                         form={form}
-                        formClassName='formRecherche'/>), context
+                        formClassName="formRecherche"/>), context
             ),
-            $result = $('div.hornet-form');
+            $result = $("div.hornet-form");
 
         assertions($).assertBasicContent($result, subTitle);
     });
 
-    it('le test doit afficher les éléments du formulaire', () => {
+    it("le test doit afficher les éléments du formulaire", () => {
         // Arrange
         var fieldsConf = [{
-                key: 'nom',
-                label: 'Nom'
+                key: "nom",
+                label: "Nom"
             }, {
-                key: 'prenom',
-                label: 'Prenom'
+                key: "prenom",
+                label: "Prenom"
             }, {
-                key: 'date',
-                label: 'Date'
+                key: "date",
+                label: "Date"
             }],
             FormDef = prepareForm(fieldsConf),
             form = new FormDef(formConf);
@@ -125,7 +125,7 @@ describe('HornetForm', () => {
         // Act
         var $ = render(
             () => (
-                <HornetForm form={form} subTitle={subTitle} formClassName='formRecherche'>
+                <HornetForm form={form} subTitle={subTitle} formClassName="formRecherche">
                     <Row>
                         <Field name="nom"/>
                         <Field name="prenom"/>
@@ -136,7 +136,7 @@ describe('HornetForm', () => {
                 </HornetForm>
             ), context
         );
-        var $result = $('div.hornet-form');
+        var $result = $("div.hornet-form");
 
         assertions($)
             .assertBasicContent($result, subTitle)
@@ -147,30 +147,30 @@ describe('HornetForm', () => {
 function assertions($) {
     var asserts = {};
     asserts.assertBasicContent = function ($formBloc, subTitle) {
-        expect($formBloc).to.have.class('hornet-form');
+        expect($formBloc).to.have.class("hornet-form");
 
-        var $formInfo = $formBloc.children('p.discret');
+        var $formInfo = $formBloc.children("p.discret");
 
-        expect($formInfo, 'p.discret').to.exist
+        expect($formInfo, "p.discret").to.exist
             .to.have.text("Les champs marqués d'un astérisque (*) doivent être renseignés.");
 
-        var $form = $formBloc.find('form');
-        expect($form, 'form').to.exist;
+        var $form = $formBloc.find("form");
+        expect($form, "form").to.exist;
 
-        var $formTitle = $form.find('h3');
-        expect($formTitle, 'h3').to.exist
+        var $formTitle = $form.find("h1"); //correction suite au changement du subtitle (h3 devient h1, révision 153228)
+        expect($formTitle, "h1").to.exist
             .to.have.text(subTitle);
 
-        var $formButtonBloc = $form.find('.button-group');
-        expect($formButtonBloc, '.button-group').to.exist;
+        var $formButtonBloc = $form.find(".button-group");
+        expect($formButtonBloc, ".button-group").to.exist;
 
         var $buttonRecherche = $($formButtonBloc).find("#form_btnValider");
         expect($buttonRecherche, "#form_btnValider").to.exist
-            .to.have.text('Valider');
+            .to.have.text("Valider");
 
         var $buttonReinit = $($formButtonBloc).find("#form_btnCancel");
         expect($buttonReinit, "#form_btnCancel").to.exist
-            .to.have.text('Annuler');
+            .to.have.text("Annuler");
 
         return asserts;
     };
@@ -183,7 +183,7 @@ function assertions($) {
      */
     asserts.assertFieldsPresent = function ($container, fieldsConf) {
         $.each(fieldsConf, function (fieldConf, i) {
-            expect($container.find('label[for="' + fieldConf.label.toLowerCase() + '"]'))
+            expect($container.find("label[for=\"" + fieldConf.label.toLowerCase() + "\"]"))
                 .to.exist
                 .to.have.text(fieldConf.label);
         });

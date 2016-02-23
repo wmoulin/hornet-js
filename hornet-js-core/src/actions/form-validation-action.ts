@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import Action = require("src/actions/action");
 import ActionsChainData = require("src/routes/actions-chain-data");
@@ -53,6 +52,4 @@ export class FormValidationAction extends Action<ActionsChainData> {
         }
         resolve();
     }
-
 }
-

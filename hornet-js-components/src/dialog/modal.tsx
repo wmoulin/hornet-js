@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import React = require("react");
@@ -8,11 +7,10 @@ import PropTypesNs = require("src/dialog/modal-props");
 var _ = utils._;
 var logger = utils.getLogger("hornet-js-components.dialog.modal");
 
-//var ReactModal = require("react-aria-modal");
-
 import ReactModal = require("src/dialog/react-aria-modal");
 
 @HornetComponent.ApplyMixins()
+@HornetComponent.Error()
 class Modal extends HornetComponent<PropTypesNs.ModalProps,any> {
 
     static displayName:string = "Modal";
@@ -51,16 +49,12 @@ class Modal extends HornetComponent<PropTypesNs.ModalProps,any> {
         super(props, context);
         this.state = {
             i18n: this.i18n("dialog")
-        }
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.props.isVisible !== nextProps.isVisible;
+        };
     }
 
     render() {
         if (utils.isServer) {
-            return null
+            return null;
         }
 
         var title = this._getTitle();
@@ -87,28 +81,27 @@ class Modal extends HornetComponent<PropTypesNs.ModalProps,any> {
                     </button>
                 </div>);
         }
-        return (
-
-            <ReactModal
-                mounted={this.props.isVisible}
+        return this.props.isVisible ?
+            (<ReactModal
                 titleText={title}
+                onShow={this.props.onShow}
                 onExit={this.props.onClickClose || function() {}}
-                verticallyCenter={this.props.verticallyCenter}
-                manageFocus={this.props.manageFocus}
-                focusDialog={this.props.focusDialog}
-                initialFocus={this.props.initialFocus}
-                alert={this.props.alert}
-                underlayClickExits={this.props.underlayClickExits}
-                escapeKeyExits={this.props.escapeKeyExits}
                 dialogClass={this.props.className}
-                underlayClass={this.props.underlayClass} onShow={this.props.onShow}
+                verticallyCenter={this.props.verticallyCenter}
+                escapeKeyExits={this.props.escapeKeyExits}
+                underlayClickExits={this.props.underlayClickExits}
+                alert={this.props.alert}
+                underlayClass={this.props.underlayClass}
+                initialFocus={this.props.initialFocus}
+                focusDialog={this.props.focusDialog}
+                manageFocus={this.props.manageFocus}
             >
                 {titleBarRender}
                 <div className="widget-dialogue-body">
                     {this.props.children}
                 </div>
                 {closeBarRender}
-            </ReactModal>);
+            </ReactModal>) : null;
 
     }
 

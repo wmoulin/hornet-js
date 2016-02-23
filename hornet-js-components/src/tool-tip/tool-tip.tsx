@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import React = require("react");
@@ -8,6 +7,7 @@ import HornetComponent = require("src/hornet-component");
 import PropsNs = require("src/tool-tip/tool-tip-props");
 
 @HornetComponent.ApplyMixins()
+@HornetComponent.Error()
 class ToolTip extends HornetComponent<PropsNs.ToolTipProps,any> {
 
     static displayName:string = "ToolTip";

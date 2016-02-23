@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import React = require("react");
@@ -9,7 +8,7 @@ export interface TabProps extends React.Props<any> {
     tabId?: string;
     panelId?: string;
     isVisible?: boolean;
-    form?: any;
+    forceRender?: boolean;
 }
 
 export interface TabsProps extends React.Props<any> {
@@ -17,7 +16,6 @@ export interface TabsProps extends React.Props<any> {
     panelId?: string;
     selectedTabIndex?: number;
     title?: string;
-    form?: any;
 }
 
 

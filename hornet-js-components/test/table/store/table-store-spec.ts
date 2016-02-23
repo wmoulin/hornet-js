@@ -1,85 +1,70 @@
-///<reference path='../../../../hornet-js-ts-typings/definition.d.ts'/>
 "use strict";
 
-import utils = require('hornet-js-utils');
-import chai = require('chai');
+import utils = require("hornet-js-utils");
+import chai = require("chai");
 
 var expect = chai.expect;
 
 // initialisation du logger
-import TableStore = require('src/table/store/table-store');
+import TableStore = require("src/table/store/table-store");
 
-import TestUtils = require('hornet-js-utils/src/test-utils');
+import TestUtils = require("hornet-js-utils/src/test-utils");
 
 var logger = TestUtils.getLogger("hornet-js-components.test.table.store.table-store-spec");
 
-describe('TableStoreSpec', () => {
+describe("TableStoreSpec", () => {
     var target:TableStore;
 
     beforeEach(() => {
         target = new TableStore(null);
     });
 
-    it('should dehydrate paginationData', () => {
+    it("should dehydrate pagination", () => {
         //Arrange
-        var paginationData = [];
+        var pagination = {
+            pageIndex: 0,
+            itemsPerPage: 10,
+            totalItems: 5
+        };
 
-        var changeformDataFn = (TableStore.handlers.RECEIVE_PAGINATION_DATA).bind(target);
-        changeformDataFn(paginationData);
+        var changeformDataFn = (TableStore.handlers[TableStore.RECEIVE_UPDATE_DATA]).bind(target);
+        changeformDataFn({key: "TableStoreSpec", pagination: pagination});
 
         //Act
         var dehydratation = target.dehydrate();
 
         //Assert
-        //expect(dehydratation).to.exist.to.have.keys('formData','currentUser');
-        expect(dehydratation.paginationData.length).to.be.equals(paginationData.length);
+        expect(dehydratation.paginationData.TableStoreSpec).not.to.be.null;
+        expect(dehydratation.paginationData.TableStoreSpec.pagination).to.be.equals(pagination);
     });
 
-    it('should rehydrate paginationData', () => {
+    it("should rehydrate paginationData", () => {
         //Arrange
-        var paginationData = { itemsPerPage: null, pageIndex: null };
+        var tableStoreData = {
+            table : {
+                pagination: {
+                    itemsPerPage: 10,
+                    pageIndex: null
+                }
+            }
+        };
 
         target.rehydrate({
-            paginationData: paginationData
+            tableStoreData: tableStoreData
         });
 
         //Act
-        var storePaginationData = target.getPaginationData("");
+        var storePaginationData = target.getPaginationData("table");
 
         //Assert
-        expect(storePaginationData.itemsPerPage).to.be.equals(paginationData.itemsPerPage);
+        expect(storePaginationData.itemsPerPage).to.be.equals(tableStoreData["table"].pagination.itemsPerPage);
     });
 
-    it('should store current filters', () => {
+    it("should store current filters", () => {
         //Arrange
-        var currenFilters = [];
-
-        var emitDone = false;
-        target.addChangeListener(() => {
-            emitDone = true;
-        });
-
-        //Act
-        var changeFilterlFn = (TableStore.handlers.RECEIVE_FILTER_DATA).bind(target);
-        changeFilterlFn(currenFilters);
-        var firstEmitDone = emitDone;
-        emitDone = false;
-        changeFilterlFn(currenFilters);
-        var secondEmitDone = emitDone;
-
-        //Act
-        var storeFilter = target.getFilterData("");
-
-        //Assert
-        expect(storeFilter).to.be.equal(currenFilters);
-    });
-
-    it('should store current sort', () => {
-        //Arrange
-        var currenSort = {
-            key: null,
-            dir: null,
-            type: null
+        var currentFilters = {
+            key: "table",
+            filters:[]
         };
 
         var emitDone = false;
@@ -88,24 +73,58 @@ describe('TableStoreSpec', () => {
         });
 
         //Act
-        var changesortFn = (TableStore.handlers.RECEIVE_SORT_DATA).bind(target);
-        changesortFn(currenSort);
+        var changeFilterlFn = (TableStore.handlers[TableStore.RECEIVE_UPDATE_DATA]).bind(target);
+        changeFilterlFn(currentFilters);
         var firstEmitDone = emitDone;
         emitDone = false;
-        changesortFn(currenSort);
+        changeFilterlFn(currentFilters);
         var secondEmitDone = emitDone;
 
         //Act
-        var storeSort = target.getSortData("");
+        var storeFilter = target.getFilterData("table");
 
         //Assert
-        expect(storeSort.key).to.be.equal(currenSort.key);
+        expect(storeFilter).to.be.equal(currentFilters.filters);
     });
 
-    it('should store current pagination', () => {
+    it("should store current sort", () => {
+        //Arrange
+        var currentSort = {
+            key: "table",
+            sort: {
+                key: "colonneTri",
+                dir: null,
+                type: null
+            }
+        };
+
+        var emitDone = false;
+        target.addChangeListener(() => {
+            emitDone = true;
+        });
+
+        //Act
+        var changesortFn = (TableStore.handlers[TableStore.RECEIVE_UPDATE_DATA]).bind(target);
+        changesortFn(currentSort);
+        var firstEmitDone = emitDone;
+        emitDone = false;
+        changesortFn(currentSort);
+        var secondEmitDone = emitDone;
+
+        //Act
+        var storeSort = target.getSortData("table");
+
+        //Assert
+        expect(storeSort.key).to.be.equal(currentSort.sort.key);
+    });
+
+    it("should store current pagination", () => {
         //Arrange
         var current = {
-            itemsPerPage : null,
+            key: "table",
+            pagination : {
+                itemsPerPage : 10
+            },
             pageIndex : null
         };
 
@@ -115,7 +134,7 @@ describe('TableStoreSpec', () => {
         });
 
         //Act
-        var changesortFn = (TableStore.handlers.RECEIVE_PAGINATION_DATA).bind(target);
+        var changesortFn = (TableStore.handlers[TableStore.RECEIVE_UPDATE_DATA]).bind(target);
         changesortFn(current);
         var firstEmitDone = emitDone;
         emitDone = false;
@@ -123,15 +142,19 @@ describe('TableStoreSpec', () => {
         var secondEmitDone = emitDone;
 
         //Act
-        var store = target.getPaginationData("");
+        var store = target.getPaginationData("table");
 
         //Assert
-        expect(store.itemsPerPage).to.be.equal(current.itemsPerPage);
+        expect(store.itemsPerPage).to.be.equal(current.pagination.itemsPerPage);
     });
 
-    it('should store current selected items', () => {
+    it("should store current selected item", () => {
         //Arrange
-        var current = [];
+        var current = {
+            key: "table",
+            selectedItems: [{id:"1"}],
+            emit: true
+        };
 
         var emitDone = false;
         target.addChangeListener(() => {
@@ -139,7 +162,7 @@ describe('TableStoreSpec', () => {
         });
 
         //Act
-        var changesortFn = (TableStore.handlers.RECEIVE_SELECTED_ITEMS).bind(target);
+        var changesortFn = (TableStore.handlers[TableStore.RECEIVE_UPDATE_DATA]).bind(target);
         changesortFn(current);
         var firstEmitDone = emitDone;
         emitDone = false;
@@ -147,33 +170,9 @@ describe('TableStoreSpec', () => {
         var secondEmitDone = emitDone;
 
         //Act
-        var store = target.getSelectedItems("");
+        var store = target.getSelectedItems("table");
 
         //Assert
-        expect(store.length).to.be.equal(current.length);
-    });
-
-    it('should store current selected item', () => {
-        //Arrange
-        var current = [];
-
-        var emitDone = false;
-        target.addChangeListener(() => {
-            emitDone = true;
-        });
-
-        //Act
-        var changesortFn = (TableStore.handlers.RECEIVE_SELECTED_ITEM).bind(target);
-        changesortFn(current);
-        var firstEmitDone = emitDone;
-        emitDone = false;
-        changesortFn(current);
-        var secondEmitDone = emitDone;
-
-        //Act
-        var store = target.getSelectedItems("");
-
-        //Assert
-        expect(store.length).to.be.equal(current.length);
+        expect(store.length).to.be.equal(current.selectedItems.length);
     });
 })

@@ -1,21 +1,21 @@
 "use strict";
 
-var React = require('react/addons');
-var TestUtils = require('hornet-js-utils/src/test-utils');
+var React = require("react/addons");
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var render = TestUtils.render;
 var sinon = TestUtils.sinon;
 
 var logger = TestUtils.getLogger("hornet-js-components.test.spinner.spinner-spec");
 
-var proxyquire = require('proxyquire').noCallThru();
+var proxyquire = require("proxyquire").noCallThru();
 
 var fluxInformationsStoreMock = sinon.stub();
-var dialogComponentMock = require('test/spinner/spinner-react-mock')();
+var dialogComponentMock = require("test/spinner/spinner-react-mock")();
 
-var Spinner = proxyquire('src/spinner/spinner', {
-    'hornet-js-core/src/stores/flux-informations-store': fluxInformationsStoreMock,
-    './../dialog/modal': dialogComponentMock
+var Spinner = proxyquire("src/spinner/spinner", {
+    "hornet-js-core/src/stores/flux-informations-store": fluxInformationsStoreMock,
+    "./../dialog/modal": dialogComponentMock
 });
 
 function makeMockContext() {
@@ -27,14 +27,14 @@ function makeMockContext() {
     };
 }
 
-describe('SpinnerReactComponent', () => {
+describe("SpinnerReactComponent", () => {
     beforeEach(() => {
         fluxInformationsStoreMock.hasActionsRunning = sinon.stub();
     });
 
     it("doit propager la conf par défaut au modal et rendre les composants fils", () => {
         // Arrange
-        var ChildComponent = require('test/dialog/generic-react-mock')();
+        var ChildComponent = require("test/dialog/generic-react-mock")();
 
         // Act
         var $ = render(() =>
@@ -96,7 +96,7 @@ describe('SpinnerReactComponent', () => {
         };
 
         // Act
-        instance.scheduleStoreCheck();
+        instance._scheduleStoreCheck();
     });
 
     it("doit replanifier l'appel au store", function (doneFn) {
@@ -105,18 +105,18 @@ describe('SpinnerReactComponent', () => {
         instance.state.isVisible = true;
         var startTime = Date.now();
         instance.state.lastVisibilitySwitch = startTime;
-        sinon.spy(instance, "scheduleStoreCheck");
+        sinon.spy(instance, "_scheduleStoreCheck");
 
         instance._retrieveStoreValue = () => {
             var endTime = Date.now();
             // Assert
             var waitedTime = endTime - startTime;
             expect(waitedTime >= 50).to.be.true;
-            expect(instance.scheduleStoreCheck).to.have.been.calledTwice;
+            expect(instance._scheduleStoreCheck).to.have.been.calledTwice;
             doneFn();
         };
 
         // Act
-        instance.scheduleStoreCheck();
+        instance._scheduleStoreCheck();
     });
 });

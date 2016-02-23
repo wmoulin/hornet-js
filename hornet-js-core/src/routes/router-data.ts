@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import utils = require("hornet-js-utils");
 import ExtendedPromise = require("hornet-js-utils/src/promise-api");
@@ -31,7 +30,6 @@ class RouterData extends RouterAbstract {
      */
     protected handleRoute(routeContext:I.IRouteContext, handler:I.IRouteHandler, parameters:any[]) {
         // `routeContext` has `req` and `res` when on the server (from Director).
-        //var router:RouterData = this;
         var params = [routeContext].concat(parameters);
         var locales:Array<string> = (<any>routeContext.req).acceptsLanguages();
         var fluxibleContext:FluxibleContext = this.configuration.dispatcherLoaderFn(locales);
@@ -94,7 +92,7 @@ class RouterData extends RouterAbstract {
                     routeContext.res.json(actionsChainData.result);
                 } else if (actionsChainData.result && (actionsChainData.result instanceof File)) {
                     logger.debug("Gestion du ResultType, renvoie d'un fichier vers le client ");
-                    //Cas d'un fichier à renvoyer au client
+                    // Cas d'un fichier à renvoyer au client
                     var file = <File>actionsChainData.result;
                     routeContext.res.writeHead(200, {"Content-Type": file.mimeType, "Cache-Control": "no-cache"});
                     routeContext.res.write(new Buffer(file.buffer));
@@ -102,9 +100,12 @@ class RouterData extends RouterAbstract {
 
                 } else {
                     logger.debug("MediaType.isRedirect(actionsChainData.responseMimeType) = false");
-                    routeContext.res.writeHead(200, {"Content-Type": actionsChainData.responseMimeType, "Cache-Control": 'no-cache'});
+                    routeContext.res.writeHead(200, {
+                        "Content-Type": actionsChainData.responseMimeType,
+                        "Cache-Control": "no-cache"
+                    });
                     logger.debug("Gestion actionsChainData.result : ", actionsChainData.result);
-                    if (actionsChainData.result) {
+                    if (actionsChainData.result && actionsChainData.result.on) {
                         actionsChainData.result.on("data", (data) => {
                             logger.debug("Gestion du ResultType actionsChainData data = ", data);
                             routeContext.res.write(data);

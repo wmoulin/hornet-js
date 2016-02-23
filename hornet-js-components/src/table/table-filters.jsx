@@ -26,7 +26,10 @@ var TableFilters = React.createClass({
     propTypes: ({
         tableName: React.PropTypes.string,
         columns: React.PropTypes.shape({
-            title: React.PropTypes.string,
+            title: React.PropTypes.oneOfType([
+                React.PropTypes.string,
+                React.PropTypes.object
+            ]),
             sort: React.PropTypes.oneOfType([
                 React.PropTypes.string,
                 React.PropTypes.object
@@ -43,7 +46,8 @@ var TableFilters = React.createClass({
         activate: React.PropTypes.func,
         visible: React.PropTypes.bool,
         enabled: React.PropTypes.bool,
-        active: React.PropTypes.bool
+        active: React.PropTypes.bool,
+        imgFilePath: React.PropTypes.string
     }),
 
     getDefaultProps: function () {
@@ -52,6 +56,10 @@ var TableFilters = React.createClass({
             enabled: false,
             visible: false
         }
+    },
+
+    _onChangeFilterForm: function() {
+        this.forceUpdate()
     },
 
     getInitialState: function () {
@@ -67,18 +75,14 @@ var TableFilters = React.createClass({
 
         var localForm = new FilterNewForm({
             data: filterData,
-            onChange: this.forceUpdate.bind(this)
+            onChange: this._onChangeFilterForm,
+            validation: "manual"
         });
 
         return {
             i18n: this.i18n("table"),
             filterForm: localForm
         };
-    },
-
-    componentDidMount: function () {
-        logger.trace("componentDidMount");
-        this.throttledSetRouteInternal = this.throttle(window.routeur.setRouteInternal.bind(window.routeur));
     },
 
     shouldComponentUpdate: function (nextProps, nextState) {
@@ -122,47 +126,53 @@ var TableFilters = React.createClass({
      * @returns {{}}
      */
     _constructFieldsForm: function () {
-        logger.trace("_constructFieldsForm");
+        try {
+            logger.trace("_constructFieldsForm");
 
-        var columnNames = Object.keys(this.props.columns);
-        var self = this;
-        var fields = {};
-        columnNames.map(function (c) {
-            var column = self.props.columns[c];
+            var columnNames = Object.keys(this.props.columns),
+                self = this,
+                fields = {},
+                inValidDateMessage = this.i18n("table").formatDateInvalid;
+            columnNames.map(function (c) {
+                var column = self.props.columns[c];
 
-            if (column.abbr && !column.lang) {
-                logger.warn("Column ", columnName, " Must have lang with abbr configuration");
-            }
-
-            if (column.filter) {
-                switch (column.filter.type) {
-                    case "text":
-                        fields[c] = newforms.CharField({
-                            label: column.title,
-                            required: false
-                        });
-                        break;
-                    case "checkbox":
-                        fields[c] = newforms.BooleanField({
-                            label: column.title,
-                            required: false
-                        });
-                        break;
-                    case "date":
-                        fields[c] = DatePickerField({
-                            label: column.title,
-                            required: false,
-                            /* Le format de saisie de date par défaut est défini avec la clé calendar.dateFormat dans messages.json
-                             ou dans hornet-messages-components.json */
-                            errorMessages: {
-                                "invalid": "Le format du champ « " + column.title + " » est incorrect."  // TODO I18N
-                            }
-                        });
-                        break;
+                if (column.abbr && !column.lang) {
+                    logger.warn("Column ", columnName, " Must have lang with abbr configuration");
                 }
-            }
-        });
-        return (fields);
+
+                if (column.filter) {
+                    switch (column.filter.type) {
+                        case "text":
+                            fields[c] = newforms.CharField({
+                                label: column.title,
+                                required: false
+                            });
+                            break;
+                        case "checkbox":
+                            fields[c] = newforms.BooleanField({
+                                label: column.title,
+                                required: false
+                            });
+                            break;
+                        case "date":
+                            fields[c] = DatePickerField({
+                                label: column.title,
+                                required: false,
+                                /* Le format de saisie de date par défaut est défini avec la clé calendar.dateFormat dans messages.json
+                                 ou dans hornet-messages-components.json */
+                                errorMessages: {
+                                    "invalid": self.formatMessage(inValidDateMessage, {title: column.title})
+                                }
+                            });
+                            break;
+                    }
+                }
+            });
+            return (fields);
+        } catch (e) {
+            logger.error("TableFilter :: _constructFieldsForm", e);
+            throw e;
+        }
     },
 
     /**
@@ -246,7 +256,7 @@ var TableFilters = React.createClass({
 
         this.executeAction(new TableActions.SaveState().action(), data);
 
-        this.throttledSetRouteInternal(this.props.routes.search, data);
+        window.routeur.setRouteInternal(this.props.routes.search, data);
         this.props.activate(false);
     },
 
@@ -276,7 +286,7 @@ var TableFilters = React.createClass({
 
             this.executeAction(new TableActions.SaveState().action(), data);
 
-            this.throttledSetRouteInternal(this.props.routes.search, data);
+            window.routeur.setRouteInternal(this.props.routes.search, data);
             this.props.activate(true);
         } else {
             logger.trace("Formulaire invalide");
@@ -287,7 +297,7 @@ var TableFilters = React.createClass({
         var tableStore = this.context.getStore(TableStore);
         return {
             key: this.props.tableName,
-            criterias: this.getStore(this.props.store).getCriterias(),
+            criterias: this.getStore(this.props.store).getCriterias(this.props.tableName),
             sort: tableStore.getSortData(this.props.tableName),
             selectedItems: []
         };

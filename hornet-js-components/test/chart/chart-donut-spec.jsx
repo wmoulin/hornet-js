@@ -1,12 +1,12 @@
 "use strict";
 
-var utils = require('hornet-js-utils');
-var React = require('react');
-var TestUtils = require('hornet-js-utils/src/test-utils');
+var utils = require("hornet-js-utils");
+var React = require("react");
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var render = TestUtils.render;
 
-var proxyquire = require('proxyquire').noCallThru();
+var proxyquire = require("proxyquire").noCallThru();
 
 var d3 ={
     draw: function(){},
@@ -37,10 +37,10 @@ var d3 ={
     }
 };
 
-var HornetDonut = proxyquire('src/chart/chart-donut', {'d3':d3});
+var HornetDonut = proxyquire("src/chart/chart-donut", {"d3":d3});
 
-describe('HornetDonut', () => {
-    it('doit être configuré avec les informations paramétrées', () => {
+describe("HornetDonut", () => {
+    it("doit être configuré avec les informations paramétrées", () => {
         // Arrange
         var data = [
             {"label": "Agro-alimentaire","value": "16","color": "#3366CC"},
@@ -75,10 +75,10 @@ describe('HornetDonut', () => {
 
         // Act
         var $ = render(() => <HornetDonut data={data} messages={messages}/>, context),
-            $svg = $('svg');
+            $svg = $("svg");
 
         // Assert
-        expect($svg).to.have.attr('width', '800');
-        expect($svg).to.have.attr('height', '500');
+        expect($svg).to.have.attr("width", "800");
+        expect($svg).to.have.attr("height", "500");
     });
 });

@@ -1,114 +1,76 @@
-/// <reference path='../../../hornet-js-ts-typings/definition.d.ts'/>
 "use strict";
 
-import utils = require('hornet-js-utils');
+import utils = require("hornet-js-utils");
 
-//pas d'utilisation du mot clé import pour TestUtils pour pouvoir compiler le fichier
-var TestUtils = require('hornet-js-utils/src/test-utils');
+// pas d'utilisation du mot clé import pour TestUtils pour pouvoir compiler le fichier
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var sinon = TestUtils.sinon;
 var assert = TestUtils.chai.assert;
 var logger = TestUtils.getLogger("hornet-js-core.test.services.superagent-hornet-plugins-spec");
 
-var proxyquire = require('proxyquire').noCallThru();
+var proxyquire = require("proxyquire").noCallThru();
 
 var HornetCacheStub = sinon.spy();
-var superAgentPlugins = proxyquire('src/services/superagent-hornet-plugins', {
-    './../cache/hornet-cache': HornetCacheStub
+var superAgentPlugins = proxyquire("src/services/superagent-hornet-plugins", {
+    "./../cache/hornet-cache": HornetCacheStub
 });
 
-describe('superagent-hornet-plugins', () => {
+describe("superagent-hornet-plugins", () => {
 
-    describe('CsrfPlugin', () => {
+    describe("CsrfPlugin", () => {
 
-        it('Should set utils header on request and get it on response', () => {
+        it("Should set utils header on request", () => {
             // Arrange
             var mockRequest = sinon.spy();
             var mockRequestCallback = sinon.spy();
             mockRequest.callback = mockRequestCallback;
             mockRequest.set = sinon.spy();
-            var mockResponse = sinon.spy();
 
-            var firstGeneratedToken = TestUtils.randomString();
-            var secondGeneratedToken = TestUtils.randomString();
-            mockResponse.get = sinon.stub().returns(secondGeneratedToken);
+            var token = TestUtils.randomString();
 
             // Act 1
-            utils.csrf = firstGeneratedToken;
+            utils.csrf = token;
             utils.isServer = false;
             superAgentPlugins.CsrfPlugin(mockRequest);
-            utils.isServer = true;
 
-            // Assert 1
-            expect(mockRequest.callback).to.not.equals(mockRequestCallback);
-            expect(mockRequest.set).to.be.calledWith('x-csrf-token', firstGeneratedToken);
-            expect(mockResponse.get).to.not.be.called;
-
-            // Act 2
-            mockRequest.callback(undefined, mockResponse);
-
-            //Assert 2
-            expect(mockResponse.get).to.be.calledWith('x-csrf-token');
-            expect(utils.csrf).to.be.equals(secondGeneratedToken);
+            expect(mockRequest.set).to.be.calledWith("x-csrf-token", token);
+            expect(utils.csrf).to.be.equals(token);
         });
 
-        it('Should set default header on request and not modify if response header', () => {
+        it("Should set default header on request and not modify if response header", () => {
             // Arrange
             var mockRequest = sinon.spy();
             var mockRequestCallback = sinon.spy();
             mockRequest.callback = mockRequestCallback;
             mockRequest.set = sinon.spy();
 
-            var defaultToken = 'no-token';
-            var mockResponse = sinon.spy();
-            mockResponse.get = sinon.stub().returns(undefined);
+            var defaultToken = "no-token";
 
             // Act 1
             utils.csrf = undefined;
             utils.isServer = false;
             superAgentPlugins.CsrfPlugin(mockRequest);
-            utils.isServer = true;
 
             // Assert 1
-            expect(mockRequest.callback).to.not.equals(mockRequestCallback);
-            expect(mockRequest.set).to.be.calledWith('x-csrf-token', defaultToken);
-            expect(mockResponse.get).to.not.be.called;
-
-            // Act 2
-            mockRequest.callback(undefined, mockResponse);
-
-            //Assert 2
-            expect(mockResponse.get).to.be.calledWith('x-csrf-token');
+            expect(mockRequest.set).to.be.calledWith("x-csrf-token", defaultToken);
             expect(utils.csrf).to.be.equals(undefined);
-        });
-
-        it('Should not modify if server', () => {
-            // Arrange
-            var mockRequest = sinon.spy();
-            var mockRequestCallback = sinon.spy();
-            mockRequest.callback = mockRequestCallback;
-
-            // Act
-            superAgentPlugins.CsrfPlugin(mockRequest);
-
-            // Assert
-            expect(mockRequest.callback).to.equals(mockRequestCallback);
         });
     });
 
-    describe('RedirectToLoginPagePlugin', () => {
+    describe("RedirectToLoginPagePlugin", () => {
 
         beforeEach(() => {
-//            global.window = {};
-//            global.window.location = {};
-//            global.window.location.href = sinon.spy();
+            (global as any).window = {};
+            (global as any).window.location = {};
+            (global as any).window.location.href = sinon.spy();
         });
 
         afterEach(() => {
-//            global.window = undefined;
+            (global as any).window = undefined;
         });
 
-        it('Should not redirect if no header', () => {
+        it("Should not redirect if no header", () => {
             // Arrange
             var mockRequest = sinon.spy();
             var mockRequestCallback = sinon.spy();
@@ -127,7 +89,7 @@ describe('superagent-hornet-plugins', () => {
             expect(mockRequestCallback).to.be.calledWith(undefined, mockResponse);
         });
 
-        it('Should redirect if header', () => {
+        it("Should redirect if header", () => {
             // Arrange
             var mockRequest = sinon.spy();
             var mockRequestCallback = sinon.spy();
@@ -151,12 +113,13 @@ describe('superagent-hornet-plugins', () => {
 
             // Assert
             expect(mockRequest.callback).to.not.equals(mockRequestCallback);
-            expect(mockRequestCallback).to.be.calledWith(undefined, mockResponse);
+           // expect(mockRequestCallback).to.be.calledWith(undefined, mockResponse);
             expect(mockResponse.get).to.be.calledWith("x-is-login-page");
-//            expect(global.window.location.href).to.be.equals("/" + configObj.contextPath + configObj.authentication.loginUrl + '?previousUrl=spy');
+//          expect(global.window.location.href).to.be.equals("/" + configObj.contextPath
+//              + configObj.authentication.loginUrl + '?previousUrl=spy');
         });
 
-        it('Should not modify if server', () => {
+        it("Should not modify if server", () => {
             // Arrange
             var mockRequest = sinon.spy();
             var mockRequestCallback = sinon.spy();
@@ -170,12 +133,12 @@ describe('superagent-hornet-plugins', () => {
         });
     });
 
-    describe('MiseEnCachePlugin', () => {
+    describe("CachePlugin", () => {
 
-        describe('Plugin Function', () => {
+        describe("Plugin Function", () => {
             var HornetCacheStubInstance;
             beforeEach(() => {
-                sinon.stub(superAgentPlugins.MiseEnCachePlugin, "_getMethodeEndForCache").returnsArg(0);
+                sinon.stub(superAgentPlugins.CachePlugin, "_getMethodeEndForCache").returnsArg(0);
 
                 HornetCacheStub.reset();
                 HornetCacheStubInstance = sinon.spy();
@@ -184,14 +147,13 @@ describe('superagent-hornet-plugins', () => {
                 HornetCacheStubInstance.getItem = sinon.stub().returns(HornetCacheStubInstance);
                 HornetCacheStubInstance.then = sinon.stub().returns(HornetCacheStubInstance);
                 HornetCacheStubInstance.catch = sinon.stub();
-
             });
 
             afterEach(() => {
-                superAgentPlugins.MiseEnCachePlugin._getMethodeEndForCache.restore();
+                superAgentPlugins.CachePlugin._getMethodeEndForCache.restore();
             });
 
-            it('should find in cache', function (done) {
+            it("should find in cache", function (done) {
                 // Arrange
                 var timeToLiveInCache = 10;
                 var stubResponse = TestUtils.randomString();
@@ -218,12 +180,12 @@ describe('superagent-hornet-plugins', () => {
                 stubRequest.abort = sinon.spy();
 
                 // Act
-                superAgentPlugins.MiseEnCachePlugin(timeToLiveInCache)(stubRequest);
+                superAgentPlugins.CachePlugin(timeToLiveInCache)(stubRequest);
                 expect(stubRequest.end).to.exist;
                 stubRequest.end(callbackEndMethod);
             });
 
-            it('should not find in cache', function (done) {
+            it("should not find in cache", function (done) {
                 // Arrange
                 var timeToLiveInCache = 10;
                 HornetCacheStubInstance.catch = function (callbackFn) {
@@ -241,19 +203,19 @@ describe('superagent-hornet-plugins', () => {
                     // Assert
                     expect(this).to.be.equals(stubRequest);
                     expect(callbackFn).to.be.equals(stubRequest.url);// C'est juste le bouchon qui retourne ca
-                    expect(superAgentPlugins.MiseEnCachePlugin._getMethodeEndForCache).to.be.calledWith(stubRequest.url, callbackEndMethod, timeToLiveInCache);
+                    expect(superAgentPlugins.CachePlugin._getMethodeEndForCache).to.be.calledWith(stubRequest.url, callbackEndMethod, timeToLiveInCache);
                     expect(stubRequest.abort).to.not.be.called;
 
                     done();
                 };
 
                 // Act
-                superAgentPlugins.MiseEnCachePlugin(timeToLiveInCache)(stubRequest);
+                superAgentPlugins.CachePlugin(timeToLiveInCache)(stubRequest);
                 expect(stubRequest.end).to.exist;
                 stubRequest.end(callbackEndMethod);
             });
 
-            it('should not find and store headers', function (done) {
+            it("should not find and store headers", function (done) {
                 // Arrange
                 var timeToLiveInCache = 10;
                 HornetCacheStubInstance.catch = function (callbackFn) {
@@ -281,7 +243,7 @@ describe('superagent-hornet-plugins', () => {
                 };
 
                 // Act
-                superAgentPlugins.MiseEnCachePlugin(timeToLiveInCache)(stubRequest);
+                superAgentPlugins.CachePlugin(timeToLiveInCache)(stubRequest);
                 expect(stubRequest.end).to.exist;
                 expect(stubRequest.set).to.exist;
 
@@ -290,7 +252,7 @@ describe('superagent-hornet-plugins', () => {
                 stubRequest.end(callbackEndMethod);
             });
 
-            it('should set default time to live', function (done) {
+            it("should set default time to live", function (done) {
                 // Arrange
                 HornetCacheStubInstance.catch = function (callbackFn) {
                     setTimeout(() => {
@@ -306,36 +268,36 @@ describe('superagent-hornet-plugins', () => {
                     // Assert
                     expect(this).to.be.equals(stubRequest);
                     expect(callbackFn).to.be.equals(stubRequest.url);// C'est juste le bouchon qui retourne ca
-                    expect(superAgentPlugins.MiseEnCachePlugin._getMethodeEndForCache).to.be.calledWith(stubRequest.url, callbackEndMethod, -1);
+                    expect(superAgentPlugins.CachePlugin._getMethodeEndForCache).to.be.calledWith(stubRequest.url, callbackEndMethod, -1);
 
                     done();
                 };
 
                 // Act
-                superAgentPlugins.MiseEnCachePlugin()(stubRequest);
+                superAgentPlugins.CachePlugin()(stubRequest);
                 expect(stubRequest.end).to.exist;
                 stubRequest.end(callbackEndMethod);
             });
         });
 
-        describe('_getMethodeEndForCache', () => {
+        describe("_getMethodeEndForCache", () => {
             var HornetCacheStubInstance;
             beforeEach(() => {
-                sinon.stub(superAgentPlugins.MiseEnCachePlugin, "_cloneResponse").returnsArg(0);
+                sinon.stub(superAgentPlugins.CachePlugin, "_cloneResponse").returnsArg(0);
                 HornetCacheStub.reset();
                 HornetCacheStubInstance = sinon.spy();
                 HornetCacheStub.getInstance = sinon.stub().returns(HornetCacheStubInstance);
 
-                HornetCacheStubInstance.miseEnCacheAsynchrone = sinon.stub().returns(HornetCacheStubInstance);
+                HornetCacheStubInstance.setCacheAsynchrone = sinon.stub().returns(HornetCacheStubInstance);
                 HornetCacheStubInstance.finally = sinon.stub().yieldsAsync();
                 HornetCacheStubInstance.getItem = sinon.stub();
             });
 
             afterEach(() => {
-                superAgentPlugins.MiseEnCachePlugin._cloneResponse.restore();
+                superAgentPlugins.CachePlugin._cloneResponse.restore();
             });
 
-            it('should not cache error request', () => {
+            it("should not cache error request", () => {
                 // Arrange
                 var url = TestUtils.randomString();
                 var callbackEndMethod = sinon.spy();
@@ -345,14 +307,14 @@ describe('superagent-hornet-plugins', () => {
                 var response = sinon.spy();
 
                 // Act
-                var endFunction = superAgentPlugins.MiseEnCachePlugin._getMethodeEndForCache(url, callbackEndMethod, timeToLiveInCache);
+                var endFunction = superAgentPlugins.CachePlugin._getMethodeEndForCache(url, callbackEndMethod, timeToLiveInCache);
                 endFunction(error, response);
 
                 // Assert
                 expect(callbackEndMethod).to.be.calledWith(error, response);
             });
 
-            it('should cache good request', function (done) {
+            it("should cache good request", function (done) {
                 // Arrange
                 var url = TestUtils.randomString();
                 var timeToLiveInCache = 10;
@@ -363,20 +325,20 @@ describe('superagent-hornet-plugins', () => {
                     expect(err).to.be.undefined;
                     expect(res).to.be.equals(response);
 
-                    expect(superAgentPlugins.MiseEnCachePlugin._cloneResponse).to.be.calledWith(response);
-                    expect(HornetCacheStubInstance.miseEnCacheAsynchrone).to.be.calledWith(url, response, timeToLiveInCache);
+                    expect(superAgentPlugins.CachePlugin._cloneResponse).to.be.calledWith(response);
+                    expect(HornetCacheStubInstance.setCacheAsynchrone).to.be.calledWith(url, response, timeToLiveInCache);
                     done();
                 };
 
                 // Act
-                var endFunction = superAgentPlugins.MiseEnCachePlugin._getMethodeEndForCache(url, callbackEndMethod, timeToLiveInCache);
+                var endFunction = superAgentPlugins.CachePlugin._getMethodeEndForCache(url, callbackEndMethod, timeToLiveInCache);
                 endFunction(undefined, response);
 
             });
         });
 
-        describe('_cloneResponse', () => {
-            it('Should clone response', () => {
+        describe("_cloneResponse", () => {
+            it("Should clone response", () => {
                 // Arrange
                 var mockRequest = {
                     body: TestUtils.randomString(),
@@ -389,7 +351,7 @@ describe('superagent-hornet-plugins', () => {
                 mockRequest[TestUtils.randomString()] = TestUtils.randomString();
 
                 // Act
-                var clonedRequest = superAgentPlugins.MiseEnCachePlugin._cloneResponse(mockRequest);
+                var clonedRequest = superAgentPlugins.CachePlugin._cloneResponse(mockRequest);
 
                 // Assert
                 expect(clonedRequest).to.eql(expectedRequest);

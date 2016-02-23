@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import RouterAbstract = require("src/routes/router-abstract");
 import I = require("src/routes/router-interfaces");
@@ -49,7 +48,7 @@ export class RouteMatcher {
         matchFn.lazy = (path:string, fileToLoad:string) => {
             if (utils.isServer) {
                 logger.debug("Ajout route lazy:", path);
-                //Sur le serveur on charge directement la route donc on va garder la liste des routes en mémoire
+                // Sur le serveur on charge directement la route donc on va garder la liste des routes en mémoire
                 this._lazyRoutes.push({
                     path: path,
                     fileToLoad: fileToLoad

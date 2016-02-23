@@ -1,0 +1,42 @@
+{
+  "name": "hornet-js-cas",
+  "version": "5.0.1",
+  "description": "Gestion d'authentification",
+  "main": "./src/index.js",
+  "tsDefinitionDependencies": {
+    "hornet-js-ts-typings": "5.0.1",
+    "hornet-js-utils-dts": "5.0.1",
+    "hornet-js-core-dts": "5.0.1"
+  },
+  "appDependencies": {
+    "connect-flash": "0.1.1",
+    "hornet-js-utils": "5.0.1",
+    "hornet-js-core": "5.0.1",
+    "lodash": "3.5.0",
+    "passport": "0.2.1",
+    "passport-local": "1.0.0",
+    "request": "2.30.0",
+    "url": "0.11.0",
+    "xml2js": "0.4.6"
+  },
+  "buildAndTestDependencies": {},
+  "author": "MAEDI",
+
+
+
+
+
+  "____HORNET-BUILDER____DO_NOT_MODIFY_THIS_OBJECT____": {
+    "current": "c4cf546255abe96870c95251e4d9cc669c53c447",
+    "history": {
+      "1369cc2ee21e53d908f3cb7be5d074f600464a85": {
+        "date": "2016-01-28T15:02:20.367Z",
+        "deps": {"assert-plus":"0.1.5","async":"0.9.2","aws-sign2":"0.5.0","boom":"0.4.2","combined-stream":"0.0.7","cryptiles":"0.2.2","forever-agent":"0.5.2","hawk":"1.0.0","hoek":"0.9.1","http-signature":"0.10.1","json-stringify-safe":"5.0.1","lodash":"3.10.1","node-uuid":"1.4.7","oauth-sign":"0.3.0","passport-strategy":"1.0.0","punycode":"1.4.0","sax":"0.6.1","sntp":"0.2.4","tough-cookie":"0.9.15","tunnel-agent":"0.3.0","xmlbuilder":"4.0.0"}
+      },
+      "c4cf546255abe96870c95251e4d9cc669c53c447": {
+        "date": "2016-02-01T17:07:30.951Z",
+        "deps": {"assert-plus":"0.1.5","async":"0.9.2","aws-sign2":"0.5.0","boom":"0.4.2","combined-stream":"0.0.7","cryptiles":"0.2.2","forever-agent":"0.5.2","hawk":"1.0.0","hoek":"0.9.1","http-signature":"0.10.1","json-stringify-safe":"5.0.1","lodash":"3.10.1","node-uuid":"1.4.7","oauth-sign":"0.3.0","passport-strategy":"1.0.0","punycode":"1.4.0","sax":"0.6.1","sntp":"0.2.4","tough-cookie":"0.9.15","tunnel-agent":"0.3.0","xmlbuilder":"4.0.0"}
+      }
+    }
+  }
+}

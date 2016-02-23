@@ -1,32 +1,27 @@
-///<reference path="../../hornet-js-ts-typings/definition.d.ts"/>
-//"use strict";
+// "use strict";
 import _ = require("lodash");
-import VerrorNS = require("verror");
-var WError = VerrorNS.WError;
+import path = require("path");
+import VError = require("verror");
 
 /**
  * Construit un logger avec la catégory demandée
  * @param category
  * @param getLoggerFn La fonction permettant de charger le logger, cette fonction est différente
-*            selon le client ou le serveur, c'est pour cette raison quelle doit être injectée
-*/
+ *            selon le client ou le serveur, c'est pour cette raison quelle doit être injectée
+ */
 class Logger {
     private category:any;
     private log4jsLogger:any;
 
-    constructor(category:any, buildLoggerFn?:(category:string)=>void) {
-        if (!(this instanceof Logger))
-            return new Logger(category, buildLoggerFn);
-
-        this.category = category;
-
-        if (buildLoggerFn && _.isFunction(buildLoggerFn)) {
-            Logger.prototype.buildLogger = buildLoggerFn;
+    constructor(category:any) {
+        if (!(this instanceof Logger)) {
+            return new Logger(category);
         }
+        this.category = category;
     }
 
-    static getLogger(category:any, buildLoggerFn?:(category:string)=>void):Logger {
-        return new Logger(category, buildLoggerFn);
+    static getLogger(category:any):Logger {
+        return new Logger(category);
     }
 
     /**
@@ -34,7 +29,8 @@ class Logger {
      * log4js-node
      */
     buildLogger(category:string):void {
-        throw new Error("The log building function should be injected before use log");
+        throw new Error("The log building function should be injected before use log : " +
+            "Logger.prototype.buildLogger = (ServerLog|ClientLog).getLoggerBuilder(logConfig)");
     }
 
     fatal(...args:any[]);
@@ -64,17 +60,25 @@ class Logger {
 
     trace(...args:any[]);
     trace(message:string) {
-        this.logInternal('trace', arguments);
+        this.logInternal("trace", arguments);
     }
 
     /**
-     * Récupère le nom de la fonction appelante
+     * Récupère le nom de la fonction appelante,
+     * [mantis 0055464] en évitant de ramener l'appel du logger, qui ne nous intéresse pas :
+     * on remonte la pile d'appels en cherchant le code applicatif à l'origine de la log.
+     *
+     * Si la "vraie" fonction appelante n'est pas trouvée dans la pile,
+     * alors par défaut on utilise le paramètre d'entrée callStackSize
+     * qui indique le nombre arbitraire de niveaux à remonter dans la pile
+     * pour avoir la fonction appelante
+     *
      */
     static getFunctionName(callStackSize:number):string {
         var notTyppedError:any = Error;
         var orig:any = notTyppedError.prepareStackTrace;
         var err:any;
-        var functionName:string = '';
+        var functionName:string = "";
         if (typeof notTyppedError.captureStackTrace === "function") {
             // Chrome/Node
             notTyppedError.prepareStackTrace = function (_, stack) {
@@ -83,17 +87,40 @@ class Logger {
             err = new notTyppedError();
             // "calle is not allowed" https://bugzilla.mozilla.org/show_bug.cgi?id=725398
             notTyppedError.captureStackTrace(err, arguments.callee);
-            if (err.stack && err.stack.length >= callStackSize){
-                functionName = err.stack[callStackSize-1].getFunctionName();
-            }else{
-                functionName = "unknownFunction";
+            functionName = "unknownFunction";
+            if (err.stack) {
+
+                // Remonter la stack jusqu'a la fonction appellante du logger
+
+                // D'abord, on cherche le premier appel au logger dans la stack (en partant du haut)
+                var lastLoggerStackIndex:number = _.findLastIndex(err.stack, function (o:any) {
+                    return o.getTypeName && o.getTypeName() === "Logger";
+                });
+                // si on a trouvé l'appel au logger dans la stack :
+                if (lastLoggerStackIndex > 0 && err.stack.length > lastLoggerStackIndex + 1) {
+                    // on remonte d'un cran pour avoir le nom de la fonction appelante
+                    var hornetCall:any = err.stack[lastLoggerStackIndex + 1];
+                    functionName = hornetCall.getFunctionName();
+                    // parfois, le nom de la fonction est vide (cas des fonctions déclarées dynamiquement)
+                    if (!functionName) {
+                        // dans ce cas on affiche "anonymous" avec le nom du fichier et le numéro de ligne+colonne
+                        var filename:string = hornetCall.getFileName() || "no source file";
+                        functionName = "anonymous:".concat(_.last(filename.split(path.sep)));
+                        // functionName = hornetCall.toString();
+                    }
+                    functionName = functionName.concat(":").concat(hornetCall.getLineNumber())
+                        .concat(":").concat(hornetCall.getColumnNumber());
+                } else if (err.stack.length >= callStackSize) {
+                    // traitement par défaut : on va chercher dans la pile avec l'index fourni en paramètre (callStackSize)
+                    functionName = err.stack[callStackSize - 1].getFunctionName();
+                }
             }
             notTyppedError.prepareStackTrace = orig;
         } else {
             // Firefox
             var e = new notTyppedError().stack;
             if (e) {
-                var callstack = e.split('\n');
+                var callstack = e.split("\n");
                 if (callstack.length > callStackSize) {
                     functionName = callstack[callStackSize];
                 }
@@ -125,9 +152,9 @@ class Logger {
      * @param niveau de log
      * @param logArguments: Un tableau des objets (string, error ou object) à logguer
      */
-    //private logInternalAsync(level:string, logArguments:IArguments) {
+    // private logInternalAsync(level:string, logArguments:IArguments) {
     //    setTimeout(this.logInternal.bind(this), 0, level, logArguments);
-    //}
+    // }
 
     /**
      * Appelle la fonction de journalisation du logger en ajoutant le nom de la fonction appelant et si
@@ -176,11 +203,11 @@ class Logger {
         }
 
         if (logFn) {
-            //On a bien besoin de logguer
+            // On a bien besoin de logguer
             var parameters = Array.prototype.slice.call(logArguments);
-            var message = parameters.map(this.mappingObjectToString.bind(this)).join(' ');
+            var message = parameters.map(this.mappingObjectToString.bind(this)).join(" ");
 
-            //Et enfin on log réellement
+            // Et enfin on log réellement
             logFn.call(this.log4jsLogger, message);
         }
     }
@@ -189,8 +216,10 @@ class Logger {
         if (_.isString(arg)) {
             return arg;
 
-        } else if (arg instanceof WError) {
-            var werr = <WError> arg;
+        } else if (arg instanceof VError.WError) {
+            /*var werr = arg as VError.WError; // pas moyen de caster (error TS2503 cannot find namespace)*/
+            var werr = arg;
+
             var errStr = werr.toString();
 
             var infoSupp;
@@ -211,27 +240,25 @@ class Logger {
             var errString;
             try {
                 errString = JSON.stringify(arg);
-            }
-            catch (err) {
+            } catch (err) {
                 errString = "<stringifyErr>";
             }
             return (arg.stack || (arg.toString && arg.toString()) || arg) + "\n Informations supplémentaires :\n" + errString;
         } else {
             try {
-                //return JSON.stringify(arg);
+                // return JSON.stringify(arg);
                 return JSON.stringify(arg, function (key, value) {
                     if (_.isFunction(value)) {
                         return "[Function" + (value.name ? ": " + value.name : "") + "]";
                     } else if (value instanceof RegExp) {
                         return "_PxEgEr_" + value;
-                    } else if(value instanceof WError) {
+                    } else if (value instanceof VError.WError) {
                         /* Pour WError on utilise toString car JSON.stringify n'affiche pas correctement la cause */
                         return value.toString();
                     }
                     return value;
                 });
-            }
-            catch (err) {
+            } catch (err) {
                 return "<stringifyErr>";
             }
         }

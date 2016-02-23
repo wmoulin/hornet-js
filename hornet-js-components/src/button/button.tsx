@@ -1,10 +1,12 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import React = require("react");
 import PropTypesNs = require("src/button/button-props");
+import HornetComponent = require("src/hornet-component");
 
-class Button extends React.Component<PropTypesNs.ButtonProps, any> {
+@HornetComponent.ApplyMixins()
+@HornetComponent.Error()
+class Button extends HornetComponent<PropTypesNs.ButtonProps, any> {
 
     static displayName:string = "Button";
 
@@ -33,7 +35,7 @@ class Button extends React.Component<PropTypesNs.ButtonProps, any> {
                 id={this.props.item.id}
                 name={this.props.item.name}
                 value={this.props.item.value}
-                onClick={this.props.item.onClick}
+                onClick={this._handleClick.bind(this)}
                 className={this.props.item.className}
                 title={this.props.item.title}
                 aria-label={this.props.item.title}
@@ -41,6 +43,13 @@ class Button extends React.Component<PropTypesNs.ButtonProps, any> {
                 {this.props.item.label}
             </button>
         );
+    };
+
+    @HornetComponent.AutoBind
+    _handleClick(e:React.MouseEvent){
+        if(this.props.item.onClick && typeof(this.props.item.onClick) === "function") {
+            this.props.item.onClick(e);
+        }
     }
 
 }

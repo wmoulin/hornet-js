@@ -1,7 +1,7 @@
 "use strict";
 var newforms = require("newforms");
 var React = require("react");
-var AutoCompleteComponent = require("src/auto-complete/auto-complete");
+var AutoComplete = require("src/auto-complete/auto-complete");
 
 var utils = require("hornet-js-utils");
 var logger = utils.getLogger("hornet-js-components.auto-complete.auto-complete-widget");
@@ -24,7 +24,7 @@ AutoCompleteWidget.prototype.render = function (name, value, kwargs) {
     this.lastRenderKwargs = kwargs;
 
     logger.trace("Rendu", name, ", value:", value, ", initialText:", this._initialText);
-    return <AutoCompleteComponent
+    return <AutoComplete
         sourceStore={this._sourceStore}
         actionClass={this._actionClass}
         onUserInputChange={this.onUserInputChange.bind(this)}
@@ -44,16 +44,12 @@ AutoCompleteWidget.prototype.setComponentProperties = function (store, actionCla
     this._i18n = i18n;
 };
 
-AutoCompleteWidget.prototype.onUserInputChange = function (oldValues, newValues, maxElements, inputDomNode) {
-    logger.trace("[onUserInputChange] oldValues:", oldValues, ", newValues:", newValues);
-
-    if (oldValues.value != newValues.value) {
-        logger.trace("[onUserInputChange] event vers newforms");
-        // On lance l"évènement original fourni par newforms uniquement sur une selection par la liste déroulante
-        this.lastRenderKwargs.attrs.onChange({
-            "target": inputDomNode
-        });
-    }
+AutoCompleteWidget.prototype.onUserInputChange = function (inputDomNode) {
+    logger.trace("[onUserInputChange] event vers newforms");
+    // On lance l"évènement original fourni par newforms pour maintenir à jour l'état interne du formulaire newforms
+    this.lastRenderKwargs.attrs.onChange({
+        "target": inputDomNode
+    });
 };
 
 /**

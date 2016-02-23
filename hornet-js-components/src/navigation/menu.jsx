@@ -22,7 +22,10 @@ var Menu = React.createClass({
         children: React.PropTypes.oneOfType([
             React.PropTypes.object,
             React.PropTypes.array
-        ])
+        ]),
+        /** Path permettant de surcharger les pictogrammes/images **/
+        imgFilePath: React.PropTypes.string
+
     },
 
     getInitialState: function () {
@@ -79,16 +82,30 @@ var Menu = React.createClass({
     render: function () {
         return (
             <nav id="nav" aria-label={this.state.i18n.mainMenu} data-title="Menu" className="menuHaut">
-                <MenuNavigation items={this.state.items} level={0} isVisible={true}
-                                infosComplementaires={this._getInfosComplementaires()}/>
+                <MenuNavigation
+                    items={this.state.items}
+                    level={0}
+                    isVisible={true}
+                    infosComplementaires={this._getInfosComplementaires()}
+                    imgFilePath={this.props.imgFilePath}
+                />
             </nav>
         );
     },
 
     _getInfosComplementaires: function () {
         //tag seulement de type InfosComplementaires
+        var nbItems = (this.state && this.state.items && this.state.items.length) || 0;
         return React.Children.map(this.props.children, function (child) {
             if (child.type.displayName === InfosComplementaires.displayName) {
+                /**
+                 * Permet de modifier l'id de l'élément "Connexion/Déconnexion" afin de le rendre navigable au clavier
+                 */
+                if(child.props && child.props.children && child.props.children.props && child.props.children.props.children
+                    && child.props.children.props.children.props && child.props.children.props.children.props.item
+                    && child.props.children.props.children.props.item.id) {
+                    child.props.children.props.children.props.item.id = MenuConstants.MENU_ROOT + nbItems;
+                }
                 return child;
             }
         });

@@ -1,8 +1,9 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import utils = require("hornet-js-utils");
 import ActionsChainData = require("src/routes/actions-chain-data");
 import ActionExtendedPromise = require("src/routes/action-extended-promise");
+import ExtendedPromise = require("hornet-js-utils/src/promise-api");
+
 var logger = utils.getLogger("hornet-js-core.actions.action");
 var WError = utils.werror;
 
@@ -33,7 +34,7 @@ class Action<A extends ActionsChainData> {
         // do nothing
     }
 
-    getInstance(Api:any, ...args):any {
+    getInstance(Api:any, ...args) {
         var builderFn = Action.serviceConstructor(Api);
         var serviceArgs = [this.actionContext].concat(args);
         return builderFn.apply(builderFn, serviceArgs);
@@ -50,12 +51,12 @@ class Action<A extends ActionsChainData> {
         }
     }
 
-    withContext(actionContext:ActionContext):Action<A> {
+    withContext(actionContext:ActionContext) {
         this.actionContext = actionContext;
         return this;
     }
 
-    withPayload(payload?:any):Action<A> {
+    withPayload(payload?:any) {
         this.payload = payload;
         return this;
     }
@@ -64,7 +65,7 @@ class Action<A extends ActionsChainData> {
      * Retourne une action Hornet, sous forme de promise.
      * Cette méthode est appelée par le routeur lors du chainage des actions déclarées dans les routes
      */
-    promise(actionsChainData:A):ActionExtendedPromise {
+    promise(actionsChainData:A) {
         this.actionChainData = actionsChainData;
         return new ActionExtendedPromise((resolve, reject) => {
             this.resolve = resolve;
@@ -76,7 +77,11 @@ class Action<A extends ActionsChainData> {
                 this.execute(this._resolveFn.bind(this), this._rejectFn.bind(this));
             } catch (err) {
                 /* On doit gérer ici les exceptions non prévues, de façon à signaler l'arrêt de l'action via le message ASYNCHRONOUS_REQUEST_END_SUCCESS et à transmettre actionChainData aux promises suivantes dans la chaîne */
-                this._rejectFn(new WError(err, "Action : erreur technique : " + err.message));
+                var errorMess:string = "Action : erreur technique : " + err.message;
+                logger.error(errorMess);
+                var error = new WError(err, errorMess);
+                error.name = " ";
+                this._rejectFn(error);
             }
         });
     }
@@ -100,6 +105,9 @@ class Action<A extends ActionsChainData> {
         this.actionContext.dispatch(Action.ASYNCHRONOUS_REQUEST_END_ERROR, error);
 
         if (error) {
+            if (error.name === "WError") {
+                error.name = " ";  // permet d'eviter d'avoir WError dans les messages de notification
+            }
             this.actionChainData.lastError = error;
             if (error && error.we_cause && error.we_cause.response && error.we_cause.response.body) {
                 // On récupère le corps de la réponse potentiellement présent dans le retour de l'API
@@ -118,13 +126,13 @@ class Action<A extends ActionsChainData> {
      *
      * this.executeAction(new MonAction().action(), payload, cb)
      */
-    action():(actionContext:ActionContext, payload?:any, cb?:(value:any) => void) => void {
-        return (actionContext:ActionContext, payload?:any, cb?:(value?:any) => void) =>(
+    action() {
+        return (actionContext:ActionContext, payload:any = {}, cb:(value?:any) => void = () => {}) =>(
             this.withContext(actionContext)
                 .withPayload(payload)
                 .promise(<A>new ActionsChainData())
                 .then(() => cb(), cb)
-        )
+        );
     }
 }
 

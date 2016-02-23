@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 /**
  * Type d'objet qui est transféré d'une action à une autre (d'une promise à une autre)
@@ -6,7 +5,6 @@
  *
  */
 import superagent = require("superagent");
-import MediaType = require ("src/protocol/media-type");
 
 class ActionsChainData {
 

@@ -1,20 +1,20 @@
 "use strict";
 
-var React = require('react');
+var React = require("react");
 
-var	TestUtils = require('hornet-js-utils/src/test-utils');
+var	TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var render = TestUtils.render;
 
 // initialisation du logger
 var logger = TestUtils.getLogger("hornet-js-components.test.icon.icon-spec");
 
-var Icon = require('src/icon/icon');
+var Icon = require("src/icon/icon");
 
-describe('Icon', () => {
+describe("Icon", () => {
 
 	// Arrange
-	var props = {url:'/partenaires',  alt: 'test alt image', title: 'test', src: '#', classLink: 'classLien'};
+	var props = {url:"/partenaires",  alt: "test alt image", title: "test", src: "#", classLink: "classLien"};
 
 	var context ={
 		getStore: (store) => {
@@ -40,18 +40,16 @@ describe('Icon', () => {
 		context
 	);
 
-	it('doit afficher un icône avec les éléments requis', () => {
+	it("doit afficher un icône avec les éléments requis", () => {
 		// Assert
-		var $a = $('a');
+		var $a = $("a");
 		expect($a).to.exist;
-		expect($a).to.have.attr('title');
-		expect($a).to.have.attr('href');
+		expect($a).to.have.attr("title");
+		expect($a).to.have.attr("href");
 
-
-		var $img = $('img');
+		var $img = $("img");
 		expect($img).to.exist;
-		expect($img).to.have.attr('alt');
-		expect($img).to.have.attr('src');
+		expect($img).to.have.attr("alt");
+		expect($img).to.have.attr("src");
 	});
-
 });

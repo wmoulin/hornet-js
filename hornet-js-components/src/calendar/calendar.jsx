@@ -39,7 +39,13 @@ var Calendar = React.createClass({
         /* Format(s) de saisie de date : surcharg(ent) éventuellement le format de date défini dans la locale */
         dateFormats: React.PropTypes.arrayOf(React.PropTypes.string),
         /* Année par défaut à utiliser lorsque le format n'inclut pas la date (par ex. 'dd/MM') */
-        defaultYear: React.PropTypes.number
+        defaultYear: React.PropTypes.number,
+        /** Path permettant de surcharger les pictogrammes/images **/
+        imgFilePath: React.PropTypes.string,
+        /* Indique que le champ de saisie libre et le bouton de sélection de date sont désactivés */
+        disabled: React.PropTypes.bool,
+        // Indique que le champ contient un datePicker
+        isDatePicker: React.PropTypes.bool
     },
 
     getInitialState: function () {
@@ -47,21 +53,21 @@ var Calendar = React.createClass({
         utils.dateUtils.initTimeZone(calendarLocale);
         /* attribut HTML size du champ de saisie */
         var inputSize = calendarLocale.dateFormat.length;
-        if(this.props.dateFormats instanceof Array && this.props.dateFormats[0]) {
+        if (this.props.dateFormats instanceof Array && this.props.dateFormats[0]) {
             /* Le format de date est surchargé : on clone puis on modifie l'objet calendarLocale car cette modification
-            doit rester spécifique à cette instance */
+             doit rester spécifique à cette instance */
             calendarLocale = utils._.cloneDeep(calendarLocale);
             calendarLocale.dateFormat = this.props.dateFormats[0];
             /* lorsque le format de date indiqué ne contient pas l'année on ne l'affiche pas en en-tête de la popup calendrier (propriété monthYearFormat) */
-            if(calendarLocale.monthYearFormat && calendarLocale.monthYearFormat.indexOf("yy") >= 0 && calendarLocale.dateFormat.indexOf("yy") < 0) {
+            if (calendarLocale.monthYearFormat && calendarLocale.monthYearFormat.indexOf("yy") >= 0 && calendarLocale.dateFormat.indexOf("yy") < 0) {
                 calendarLocale.monthYearFormat = "MMMM";
             }
             /* l'attribut size est dimensionné selon la taille du plus grand format possible */
             inputSize = calendarLocale.dateFormat.length;
             var dateFormat;
-            for(var index in this.props.dateFormats) {
+            for (var index in this.props.dateFormats) {
                 dateFormat = this.props.dateFormats[index];
-                if(dateFormat.length > inputSize) {
+                if (dateFormat.length > inputSize) {
                     inputSize = dateFormat.length;
                 }
             }
@@ -83,14 +89,15 @@ var Calendar = React.createClass({
         });
     },
 
-    shouldComponentUpdate: function(nextProps, nextState) {
-        return this.state.value !== nextState.value || this.state.isVisible !== nextState.isVisible;
+    shouldComponentUpdate: function (nextProps, nextState) {
+        return this.state.value !== nextState.value || this.state.isVisible !== nextState.isVisible
+            || this.props.disabled !== nextProps.disabled;
     },
 
     render: function () {
         logger.trace("render");
         var reactIconTag;
-        var reactCalendarDialogueTag;
+        var reactCalendarDialogueTag = null;
 
         this.props.attributes.attrs.ref = "dateInputWidget";
         this.props.attributes.attrs.size = this.state.inputSize;
@@ -98,32 +105,36 @@ var Calendar = React.createClass({
         var reactDateInputTag = newforms.DateInput.prototype.render.call(this.props.thisContext, this.props.name, this.state.value, this.props.attributes);
 
         var dateToSelect = this._parse(this.state.value);
-        if(!dateToSelect){
+        if (!dateToSelect) {
             //on force la date à la date du jour, car rcCalendar ne prend pas en compte la local
             dateToSelect = this._parse(new Date());
         }
-        reactIconTag =
-            <button className="agenda icon" type="button" onClick={this.showCalendar}>
-                <img src={this.genUrlTheme("/img/calendar/ico_calendar.png")}
-                     alt={this.props.title || this.state.calendarLocale.agendaTitle}/>
-            </button>;
-
-        reactCalendarDialogueTag =
-            (<Modal isVisible={this.state.isVisible}
-                    onClickClose={this.hideCalendar}
-                    underlayClickExits={true}
-                    escapeKeyExits={true}
-                    title={this.state.calendarLocale.choiceDate}
-                    onShow={this.patchRcCalendar}
-                >
-                <RcCalendar
-                    ref="calendar"
-                    locale={this.state.calendarLocale}
-                    value={dateToSelect}
-                    onSelect={this.setValueAndCloseCalendar} />
-            </Modal>
+        var urlTheme = this.props.imgFilePath || this.genUrlTheme();
+        if (this.props.isDatePicker) {
+            reactIconTag = (
+                <button className="agenda icon" type="button" onClick={this.showCalendar}
+                        disabled={this.props.disabled}>
+                    <img src={urlTheme + "/img/calendar/ico_calendar.png"}
+                         alt={this.props.title || this.state.calendarLocale.agendaTitle}/>
+                </button>
             );
 
+            reactCalendarDialogueTag = (
+                <Modal isVisible={this.state.isVisible}
+                       onClickClose={this.hideCalendar}
+                       underlayClickExits={true}
+                       escapeKeyExits={true}
+                       title={this.state.calendarLocale.choiceDate}
+                       onShow={this.patchRcCalendar}
+                >
+                    <RcCalendar
+                        ref="calendar"
+                        locale={this.state.calendarLocale}
+                        value={dateToSelect}
+                        onSelect={this.setValueAndCloseCalendar}/>
+                </Modal>
+            );
+        }
         return (
             <div>
                 {reactDateInputTag}
@@ -133,9 +144,9 @@ var Calendar = React.createClass({
         );
     },
 
-    patchRcCalendar : function () {
+    patchRcCalendar: function () {
         var cal = this.refs["calendar"];
-        cal.getMonthYear = function() {
+        cal.getMonthYear = function () {
             var locale = this.props.locale;
             var value = this.state.value;
             return new DateTimeFormat(locale.monthYearFormat, locale.format).format(value);
@@ -177,7 +188,6 @@ var Calendar = React.createClass({
         this.setState({
             isVisible: false
         });
-        //document.removeEventListener('keydown', this._keyDown);
     },
 
     /**
@@ -189,7 +199,7 @@ var Calendar = React.createClass({
     _parse: function (date) {
         logger.trace("Date à parser: ", date);
         var calendar;
-        if(date) {
+        if (date) {
 
             if (utils._.isString(date)) {
                 try {
@@ -202,8 +212,8 @@ var Calendar = React.createClass({
                 calendar.setTime(date.getTime());
             }
             /* Le format n'inclut pas l'année : on utilise l'année par défaut si celle-ci est définie ou alors l'année en cours */
-            if(calendar && this.state.calendarLocale.dateFormat.indexOf("yy") < 0) {
-                if(this.props.defaultYear) {
+            if (calendar && this.state.calendarLocale.dateFormat.indexOf("yy") < 0) {
+                if (this.props.defaultYear) {
                     calendar.set(GregorianCalendar.YEAR, this.props.defaultYear);
                 } else {
                     calendar.set(GregorianCalendar.YEAR, new Date().getFullYear());
@@ -216,7 +226,7 @@ var Calendar = React.createClass({
     _formatDate: function (date) {
         var strValue;
         try {
-            if(date) {
+            if (date) {
                 strValue = utils.dateUtils.format(date.getTime(), this.state.calendarLocale);
             }
         } catch (err) {
@@ -226,12 +236,11 @@ var Calendar = React.createClass({
             strValue = "";
         }
 
-        logger.trace("Date formatée : ", strValue + '  -- à partir de la valeur', date);
+        logger.trace("Date formatée : ", strValue + "  -- à partir de la valeur", date);
         return strValue;
     },
 
     _keyDown: function (e) {
-        //logger.trace('Caractère saisie', e.keyCode);
         if (e.keyCode == utils.keyEvent.DOM_VK_ESCAPE) {
             this.hideCalendar();
         }

@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import BaseStore = require("fluxible/addons/BaseStore");
@@ -27,7 +26,7 @@ class PageInformationsStore extends BaseStore {
         "CHANGE_PAGE_COMPONENT": function (newPage:any) {
             logger.debug("CHANGE PAGE - current Page :",
                 (this.currentPageComponent) ? this.currentPageComponent.displayName : "",
-                ", new Page :",(newPage) ? newPage.displayName : "");
+                ", new Page :", (newPage) ? newPage.displayName : "");
 
             if (this.currentPageComponent !== newPage) {
                 this.currentPageComponent = newPage;
@@ -89,11 +88,11 @@ class PageInformationsStore extends BaseStore {
     getThemeUrl():string {
         var themeUrl:string;
 
-        if (!this.themeName || this.themeName == this.defaultThemeName) {
+        if (!this.themeName || this.themeName === this.defaultThemeName) {
             themeUrl = this.defaultThemeUrl;
             this.currentThemeUrl = themeUrl;
         } else {
-            if (this.currentThemeName != this.themeName) {
+            if (this.currentThemeName !== this.themeName) {
                 themeUrl = this.defaultThemeUrl.replace(this.defaultThemeName, this.themeName);
                 this.currentThemeName = this.themeName;
                 this.currentThemeUrl = themeUrl;

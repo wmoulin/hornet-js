@@ -1,5 +1,5 @@
 {
-  "contextPath": "applitutoriel-5.0.0",
+  "contextPath": "applitutoriel-5.0.1",
   "server": {
     "port": 8888,
     "keepAlive": true,
@@ -7,7 +7,7 @@
     "timeout": 300000,
     "uploadFileSize": 1000000
   },
-  "themeUrl": "http://localhost:7777/5.0.0/default",
+  "themeUrl": "http://localhost:7777/5.0.1/default",
   "security": {
     "enabled": false,
     "hpp": true,
@@ -88,13 +88,15 @@
       //        }
     ]
   },
-  "services": {
+  "defaultServices": {
     "host": "http://localhost:8080/",
     "name": "applitutoriel-service/"
   },
   "mock": {
-    "enabled": true,
-    "routes": "/mock/routes"
+    "enabled": false,
+    "routes": "/mock/routes",
+    "defaultServices": { // service mock par defaut : le contexte est toujours "applitutoriel/hornet-mock"
+      "host": "http://localhost:${server.port}/" //default localhost:8888
   },
   "cookie": {
     "httpOnly": true,

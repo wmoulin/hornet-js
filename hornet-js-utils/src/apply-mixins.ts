@@ -1,4 +1,3 @@
-///<reference path="../../hornet-js-ts-typings/lodash/lodash.d.ts"/>
 "use strict";
 
 export class ApplyMixins {
@@ -7,7 +6,7 @@ export class ApplyMixins {
         baseCtors.forEach(baseCtor => {
             Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
                 derivedCtor.prototype[name] = baseCtor.prototype[name];
-            })
+            });
         });
     }
 }

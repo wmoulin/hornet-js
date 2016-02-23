@@ -1,17 +1,18 @@
-///<reference path='../../hornet-js-ts-typings/definition.d.ts'/>
 "use strict";
 import utils = require("hornet-js-utils");
 utils.setConfigObj((<any>window).Config);
 utils.appSharedProps.rehydrate((<any>window).AppSharedProps);
 var WError = utils.werror;
 
+import Logger = require("hornet-js-utils/src/logger");
+import ClientLog = require("src/log/client-log");
+Logger.prototype.buildLogger = ClientLog.getLoggerBuilder(utils.config.getOrDefault("logClient", {}));
+
 import react = require("react");
 import PageInformationsStore = require("src/stores/page-informations-store");
-import routerInterfaces = require("src/routes/router-interfaces");
 import RouterView = require("src/routes/router-view");
 import i18nPlugin = require("src/i18n/i18n-fluxible-plugin");
 import ExtendedPromise = require("hornet-js-utils/src/promise-api");
-import fluxible = require("fluxible");
 import ClientConfiguration = require("src/client-conf");
 declare var __webpack_public_path__:string;
 
@@ -35,7 +36,7 @@ class Client {
      * </ul>
      * @param appConfig
      */
-    static initAndStart(appConfig:ClientConfiguration) {
+    static initAndStart(appConfig:ClientConfiguration, readyCallback:Function) {
 
         var logger = utils.getLogger("hornet-js-core.client");
         logger.trace("Enter initAndStart");
@@ -43,7 +44,7 @@ class Client {
         __webpack_public_path__ = utils.buildStaticPath("/js") + "/";
 
         var currentPromise = <ExtendedPromise<any>>ExtendedPromise.resolve();
-        //Patch pour l'internationalisation, valorise l'objet Intl s'il n'existe pas.
+        // Patch pour l'internationalisation, valorise l'objet Intl s'il n'existe pas.
         if (!(<any>window).Intl) {
             logger.warn("Chargement d'une librairie remplacant Intl qui n'est pas supportée par ce navigateur");
 
@@ -63,14 +64,13 @@ class Client {
             appConfig.dispatcher.plug(plugIntl.createPlugin());
             // Création du contexte unique pour le client
             var fluxibleContext:FluxibleContext = appConfig.fluxibleContext = appConfig.dispatcher.createContext();
-            //On réinjecte les stores et la conf
+            // On réinjecte les stores et la conf
 
             try {
                 fluxibleContext.rehydrate((<any>window).App);
             } catch (exc) {
                 var message:string = "Erreur lors du rehydrade du context fluxible côté client";
                 logger.error(message, exc);
-                //throw new WError(exc, message);
             }
 
             logger.trace("fluxibleContext rehydrate done");
@@ -85,6 +85,10 @@ class Client {
                     }
 
                     logger.trace("initAppFn : react render");
+
+                    // change "null" > <noscript> en "null" > <script> pour éviter les violations de DOM !
+                    require("react/lib/ReactInjection").EmptyComponent.injectEmptyComponent("script");
+
                     react.render(
                         appConfig.appComponent({
                             componentContext: fluxibleContext.getComponentContext(),
@@ -93,14 +97,22 @@ class Client {
                         document.getElementById("app"),
                         function () {
                             logger.info("Application démarrée côté client !");
-                        });
+                        }
+                    );
 
-                    logger.trace('removeChangeListener initAppFn');
+                    logger.trace("removeChangeListener initAppFn");
                     pageInformationStore.removeChangeListener(initAppFn);
+
+                    if (_.isFunction(readyCallback)) {
+                        logger.trace("readyCallback");
+                        readyCallback();
+                    }
                 } catch (exc) {
                     var message:string = "Erreur lors du premier rendu react côté client";
                     logger.error(message, exc);
-                    throw new WError(exc, message);
+                    var error = new WError(exc, message);
+                    error.name = " ";
+                    throw error;
                 }
             }
 
@@ -108,7 +120,7 @@ class Client {
             pageInformationStore.addChangeListener(initAppFn);
 
             logger.trace("setCsrf initAppFn");
-            utils.csrf = (<any>window).CsrfTokken;
+            utils.csrf = (<any>window).CsrfToken;
 
             var routeur = new RouterView(appConfig);
             (<any>window).routeur = routeur;

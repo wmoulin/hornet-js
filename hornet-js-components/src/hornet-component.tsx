@@ -1,5 +1,3 @@
-///<reference path="../../hornet-js-ts-typings/definition.d.ts"/>
-
 import React = require("react");
 import BaseStore = require("fluxible/addons/BaseStore");
 import utils = require("hornet-js-utils");
@@ -7,6 +5,8 @@ var lodash = utils._;
 var autobind = require("autobind-decorator");
 var reactMixin = require("react-mixin");
 var HornetComponentMixin = require("hornet-js-core/src/mixins/react-mixins");
+
+import reactComponentErrors, {config} from "src/react-component-errors";
 
 class HornetComponent<P,S> extends React.Component<P, S> {
 
@@ -24,6 +24,9 @@ class HornetComponent<P,S> extends React.Component<P, S> {
     // HornetComponentMixin.themeMixin
     genUrlTheme:(path:string) => string;
 
+    // HornetComponentMixin.mergePropsMixin
+    mergeParentPropsWithChildProps:(childProps, childPropsSetByParent, parentPropsToExclude?) => any;
+
     // HornetComponentMixin.contextPathMixin
     genUrl:(path?:string)=>string;
     getContextPath:()=> string;
@@ -34,6 +37,9 @@ class HornetComponent<P,S> extends React.Component<P, S> {
 
     // HornetComponentMixin.throttleMixin
     throttle:(fn:Function, conf?:any) => Function;
+
+    // HornetComponentMixin.throttleMixin
+    debounce:(fn:Function, conf?:any) => Function;
 
     /**
      * Fonction à utiliser dans une annotation TypeScript pour appliquer les mixins.
@@ -57,6 +63,13 @@ class HornetComponent<P,S> extends React.Component<P, S> {
         } else {
             return reactMixin.decorate(HornetComponentMixin);
         }
+    }
+
+    static Error(errorHandler?:any):ClassDecorator {
+        if (errorHandler) {
+            config.errorHandler = errorHandler;
+        }
+        return reactComponentErrors;
     }
 
     /**

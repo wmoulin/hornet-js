@@ -1,21 +1,21 @@
-///<reference path='../../../hornet-js-ts-typings/definition.d.ts'/>
 "use strict";
 
-import ActionsChainData = require('src/routes/actions-chain-data');
-import ValidateUserAccessAction = require('src/actions/validate-user-access-action');
+import TestUtils = require("hornet-js-utils/src/test-utils");
+
+import ActionsChainData = require("src/routes/actions-chain-data");
+import ValidateUserAccessAction = require("src/actions/validate-user-access-action");
 import PageInformationStore = require("src/stores/page-informations-store");
 
-import TestUtils = require('hornet-js-utils/src/test-utils');
 var chai = TestUtils.chai;
 var sinon = TestUtils.sinon;
 var expect:any = chai.expect;
 var logger = TestUtils.getLogger("hornet-js-core.test.action.validate-user-access-spec");
 
-describe('ValidateUserAccess', () => {
+describe("ValidateUserAccess", () => {
 
-    it('should dispatch user in store', () => {
+    it("should dispatch user in store", () => {
         // Arrange
-        var realPayload = {'user': {'name': TestUtils.randomString()}};
+        var realPayload = {user: {name: TestUtils.randomString()}};
         var actionContext = {
             dispatch: sinon.spy()
         };
@@ -27,11 +27,11 @@ describe('ValidateUserAccess', () => {
             .then(() => {
                 // Assert
                 expect(actionContext.dispatch).to.have.been.calledThrice;
-                expect(actionContext.dispatch).to.have.been.calledWith('CHANGE_LOGGED_USER', realPayload.user);
+                expect(actionContext.dispatch).to.have.been.calledWith("CHANGE_LOGGED_USER", realPayload.user);
             });
     });
 
-    it('should not dispatch in store if no user', () => {
+    it("should not dispatch in store if no user", () => {
         // Arrange
         var realPayload = {};
         var actionContext = {
@@ -48,7 +48,7 @@ describe('ValidateUserAccess', () => {
             });
     });
 
-    it('should allow user with role', () => {
+    it("should allow user with role", () => {
         // Arrange
         var stubPageInformationStore:any = sinon.stub();
         stubPageInformationStore.userHasRole = sinon.stub().returns(true);
@@ -70,7 +70,7 @@ describe('ValidateUserAccess', () => {
             });
     });
 
-    it('should not allow user without role', () => {
+    it("should not allow user without role", () => {
         // Arrange
         var stubPageInformationStore:any = sinon.stub();
         stubPageInformationStore.userHasRole = sinon.stub().returns(false);
@@ -87,7 +87,7 @@ describe('ValidateUserAccess', () => {
             .promise(new ActionsChainData())
             .then(() => {
                 // Assert
-                chai.assert.fail('called', 'not called', 'Ne devrait pas être appelé');
+                chai.assert.fail("called", "not called", "Ne devrait pas être appelé");
             }, function (actionChainData:any) {
                 // Assert
                 expect((<ActionsChainData>actionChainData).isAccessForbidden).to.be.true;

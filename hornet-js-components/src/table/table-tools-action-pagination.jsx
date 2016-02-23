@@ -5,38 +5,53 @@ var HornetComponentMixin = require("hornet-js-core/src/mixins/react-mixins");
 
 var logger = utils.getLogger("hornet-js-components.table.table-tools-action-pagination");
 
-var TableToolsActionPagination = React.createClass({
+module.exports = React.createClass({
     mixins: [HornetComponentMixin],
 
     propTypes: {
         tableName: React.PropTypes.string,
         options: React.PropTypes.object,
+        /** Libellés surchargeant les libellés du composant table */
         messages: React.PropTypes.object,
         pagination: React.PropTypes.object,
         onchangePaginationData: React.PropTypes.func,
         classAction: React.PropTypes.string,
 
-        enabled: React.PropTypes.bool
+        enabled: React.PropTypes.bool,
+        /** Choix de taille de page proposés */
+        pageSizeSelect: React.PropTypes.arrayOf(React.PropTypes.shape({
+            /** Taille de page */
+            value: React.PropTypes.number.isRequired,
+            /** Clé du libellé à rechercher dans messages ou dans le bloc de messages du composant "table" */
+            textKey: React.PropTypes.string.isRequired
+        })),
+        /** Path permettant de surcharger les pictogrammes/images **/
+        imgFilePath: React.PropTypes.string,
+        actions: React.PropTypes.object,
+        routes: React.PropTypes.object,
+        openDeleteAlert: React.PropTypes.func,
+        actionMassEnabled: React.PropTypes.bool,
+        actionAddEnabled: React.PropTypes.bool,
+        actionPaginationEnabled: React.PropTypes.bool
     },
 
     getDefaultProps: function () {
         return {
-            enabled: false
+            enabled: false,
+            pageSizeSelect : [
+                {value: 10, textKey: "10"},
+                {value: 50, textKey: "50"},
+                {value: 100, textKey: "100"},
+                {value: -1, textKey: "displayAll"}
+            ],
+            messages: {}
         };
     },
 
     getInitialState: function () {
-        var intMess = this.i18n("table");
-        var optionSelect = [
-            {value: 10, text: 10},
-            {value: 50, text: 50},
-            {value: 100, text: 100},
-            {value: -1, text: this.props.messages.displayAll || intMess.displayAll}
-        ]; // TODO Externaliser la configuration
-
         return {
-            i18n: intMess,
-            optionSelect: optionSelect
+            /* Libellés du composant table */
+            i18n: this.i18n("table")
         };
     },
 
@@ -61,7 +76,7 @@ var TableToolsActionPagination = React.createClass({
                                 {this._getButtons()}
                             </div>
                             {this._renderSelectIndexPage()}
-                            {this._renderSelectItemsPerPage(this.state.optionSelect)}
+                            {this._renderSelectItemsPerPage(this.props.pageSizeSelect)}
                         </div>
                     </div> : null
             );
@@ -75,25 +90,30 @@ var TableToolsActionPagination = React.createClass({
      * Rendu HTML du composant Select ItemsPerPage
      * @returns {XML}
      */
-    _renderSelectItemsPerPage: function (optionSelect) {
+    _renderSelectItemsPerPage: function (pageSizeSelect) {
         logger.trace("_renderSelectItemsPerPage");
 
         var labelForSelectItemsPerPage = this.props.tableName + "itemsPerPage";
 
         var options = [];
-        optionSelect.map((item) => {
+        pageSizeSelect.map((item) => {
             options.push(
-                <option value={item.value} selected={this.props.pagination.itemsPerPage == item.value}>
-                    {item.text}
+                <option
+                    value={item.value}
+                    key={"selectedItems-"+item.value+"-"+item.textKey}
+                    selected={this.props.pagination.itemsPerPage == item.value}
+                    >
+                    {this.props.messages[item.textKey] || this.state.i18n[item.textKey] || item.textKey}
                 </option>
             );
         });
+        var itemPerPageValue = this.props.pagination.itemsPerPage.toString();
         return (
             <div className="hornet-datatable-pagination-select-index pure-u-1-3">
                 <label htmlFor={labelForSelectItemsPerPage}>
-                    {this.state.i18n.rowNumber}
+                    {this.props.messages.rowNumber || this.state.i18n.rowNumber}
                 </label>
-                <select name={labelForSelectItemsPerPage} onChange={this.onFormChange}>
+                <select name={labelForSelectItemsPerPage} onChange={this.onFormChange} value={itemPerPageValue}>
                     {options}
                 </select>
             </div>
@@ -111,14 +131,14 @@ var TableToolsActionPagination = React.createClass({
         var options = [];
         var totalPages = this._getTotalPages() || 1;
         for (var i = 1; i <= totalPages; i++) {
-            options.push(<option value={i} selected={(this.props.pagination.pageIndex == i)}>{i}</option>);
+            options.push(<option value={i} key={"indexPage-"+i}>{i}</option>);
         }
         return (
             <div className="hornet-datatable-pagination-per-page pure-u-1-3">
                 <label>
-                    {this.state.i18n.pageFooter}
+                    {this.props.messages.pageFooter || this.state.i18n.pageFooter}
                 </label>
-                <select name="indexPage" onChange={this.onFormChange}>
+                <select name="indexPage" onChange={this.onFormChange} value={this.props.pagination.pageIndex}>
                     {options}
                 </select>
                 &nbsp;/&nbsp;{totalPages}
@@ -197,12 +217,21 @@ var TableToolsActionPagination = React.createClass({
         logger.trace("_renderButton");
         className += " hornet-datatable-pagination-control hornet-datatable-pagination-control-" + type;
 
+        var changePaginationFunction = null,
+            self = this;
+        if(onClickActif) {
+            changePaginationFunction = function () {
+                self._onChangePagination(page, self.props.pagination.itemsPerPage);
+            }
+        }
+
         return (
             <button
                 data-type={type}
                 className={className}
-                onClick={(onClickActif)?this._onChangePagination.bind(this, page, this.props.pagination.itemsPerPage):null}
+                onClick={(onClickActif)? changePaginationFunction : null}
                 data-page={page}
+                key={"buttonPagination-"+type}
             >
                 {texte}
             </button>
@@ -245,5 +274,3 @@ var TableToolsActionPagination = React.createClass({
         }
     }
 });
-
-module.exports = TableToolsActionPagination;

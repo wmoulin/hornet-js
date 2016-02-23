@@ -1,4 +1,3 @@
-///<reference path='../../hornet-js-ts-typings/definition.d.ts'/>
 "use strict";
 import I = require("./routes/router-interfaces");
 
@@ -43,6 +42,8 @@ interface  ClientConfiguration {
     dispatcher:Fluxible;
 
     fluxibleContext?:FluxibleContext;
+
+    directorClientConfiguration?:I.DirectorClientConfiguration
 }
 
 export = ClientConfiguration;

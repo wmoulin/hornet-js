@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import utils = require("hornet-js-utils");
 import Action = require("src/actions/action");
@@ -19,8 +18,7 @@ class SimpleAction extends Action<ActionsChainData> {
         super();
         if (key) {
             this.key = key;
-        }
-        else {
+        } else {
             throw new Error("SimpleAction cannot dispatch an empty key string");
         }
     }
@@ -34,11 +32,9 @@ class SimpleAction extends Action<ActionsChainData> {
     getDispatchKey():string {
         if (!this.key) {
             throw new Error("SimpleAction cannot dispatch an empty key string");
-        }
-        else {
+        } else {
             return this.key;
         }
     }
 }
 export = SimpleAction;
-

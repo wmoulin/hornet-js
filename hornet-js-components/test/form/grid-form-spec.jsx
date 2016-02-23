@@ -1,14 +1,15 @@
 "use strict";
 
-var utils = require('hornet-js-utils');
-var React = require('react');
-var TestUtils = require('hornet-js-utils/src/test-utils');
+var utils = require("hornet-js-utils");
+var React = require("react");
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var render = TestUtils.render;
 
-var Newforms = require('newforms');
+var Newforms = require("newforms");
 var RenderForm = Newforms.RenderForm;
-var GridForm = require('src/form/grid-form');
+var HornetForm = require("src/form/form");
+var GridForm = require("src/form/grid-form");
 var Grid = GridForm.GridForm;
 var FieldSet = GridForm.FieldSet;
 var Row = GridForm.Row;
@@ -16,9 +17,9 @@ var Field = GridForm.Field;
 
 var logger = utils.getLogger("hornet-js-components.test.form.grid-form-spec");
 
-describe('GridForm', () => {
+describe("GridForm", () => {
     var formConf = {
-        autoId: '{name}',
+        autoId: "{name}",
         labelSuffix: ''
     };
 
@@ -29,7 +30,7 @@ describe('GridForm', () => {
         },
         getStore: (store) => {
             return {
-                getThemeUrl : function() {
+                getThemeUrl: function () {
                     return "utltheme";
                 }
             };
@@ -47,10 +48,10 @@ describe('GridForm', () => {
     function prepareForm(fieldConf) {
         var fieldsConf = Array.isArray(fieldConf) ? fieldConf : [fieldConf],
             form = {
-                labelSuffix: '',
-                errorCssClass: 'error',
-                requiredCssClass: 'required',
-                validCssClass: 'valid'
+                labelSuffix: "",
+                errorCssClass: "error",
+                requiredCssClass: "required",
+                validCssClass: "valid"
             };
 
         for (var i = 0; i < fieldsConf.length; i++) {
@@ -63,16 +64,18 @@ describe('GridForm', () => {
         return Newforms.Form.extend(form);
     }
 
-    describe('Field', () => {
-        it('doit afficher un champ facultatif à partir des informations du form', () => {
+    describe("Field", () => {
+        it("doit afficher un champ facultatif à partir des informations du form", () => {
             // Arrange
             var fieldConf = {
-                    key: 'nom',
-                    label: 'Nom',
+                    key: "nom",
+                    label: "Nom",
                     required: false
                 },
                 FormDef = prepareForm(fieldConf),
                 form = new FormDef(formConf);
+
+            context["form"] = form;
 
             // Act
             //
@@ -81,183 +84,176 @@ describe('GridForm', () => {
             //logger.debug("ZE FORM ", form);
 
             var $ = render(() =>(
-                <Grid form={form} >
-                    <Field name="nom" span="1"/>
-                </Grid>
+                <HornetForm form={form}>
+                        <Field name="nom" groupClass="pure-u-1-1"/>
+                </HornetForm>
             ), context);
 
             // Assert
             var asserts = assertions($),
-                $result = $('div.grid-form');
+                $result = $("div.grid-form");
             asserts.assertGrid($result);
-            var $gridFormField = $result.find('.grid-form-field');
-            expect($gridFormField).to.have.class('pure-u-1-1');
+            var $gridFormField = $result.find(".grid-form-field");
+            expect($gridFormField).to.have.class("pure-u-1-1");
             asserts.assertField($gridFormField, fieldConf);
         });
 
-        it('doit afficher un champ obligatoire à partir des informations du form', () => {
+        it("doit afficher un champ obligatoire à partir des informations du form", () => {
             // Arrange
             var fieldConf = {
-                    key: 'nom',
-                    label: 'Nom',
+                    key: "nom",
+                    label: "Nom",
                     required: true
                 },
                 FormDef = prepareForm(fieldConf),
                 form = new FormDef(formConf);
+            context["form"] = form;
 
             // Act
             var $ = render(() => (
-                    <Grid form={form}>
-                        <Field name="nom" span="1" />
-                    </Grid>
-                ), context);
+                <HornetForm form={form}>
+                    <Field name="nom" groupClass="pure-u-1-1"/>
+                </HornetForm>
+            ), context);
 
             // Assert
             var asserts = assertions($),
-                $result = $('div.grid-form');
+                $result = $("div.grid-form");
 
             asserts.assertGrid($result);
-            var $gridFormField = $result.find('.grid-form-field');
-            expect($gridFormField).to.have.class('pure-u-1-1');
+            var $gridFormField = $result.find(".grid-form-field");
+            expect($gridFormField).to.have.class("pure-u-1-1");
             asserts.assertField($gridFormField, fieldConf);
         });
     });
 
-    describe('Row', () => {
-        it('doit afficher un unique champ dans un bloc', () => {
+    describe("Row", () => {
+        it("doit afficher un unique champ dans un bloc", () => {
             // Arrange
             var fieldConf = {
-                    key: 'nom',
-                    label: 'Nom'
+                    key: "nom",
+                    label: "Nom"
                 },
                 FormDef = prepareForm(fieldConf),
                 form = new FormDef(formConf);
 
             // Act
             var $ = render(() => (
-                <RenderForm form={form}>
-                    <Grid>
-                        <Row>
-                            <Field name="nom" />
-                        </Row>
-                    </Grid>
-                </RenderForm>),context);
+                <HornetForm form={form}>
+                    <Row>
+                        <Field name="nom"/>
+                    </Row>
+                </HornetForm>), context);
 
             // Assert
             var asserts = assertions($),
-                $result = $('div.grid-form');
+                $result = $("div.grid-form");
             asserts.assertGrid($result);
-            var $gridRows = $result.find('div.formmgr-row');
-            var $rows = $gridRows.find('div.grid-form-field');
+            var $gridRows = $result.find("div.pure-g-r");
+            var $rows = $gridRows.find("div.grid-form-field");
             asserts.assertRow($gridRows, [fieldConf]);
             asserts.assertFields($rows, [fieldConf]);
         });
 
-        it('doit afficher deux champs dans leurs blocs', () => {
+        it("doit afficher deux champs dans leurs blocs", () => {
             // Arrange
             var fieldsConf = [{
-                    key: 'nom',
-                    label: 'Nom'
+                    key: "nom",
+                    label: "Nom"
                 }, {
-                    key: 'prenom',
-                    label: 'Prenom'
+                    key: "prenom",
+                    label: "Prenom"
                 }],
                 FormDef = prepareForm(fieldsConf),
                 form = new FormDef(formConf);
 
             // Act
             var $ = render(() =>(
-                <RenderForm form={form}>
-                    <Grid>
+                <HornetForm form={form}>
                         <Row>
-                            <Field name="nom" />
-                            <Field name="prenom" />
+                            <Field name="nom"/>
+                            <Field name="prenom"/>
                         </Row>
-                    </Grid>
-                </RenderForm>), context);
+                </HornetForm>), context);
 
             // Assert
             var asserts = assertions($),
-                $result = $('div.grid-form');
+                $result = $("div.grid-form");
             asserts.assertGrid($result);
-            var $gridRows = $result.find('div.formmgr-row');
-            var $rows = $gridRows.find('div.grid-form-field');
+            var $gridRows = $result.find("div.pure-g-r");
+            var $rows = $gridRows.find("div.grid-form-field");
             asserts.assertRow($gridRows, fieldsConf);
             asserts.assertFields($rows, fieldsConf);
         });
     });
 
-    describe('GroupeChamps', () => {
-        it('doit afficher des champs dans une ligne', () => {
+    describe("GroupeChamps", () => {
+        it("doit afficher des champs dans une ligne", () => {
             // Arrange
             var fieldConf = {
-                    key: 'nom',
-                    label: 'Nom'
+                    key: "nom",
+                    label: "Nom"
                 },
-                sectionName = 'Section 1',
+                sectionName = "Section 1",
                 FormDef = prepareForm(fieldConf),
                 form = new FormDef(formConf);
 
             // Act
             var $ = render(() =>(
-                <RenderForm form={form}>
-                    <Grid>
+                <HornetForm form={form}>
                         <FieldSet name={sectionName} classNames="hornet-fieldset">
                             <Row>
-                                <Field name="nom" />
+                                <Field name="nom"/>
                             </Row>
                         </FieldSet>
-                    </Grid>
-                </RenderForm>), context);
+                </HornetForm>), context);
 
             // Assert
             var asserts = assertions($),
-                $result = $('div.grid-form');
+                $result = $("div.grid-form");
             asserts.assertGrid($result);
             asserts.assertGroupeChamps($result, sectionName);
-            var $gridRows = $result.find('div.formmgr-row');
-            var $rows = $gridRows.find('div.grid-form-field');
+            var $gridRows = $result.find("div.pure-g-r");
+            var $rows = $gridRows.find("div.grid-form-field");
             asserts.assertRow($gridRows, [fieldConf]);
             asserts.assertFields($rows, [fieldConf]);
         });
     });
 
-    describe('Grid', () => {
-        it('doit afficher des lignes', () => {
+    describe("Grid", () => {
+        it("doit afficher des lignes", () => {
             // Arrange
             var fieldsConf = [{
-                    key: 'nom',
-                    label: 'Nom'
+                    key: "nom",
+                    label: "Nom"
                 }, {
-                    key: 'prenom',
-                    label: 'Prenom'
+                    key: "prenom",
+                    label: "Prenom"
                 }, {
-                    key: 'date',
-                    label: 'Date'
+                    key: "date",
+                    label: "Date"
                 }],
                 FormDef = prepareForm(fieldsConf),
                 form = new FormDef(formConf);
 
             // Act
             var $ = render(() =>(
-                <RenderForm form={form}>
-                    <Grid>
+                <HornetForm form={form}>
                         <Row>
-                            <Field name="nom" fieldClassName="pure-u-1-3"/>
-                            <Field name="prenom" />
+                            <Field name="nom" fieldClass="pure-u-1-3"/>
+                            <Field name="prenom"/>
                         </Row>
                         <Row>
-                            <Field name="date" />
+                            <Field name="date"/>
                         </Row>
-                    </Grid>
-                </RenderForm>),context);
+                </HornetForm>), context);
 
             // Assert
             var asserts = assertions($),
-                $result = $('div.grid-form');
+                $result = $("div.grid-form");
             asserts.assertGrid($result);
             // 2 lignes attendues
-            var $gridRows = $result.find('div.formmgr-row');
+            var $gridRows = $result.children("div.pure-g-r");
             expect($gridRows).with.length(2);
             // la première ligne doit contenir les deux premiers champs
             asserts.assertRow($($gridRows[0]), [fieldsConf[0], fieldsConf[1]]);
@@ -275,7 +271,7 @@ function assertions($) {
     var asserts = {};
 
     asserts.extractCols = function ($row) {
-        return $row.find('div.grid-form-field');
+        return $row.find("div.grid-form-field");
     };
 
     /**
@@ -285,8 +281,8 @@ function assertions($) {
      */
     asserts.assertGrid = function ($gridForm) {
         expect($gridForm)
-            .to.have.class('grid-form')
-            .to.have.class('pure-g-r');
+            .to.have.class("grid-form")
+            .to.have.class("pure-g-r");
 
         return asserts;
     };
@@ -298,11 +294,11 @@ function assertions($) {
      * @param sectionName
      */
     asserts.assertGroupeChamps = function ($gridForm, sectionName) {
-        var $section = $gridForm.find('.hornet-fieldset');
+        var $section = $gridForm.find(".hornet-fieldset");
         expect($section).to.exist;
 
-        expect($section.find('legend')).to.have.text(sectionName);
-        expect($section.find('.formmgr-row')).to.exist;
+        expect($section.find("legend")).to.have.text(sectionName);
+        expect($section.find(".pure-g-r")).to.exist;
 
         return asserts;
     };
@@ -316,10 +312,10 @@ function assertions($) {
      */
     asserts.assertRow = function ($gridRow, fieldsConf) {
         expect($gridRow).to.exist;
-        expect($gridRow).to.have.class('pure-g-r');
+        expect($gridRow).to.have.class("pure-g-r");
 
         if (fieldsConf.length > 0) {
-            expect($gridRow).to.have.descendants('.grid-form-field');
+            expect($gridRow).to.have.descendants(".grid-form-field");
 
             var $cols = asserts.extractCols($gridRow);
             expect($cols).with.length(fieldsConf.length);
@@ -337,8 +333,8 @@ function assertions($) {
     asserts.assertFields = function ($rows, fieldsConf) {
         $rows.each(function (i) {
             var $fieldContainer = $(this);
-            expect($fieldContainer).to.have.class('pure-u-1-' + fieldsConf.length);
-            expect($fieldContainer.find('label'))
+            expect($fieldContainer).to.have.class("pure-u-1-" + fieldsConf.length);
+            expect($fieldContainer.find("label"))
                 .to.exist
                 .to.have.text(fieldsConf[i].label);
 
@@ -357,31 +353,31 @@ function assertions($) {
         expect($gridFormField).to.exist;
 
         // deux sous div (colonnes label et champ)
-        var $fieldGrid = $gridFormField.children('div.pure-g-r');
+        var $fieldGrid = $gridFormField.children("div.pure-g-r");
         expect($fieldGrid).to.exist;
-        var $fieldCols = $fieldGrid.children('div');
+        var $fieldCols = $fieldGrid.children("div");
         expect($fieldCols).with.length(2);
         var $fieldLabelCol = $($fieldCols[0]);
-        var $fieldLabel = $fieldLabelCol.children('label');
+        var $fieldLabel = $fieldLabelCol.children("label");
         expect($fieldLabel).to.exist;
         if (fieldConf.required) {
             expect($fieldLabel.text())
                 .to.contain(fieldConf.label)
-                .to.contain('*');
-            expect($fieldLabelCol.find('span.required'))
+                .to.contain("*");
+            expect($fieldLabelCol.find("span.required"))
                 .to.exist
-                .to.have.text('*');
+                .to.have.text("*");
         } else {
             expect($fieldLabel).to.have.text(fieldConf.label);
         }
-        expect($fieldLabel).to.have.attr('for', fieldConf.label.toLowerCase());
+        expect($fieldLabel).to.have.attr("for", fieldConf.label.toLowerCase());
 
         var $fieldInputCol = $($fieldCols[1]);
-        var $fieldInput = $fieldInputCol.children('input');
+        var $fieldInput = $fieldInputCol.children("input");
         expect($fieldInput).to.exist;
-        expect($fieldInput).to.have.attr('type', 'text');
-        expect($fieldInput).to.have.attr('id', fieldConf.label.toLowerCase());
-        expect($fieldInput).to.have.attr('name', fieldConf.label.toLowerCase());
+        expect($fieldInput).to.have.attr("type", "text");
+        expect($fieldInput).to.have.attr("id", fieldConf.label.toLowerCase());
+        expect($fieldInput).to.have.attr("name", fieldConf.label.toLowerCase());
 
         return asserts;
     }

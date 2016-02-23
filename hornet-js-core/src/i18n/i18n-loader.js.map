@@ -1,1 +1,0 @@
-{"version":3,"file":"i18n-loader.js","sourceRoot":"","sources":["i18n-loader.ts"],"names":["I18nLoader","I18nLoader.constructor","I18nLoader.getMessages"],"mappings":"AAAA;;GAEG;AACH,YAAY,CAAC;AAEb;IACIA;IACAC,CAACA;IAEDD,gCAAWA,GAAXA,UAAYA,MAAoBA;QAC5BE,MAAMA,IAAIA,KAAKA,CAACA,wCAAwCA,CAACA,CAACA;IAC9DA,CAACA;IACLF,iBAACA;AAADA,CAACA,AAPD,IAOC;AACD,iBAAS,UAAU,CAAC"}

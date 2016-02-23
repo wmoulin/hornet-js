@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import React = require("react/addons");
@@ -11,6 +10,7 @@ import Modal = require("src/dialog/modal");
 var logger = utils.getLogger("hornet-js-components.spinner.spinner");
 
 @HornetComponent.ApplyMixins()
+@HornetComponent.Error()
 class Spinner extends HornetComponent<PropTypesNs.SpinnerProps,any> {
 
     static displayName:string = "Spinner";
@@ -93,7 +93,7 @@ class Spinner extends HornetComponent<PropTypesNs.SpinnerProps,any> {
     render() {
         var contentSpinner = this.props.children || this._renderDefaultSpinnerContent();
         return (
-            <Modal isVisible={this.state.isVisible} title={this._getLoadingTitle()} hideCloseBar={true} manageFocus={false}>
+            <Modal isVisible={this.state.isVisible} title={this._getLoadingTitle()} hideCloseBar={true} manageFocus={true}>
                 <span role="progressbar">
                     {contentSpinner}
                 </span>

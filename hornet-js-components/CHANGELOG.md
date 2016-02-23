@@ -1,0 +1,241 @@
+# hornet-js 5.0.1
+
+- 0055316: [hornet] Exposition de la conf service au client (heurtemattes) - traité.
+- 0055317: [hornet] RouterAbstract : message I18n sur erreur technique (heurtemattes) - traité.
+- 0055048: [hornet] Stacktrace des logs console, association ligne de code exact plutot que log4js.js:1416 (heurtemattes) - traité.
+- 0055814: [hornet] Verror : mise à jour du d.ts en 1.6.0 (heurtemattes) - traité.
+- 0055318: [hornet] WError dans les messages de notification (heurtemattes) - traité.
+- 0055321: [hornet] try-catch tsx/jsx (glotainyy) - traité.
+- 0053394: [hornet] mode SPA : chemin "static" en dur (bozecm) - traité.
+- 0055463: [hornet] ServerLog : Ajout de token applicatif (bozecm) - traité.
+- 0055826: [hornet] Composant onglets (tabs) - propTypes - enlever les props liées aux Forms (bozecm) - traité.
+- 0056013: [hornet] ProptypesMixin : suppression du mixin (heurtemattes) - traité.
+- 0055467: [hornet] Configuration multi-services impossible (bozecm) - traité.
+- 0055242: [hornet] Composant Tableau : autorisé le tri colonne, sans colonne par défaut (glotainyy) - traité.
+- 0055335: [hornet] Gestion des champs en mode readonly (brierel) - traité.
+- 0055751: [hornet] Mettre à jour les versions de librairies (brierel) - traité.
+- 0055974: [hornet] Datepicker : ajout de l'attribut isDatePicker (heurtemattes) - traité.
+- 0055816: [hornet] Composant Tableau : multi résultat dans le store applicatif (heurtemattes) - traité.
+- 0055315: [hornet] Traitement des slash sur les noms de conf host et name (heurtemattes) - traité.
+- 0055464: [hornet] ServerLog : getFunctionName (bozecm) - traité.
+- 0055411: [hornet] Force génération page serveur (bozecm) - traité.
+- 0055337: [hornet] Perte de focus sous firefox (buganp) - traité.
+- 0055532: [hornet] Composant Tableau : bouton export avec url incorrect (bozecm) - traité.
+- 0055320: [hornet] Warning des messages par defaut I18N (brierel) - traité.
+- 0054496: [hornet] Composant Pagination tableau : externalisation de la configuration du select (brierel) - traité.
+- 0055409: [hornet] Composant Form : suppression de la propTypes "action" (heurtemattes) - traité.
+- 0055710: [hornet] Rendre l'astérisque optionnel sur les champs obligatoires (brierel) - traité.
+- 0055175: [hornet] react-mixins : mode production pas de warning (brierel) - traité.
+- 0054990: [hornet] Multi-click / multi-frappe possible sur les actions (brierel) - traité.
+- 0054396: [hornet] Logs : améliorer l'initialisation & intercepter les "console.log/err/warn/..." (buganp) - traité.
+- 0054392: [hornet] Ajout d'un utilitaire afin de charger des fichiers JSON customisés (buganp) - traité.
+
+- 0055866: [hornet] Gestion simplifiée d'un keystore/truststore (buganp) - traité.
+- 0056041: [hornet] AutoComplete: pas de classe CSS sur élément sélectionné depuis clavier (glotainyy) - traité.
+- 0055494: [hornet] Recherche Partenaire: Erreur Tri après ajout du critère de recherche Vip (glotainyy) - traité.
+- 0055166: [hornet] generator-hornet-js: Evolutions / Corrections entre la 5.0.0 et la 5.0.1 (glotainyy) - traité.
+- 0055542: [hornet] Construction des thèmes : impacts sur les thèmes et applitutoriel (buganp) - traité.
+- 0056021: [hornet] hornet-js-cas : permettre des protocoles / hostnames différents pour les urls cas (buganp) - traité.
+- 0055172: [hornet] Composant d'upload - pouvoir spécifier les formats de fichier autorisés (bozecm) - traité.
+- 0055626: [hornet] Recherche Partenaire: saisie impossible sur champ date de fin (glotainyy) - traité.
+- 0055714: [hornet] Hornet-js : externalisation des d.ts dans des modules dédiés (buganp) - traité.
+- 0055510: [hornet] Ajout d'un entête http sur les statiques provenant de node / express (buganp) - traité.
+- 0055803: [hornet] Conversion des simples quotes en doubles quotes (heurtemattes) - traité.
+- 0055516: [hornet] Middleware : méthodes afin d'insérer un middleware avant / après un middleware de référence (buganp) - traité.
+- 0055677: [hornet] Router : permettre de personnaliser la configuration de Director côté client (buganp) - traité.
+- 0055136: [hornet] CSRF : suppression du mécanisme gérant plusieurs token > un seul token à générer (buganp) - traité.
+- 0055369: [hornet] Pas de log dans le navigateur en mode fullSpa (bozecm) - traité.
+- 0055370: [hornet] mode fullSpa - index.html - object.assign incompatible IE (bozecm) - traité.
+- 0055358: [hornet] Tri sur colonne fictive (render perso) : comportement étrange (bozecm) - traité.
+- 0055207: [hornet] Problème sur la modale (buganp) - traité.
+- 0055616: [hornet] stacktrace nodejs & sourcemap : lien avec les sources TS, TSX (buganp) - traité.
+- 0055618: [hornet] Rendre paramétrable la taille des stacktrace côté nodejs (buganp) - traité.
+- 0055608: [hornet] Maximum call stack size exceeded : new-forms-aria-modifications.ts (buganp) - traité.
+- 0055357: [hornet] Désactiver la validation lors du 1er affichage d'un formulaire (buganp) - traité.
+- 0055173: [hornet] Champ de saisie email - ne pas utiliser le type email (bozecm) - traité.
+- 0055171: [hornet] Logo Hornet dans le bandeau - changement du texte de l'infobulle (bozecm) - traité.
+- 0055174: [hornet] Theme hornet - Changement de couleurs h4 et legend (bozecm) - traité.
+- 0055547: [hornet] hornet-js-components: permettre la surcharge des pictogrammes/images (glotainyy) - traité.
+- 0055360: [hornet] La génération de PDF ne fonctionne pas (brierel) - traité.
+- 0055629: [hornet] composant Tableau: sur changement de pagination, scroller en haut du tableau (glotainyy) - traité.
+- 0055491: [hornet] Recherche Partenaire - Tableau: Tri Colonne Vip (glotainyy) - traité.
+- 0055340: [hornet] Composant HornetForm sous IE: problème d'accessibilité du bouton Valider (glotainyy) - traité.
+- 0055338: [hornet] Menu Navigation: pas de blur sur élément sans sous-menu (glotainyy) - traité.
+- 0055339: [hornet] Menu Navigation: Le bouton "déconnexion" n'est pas tabulable (glotainyy) - traité.
+- 0054976: [hornet] Ecran recherche partenaire: un clic sur une case à cocher d'une ligne du tableau coche toutes les lignes (glotainyy) - traité.
+- 0055557: [hornet] Recherche Partenaire: séparer formulaire et tableau en 2 composants distincts (glotainyy) - traité.
+- 0056062: [hornet] Erreur au rafraîchissement d'un tableau dont certaines colonnes sont masquées (brierel) - traité.
+
+# hornet-js 5.0.0-rc4
+- 53094 - I-01 - EC-PAR01 : Liste des partenaires via recherche
+- 53219 - README.md
+- 53451 - Ajout de paramètre automatique
+- 53356 - Composant upload
+- 53348 - Internationalisation des messages d'erreurs
+- 53382 - Normalisation des imports et suppression des raccourcies
+- 53397 - Présence d'identifiants dom fixes dans le framework
+- 53026 - Menu : blocage de la tabulation
+- 53251 - Erreur CSRF : affichage du bloc d'erreur côté navigateur
+- 53400 - Cohérence de hornet-messages-components.json avec l'applitutoriel
+
+# hornet-js 5.0.0-rc3
+- 53311 - Validation d'une action dans une modale : spinner en arrière plan
+- 53263 - Ajout / Edition d'un secteur : performance
+- 53275 - Suppression répertoire testvie et typescript-maven-plugin de hornet-service-framework
+- 53264 - Ecran recherche partenaire : date picker
+- 53391 - Utilisation de use strict
+- 53398 - Thème Intranet : référence à "hornet-skin-diplonet"
+- 53401 - pagination.jsx : I18N option Select : Afficher tout
+- 53402 - I18N action de masse
+- 52961 - Gestion des droits : Access Forbidden
+- 53250 - Ecran recherche partenaire : tri tableau lance 2 requêtes
+- 53309 - Ecran recherche partenaire : scroll haut de page suite action
+- 53037 - Champ autocomplete nationalité : remarques
+
+# hornet-js 5.0.0-rc2
+- 53095 - Gérer l'encodage des mdp dans node
+- 53098 - IE 9/10 - Lister secteurs - mise en cache
+- 53141 - Commit svn : répertoire vide
+- 53154 - classSet deprecated
+- 53155 - authentification-utils : définition de classe
+- 53156 - Composant utils : nommage du logConfig.json
+- 53158 - Composant utils : cohérence de nommage CommonIndex
+- 53161 - Cohérence des fichiers index.ts
+- 53252 - Express-session : accès concurrent à la session non géré
+
+# hornet-js 5.0.0-rc1
+
+- 51715  -  EXP_INF_IAT  -  En tant que Exploitant je peux installer l'applitutoriel
+- 51716  -  INT_PIC_CAT  -  En tant que Intégrateur je peux construire l'applitutoriel
+- 51717  -  DEV_ENV_LDA  -  En tant que Developpeur je peux lancer / debugger l'applitutoriel
+- 51718  -  DEV_ENV_TAT  -  En tant que Developpeur je peux tester (unitaire) l'applitutoriel
+- 51719  -  INT_PIC_CFM  -  En tant que Intégrateur je peux construire le framework
+- 51720  -  DEV_ENV_TDF  -  En tant que Developpeur je peux tester / debuger le framework
+- 51721  -  DEV_ENV_IEW  -  En tant que Developpeur je peux installer mon environnement JS
+- 51722  -  DEV_ENV_IEE  -  En tant que Developpeur je peux installer mon environnement Java
+- 51723  -  DEV_ENV_MCF  -  En tant que Developpeur je peux mesurer la couverture de test du framwork
+- 51724  -  INT_PIC_MFC  -  En tant que Intégrateur je peux mesurer la couverture de test du framwork
+- 51725  -  EXP_INF_PFM  -  En tant que Exploitant je peux publier / installer le Framework
+- 51726  -  EXP_INF_PTH  -  En tant que Exploitant je peux publier / installer les Themes
+- 51727  -  INT_PIC_CTH  -  En tant que Intégrateur je peux construire les Themes
+- 51728  -  DEV_ENV_MCA  -  En tant que Developpeur je peux mesurer la couverture de test de l'applituto
+- 51729  -  INT_PIC_MCA  -  En tant que Intégrateur je peux mesurer la couverture de test de l'applituto
+- 51730  -  UTI_APT_VAD  -  En tant que Utilisateur je peux visualiser l'applitutoriel sur le thème diplonet avec son entete
+- 51731  -  UTI_APT_ACC  -  En tant que Utilisateur je peux visualiser la page d'accueil
+- 51732  -  UTI_APT_AID  -  En tant que Utilisateur je peux En tant qu'utilisateur je visualise la page d'aide
+- 51733  -  UTI_APT_NPA  -  En tant que Utilisateur je peux naviguer dans l'applitutoriel via un plan d'application
+- 51734  -  UTI_APT_NFA  -  En tant que Utilisateur je peux naviguer dans l'applitutoriel via un fil d'ariane
+- 51735  -  UTI_APT_PAC  -  En tant que Utilisateur je peux visualiser la politique d'accessibilité
+- 51736  -  UTI_APT_EMC  -  En tant que Utilisateur je peux envoyer un mail de contact
+- 51737  -  UTI_APT_VLP  -  En tant que Utilisateur je peux visualiser une liste de partenaire
+- 51738  -  UTI_APT_ERL  -  En tant que Utilisateur je peux effectuer une recherche sur la liste des partenaires
+- 51739  -  UTI_APT_TRT  -  En tant que Utilisateur je peux trier le résultats du tableau
+- 51740  -  UTI_APT_APT  -  En tant que Utilisateur je peux ajouter un partenaire via le tableau
+- 51741  -  UTI_APT_VPT  -  En tant que Utilisateur je peux visualiser un partenaire via le tableau
+- 51742  -  UTI_APT_NPT  -  En tant que Utilisateur je peux naviguer de page en page pour visualiser les partenaires
+- 51743  -  UTI_APT_SPP  -  En tant que Utilisateur je peux supprimer un ou plusieurs partenaires
+- 51744  -  UTI_APT_FPT  -  En tant que Utilisateur je peux filtrer les partenaires remontés par la recherche
+- 51745  -  UTI_APT_VER  -  En tant que Utilisateur je peux visualiser mes erreurs de saisies sur les champs de recherche
+- 51746  -  UTI_APT_VEF  -  En tant que Utilisateur je peux visualiser mes erreurs de saisies sur le filtre du tableau
+- 51747  -  UTI_APT_VEE  -  En tant que Utilisateur je peux visualiser mes erreurs de saisies sur la fiche d'édition des partenaires
+- 51748  -  UTI_APT_ONG  -  En tant que Utilisateur je peux passer d'un onglet à l'autre sur la page des partenaire
+- 51749  -  UTI_APT_SEC  -  En tant que Utilisateur je peux visualiser la liste des secteurs sous forme de tableau
+- 51750  -  UTI_APT_ASE  -  En tant que Utilisateur je peux ajouter un secteur
+- 51752  -  UTI_APT_ESE  -  En tant que Utilisateur je peux editer un secteur
+- 51755  -  INT_PIC_CDO  -  En tant que Intégrateur je peux construire la documentation
+- 51760  -  INT_APT_PER  -  En tant que Intégrateur je peux valider les performance de l'applituto
+- 51761  -  DEV_PIC_EXP  -  En tant que Developpeur je peux exporter mes objets Java sous un format TypeScript
+- 51762  -  EXP_INF_IAS  -  En tant que Exploitant je peux installer l'applitutoriel (service)
+- 51763  -  INT_PIC_CAS  -  En tant que Intégrateur je peux construire l'applitutoriel (service)
+- 51764  -  DEV_ENV_LAS  -  En tant que Developpeur je peux lancer / debugger l'applitutoriel  (service)
+- 51765  -  DEV_ENV_TAS  -  En tant que Developpeur je peux tester (unitaire) l'applitutoriel  (service)
+- 51766  -  INT_PIC_CFS  -  En tant que Intégrateur je peux construire le framework  (service)
+- 51767  -  DEV_ENV_TFS  -  En tant que Developpeur je peux tester / debuger le framework (service)
+- 51769  -  EXP_INF_PFS  -  En tant que Exploitant je peux publier le Framework  (service)
+- 51770  -  DEV_ENV_MAS  -  En tant que Developpeur je peux mesurer la couverture de test de l'applituto  (service)
+- 51772  -  DEV_SER_MVN  -  En tant que Developpeur je peux utiliser Maven pour développer l'applitutoriel services
+- 51773  -  DEV_SER_SP4  -  En tant que Developpeur je peux utiliser Spring 4 pour développer l'applitutoriel services
+- 51774  -  DEV_SER_LBK  -  En tant que Developpeur je peux utiliser Logback pour développer l'applitutoriel services
+- 51775  -  DEV_SER_SMV  -  En tant que Developpeur je peux utiliser Spring MVC pour développer l'applitutoriel services
+- 51777  -  DEV_SER_MB3  -  En tant que Developpeur je peux utiliser MyBatis 3 pour développer l'applitutoriel services
+- 51778  -  INT_APT_MVN  -  En tant que IntégrateuirJe peux construire l'application Tuto services avec Maven
+- 51779  -  EXP_APT_CONF  -  Je peux configurer l'appli tuto via un ou plusieurs fichier de conf externes à l'appliAfin 
+- 51780  -  DEV_ENV_LINK  -  En tant que DéveloppeurJe peux gérer les dépendances entre modules Afin de travailler efficacement 
+- 51781  -  DEV_CLI_DBL  -  En tant que développeur Je peux rendre isomorphe les contôles de validation et de saisie
+- 51782  -  DEV_ENV_LPD  -  En tant que Développeur Je peux gérer les PeerDependencies entre modules Afin de travailler efficacement
+- 51785  -  EXP_DOC_SAT  -  En tant que Exploitant je peux Installer l'application Tutoriel
+- 51786  -  EXP_DOC_STH  -  En tant que Exploitant je peux Installer le CDN (Thème)
+- 51787  -  DEV_DOC_SER  -  En tant que Developpeur je peux connaitre les utilisation des composant services
+- 51788  -  DEV_DOC_NJS  -  En tant que Developpeur je peux connaitre les utilisation des composant js
+- 51789  -  DEV_DOC_ARC  -  En tant que Developpeur je peux connaitre La structure générale de l'application
+- 51790  -  DEV_APT_BOU  -  En tant que Developpeur je peux Lancer l'application tutoriel sans services
+- 51791  -  DEV_APT_HAN  -  En tant que Developpeur je peux utiliser React pour le template de page
+- 51792  -  DEV_DEV_DTS  -  En tant que Developpeur je peux mettre des point d'arret dans les TS 
+- 51793  -  DEV_DEV_SCO  -  En tant que Developpeur je peux Lancer les application sans ligne de commande
+- 51794  -  DEV_TEM_TJS  -  En tant que Developpeur je peux Constuire une application Node JS basée sur yeoman (thème Intranet)
+- 51795  -  DEV_TEM_TJA  -  En tant que Developpeur je peux Constuire une application Service basée sur Maven (Archetype)
+- 51796  -  UTI_APT_ECS  -  En tant que Utilisateur je peux Exporter les données du tableau partenaire au format CSV
+- 51797  -  UTI_APT_EXL  -  En tant que Utilisateur je peux Exporter les données du tableau partenaire au format EXL
+- 51798  -  UTI_APT_EPD  -  En tant que Utilisateur je peux Exporter les données du tableau partenaire au format PDF
+- 51799  -  DEV_APT_TAR  -  je peux acceder aux composant sans connaitre l'arboressence des composants
+- 51800  -  DEV_APT_ORG  -  je peux retrouver mes fichier en fonction du patterne Flux  et non de leur technologie
+- 51801  -  DEV_APT_COD  -  retrouver les Codification des spécifications dans l'organisation des sources
+- 51802  -  UTI_APT_I18  -  En tant que Utilisateur je peux visualiser l'application dans ma langue.
+- 51803  -  DEV_APT_SRM  -  En tant que Developpeur je peux séparer les routes par modules fonctionnel
+- 51804  -  UTI_APT_ERT  -  En tant que Utilisateur je peux savoir lorsqu'un traitement n'a pas abouti (erreur technique)
+- 51805  -  DEV_APT_FLU  -  En tant que Developpeur je peux Utiliser les contextes Fluxible
+- 51806  -  DEV_DEV_FTS  -  En tant que Developpeur je peux importer une seul définition de donn?es
+- 51807  -  DEV_APT_FIL  -  En tant que Developpeur je peux Poser run filtre sur une famille d'URL
+- 51808  -  DEV_APT_AGE  -  En tant que Developpeur je peux Utiliser des actions de base pour développer mes Action
+- 51809  -  DEV_APT_STS  -  En tant que Developpeur je peux Implémenter mes Store sen TS avec Héritage
+- 51810  -  DEV_APT_CRM  -  En tant que Developpeur je peux séparer les routes par modules fonctionnel
+- 51811  -  DEV_CLI_FLU  -  En tant que Developpeur je peux Utiliser fluxible pour réaliser mes développpement
+- 51812  -  DEV_DEV_DTW  -  En tant que Developpeur je peux Debugger en typescript dans l'environnement webstorm
+- 51813  -  DEV_CLI_SRM  -  En tant que Developpeur je peux charger les routes par modules fonctionnel
+- 52892  -  UTI_APT_PCA  -  En tant que Utilisateur je peux ajouer / modifier un partenaire avec des composants avancés
+- 52894  -  UTI_APT_GRA  -  En tant que Utilisateur je peux Visualiser la répartition par secteur
+- 52896  -  UTI_APT_AUT  -  En tant que Utilisateur je peux m'identifier
+- 52897  -  UTI_APT_HAB  -  En tant que Utilisateur je peux accéder uniquement aux parges autorisées
+- 52898  -  UTI_APT_CTH  -  En tant que Utilisateur je peux changer de théme
+- 52899  -  UTI_APT_TAB  -  En tant que Utilisateur je peux naviguer avec une tablette
+- 52902  -  UTI_APT_SMX  -  En tant que Utilisateur je peux basculer en mode spa / mpa / mixte
+- 52903  -  UTI_APT_SSB  -  En tant que Utilisateur je peux ne plus avoir de backend
+- 52905  -  DEV_CLI_MRE  -  En tant que Developpeur je peux Utiliser la derniére versino de React
+- 52906  -  DEV_APT_AND  -  En tant que Developpeur je peux utiliser des classes en environnement case sensitive
+- 52907  -  EXP_DOC_ISI  -  En tant que Exploitant je peux installer une infra simple
+- 52908  -  UTI_APT_MIF  -  En tant que Utilisateur je peux visualiser les message d'information
+- 52909  -  UTI_APT_CTH_1  -  En tant que Utilisateur je peux changer de théme
+- 52910  -  UTI_APT_MOB_1  -  En tant que Utilisateur je peux naviguer avec un mobile
+- 52911  -  DEV_TEM_TTH  -  En tant que Developpeur je peux générer un projet sur un théme
+- 52912  -  UTI_APT_FUP  -  En tant que Utilisateur je peux uploader un fichier sur la fiche partenaire (photo)
+- 52916  -  EXP_INF_SCE  -  En tant que Exploitant je peux Séparer les confs d'exploitation des confs d'appli
+- 52918  -  DEV_CLI_R13  -  En tant que Developpeur je peux Utiliser React 0.13
+- 52919  -  UTI_APT_CLL  -  En tant que Utilisateur je peux ajouer / modifier un partenaire avec des composants avancés
+- 52920  -  UTI_APT_CSM  -  En tant que Utilisateur je peux ajouer / modifier un partenaire avec des composants avancés
+- 52921  -  DEV_CLI_ACD  -  En tant que développeur Je peux enchainer les actions en passant le contexte "chaindata"
+- 52922  -  INT_CLI_SCH  -  En tant que intégrateur Je peux reconstruire l'application é l'identique dans plusieurs mois.
+- 52923  -  UTI_CLI_NOT  -  En tant que Utilisateur je peux afficher le composant Notification de maniére isomorphe
+- 52924  -  UTI_CLI_CAL  -  En tant que Utilisateur je peux afficher le composant Calendrier n de maniére isomorphe
+- 52925  -  UTI_CLI_AUC  -  En tant que Utilisateur je peux afficher le composant AutoComplete de maniére isomorphe
+- 52926  -  UTI_CLI_ONG  -  En tant que Utilisateur je peux afficher le composant Onglets de maniére isomorphe
+- 52927  -  DEV_CLI_RTE  -  En tant que Developpeur je peux Migration du routeur pour fonctionnement avec js
+- 52928  -  DEV_CLI_ACT  -  En tant que Developpeur je peux Migration du routeur et des actions pour fonctionnement avec js
+- 52929  -  DEV_CLI_TAB  -  En tant que Developpeur je peux Afficher le tableau en isomorphe
+- 52930  -  DEV_DEV_W10  -  En tant que Developpeur je peux utiliser le deboggeur webstorm 10 (nécéssite Nodejs 0.12)
+- 52931  -  INT_MSC_N12  -  En tant que Intégrateur je peux construire et installer le projet sur node 0.12
+- 52932  -  DEV_CLI_ESC  -  En tant que Developpeur je peux désactiver les protections anti injection SQL (escape)
+- 52933  -  DEV_CLI_CSR  -  En tant que Developpeur je peux effectuer une validation d'autenticité de mon formulaire via csrf
+- 52934  -  EXP_CLI_PCP  -  En tant que Exploitant je peux paramétrer le contextPath
+- 52935  -  DEV_CLI_UUS  -  En tant que Developpeur je peux utiliser de faéon systématique use strict dans mes TS.
+- 52936  -  DEV_APT_HEL  -  En tant que Developpeur je peux paramétrer les configurations de sécurité de Helmet
+- 52937  -  DEV_CLI_HPP  -  En tant que Developpeur je peux  assurer l'absence de doublons dans les paramétres get
+- 52938  -  DEV_CLI_SHO  -  En tant que Developpeur je peux configurer les sessions de express (httponly, secure)
+- 52939  -  DEV_APT_BOM  -  En tant que Developpeur je peux importer les dépendances par familles (Plans de conf / BOM)
+- 52940  -  DEV_CLI_LIC  -  En tant que Developpeur je peux avoir les licences et les changelog des modules
+- 52941  -  DEV_APT_SPI  -  En tant que Developpeur je peux savoir lorsqu'un traitement est en cours (spiner)
+- 52947  -  DEV_DOC_GDF  -  En tant que Developpeur je peux connaitre les bonnes pratiques pour le framework
+- 52950  -  DEV_APT_CJS  -  En tant que Developpeur je peux utiliser un systéme de cache en JS
+- 52953  -  DEV_SER_LIC  -  En tant que Developpeur je peux avoir les licences et les changelog des modules
+- 52954  -  UTI_APT_NMO  -  En tant que Utilisateur je peux utiliser l'application dans plusieurs onglets
+- 52956  -  UTI_APT_SPI  -  En tant que Utilisateur je peux savoir si un traitement est en cours
+- 52957  -  DEV_APT_UCP  -  En tant que Developpeur je peux Utiliser un context path

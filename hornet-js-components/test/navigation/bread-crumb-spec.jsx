@@ -1,19 +1,23 @@
 "use strict";
 
-var utils = require('hornet-js-utils');
-var React = require('react');
-var TestUtils = require('hornet-js-utils/src/test-utils');
+var utils = require("hornet-js-utils");
+var AppSharedProps = require("hornet-js-utils/src//app-shared-props");
+var React = require("react");
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var render = TestUtils.render;
-var context = require('test/navigation/bread-crumb-dispatcher-mock');
-var contextAccueil = require('test/navigation/bread-crumb-dispatcher-mock-accueil');
-var contextPartenairesListe = require('test/navigation/bread-crumb-dispatcher-mock-liste-partenaires');
-var FilAriane = require('src/navigation/bread-crumb');
+var context = require("test/navigation/bread-crumb-dispatcher-mock");
+var contextAccueil = require("test/navigation/bread-crumb-dispatcher-mock-accueil");
+var contextPartenairesListe = require("test/navigation/bread-crumb-dispatcher-mock-liste-partenaires");
+var FilAriane = require("src/navigation/bread-crumb");
 
 var logger = TestUtils.getLogger("hornet-js-components.test.navigation.bread-crumb-spec");
 
-describe('FilAriane', () => {
-    it('doit être configuré avec les informations paramétrées', () => {
+AppSharedProps.set("welcomePageUrl", "/accueil");
+utils.appShareProperties = AppSharedProps;
+
+describe("FilAriane", () => {
+    it("doit être configuré avec les informations paramétrées", () => {
 
         // Act
         var $ = render(() =>
@@ -24,12 +28,12 @@ describe('FilAriane', () => {
         );
 
         // Assert
-        var $breadCrumb = $('div#breadcrumb');
+        var $breadCrumb = $("nav#breadcrumb");
 
         expect($breadCrumb).to.exist;
-        var $firstAriane = $breadCrumb.find('li.fil-ariane-racine');
+        var $firstAriane = $breadCrumb.find("li.fil-ariane-racine");
         expect($firstAriane).to.exist;
-        var $firstChevron = $breadCrumb.find('span.fil-ariane-chevron');
+        var $firstChevron = $breadCrumb.find("span.fil-ariane-chevron");
         expect($firstChevron).to.exist;
 
         // Act
@@ -41,16 +45,15 @@ describe('FilAriane', () => {
         );
 
         // Assert
-        var $breadCrumb = $('div#breadcrumb');
+        var $breadCrumb = $("nav#breadcrumb");
 
         expect($breadCrumb).to.exist;
 
-        var $firstAriane = $breadCrumb.find('li.fil-ariane-racine');
+        var $firstAriane = $breadCrumb.find("li.fil-ariane-racine");
         expect($firstAriane).to.not.exist;
 
-        var $firstChevron = $breadCrumb.find('span.fil-ariane-chevron');
+        var $firstChevron = $breadCrumb.find("span.fil-ariane-chevron");
         expect($firstChevron).to.not.exist;
-
 
         // Act
         var $ = render(() =>
@@ -61,14 +64,14 @@ describe('FilAriane', () => {
         );
 
         // Assert
-        var $breadCrumb = $('div#breadcrumb');
+        var $breadCrumb = $("nav#breadcrumb");
 
         expect($breadCrumb).to.exist;
-        var $firstAriane = $breadCrumb.find('li.fil-ariane-racine');
+        var $firstAriane = $breadCrumb.find("li.fil-ariane-racine");
         expect($firstAriane).to.exist;
-        var $firstChevron = $breadCrumb.find('span.fil-ariane-chevron');
+        var $firstChevron = $breadCrumb.find("span.fil-ariane-chevron");
         expect($firstChevron).to.exist;
-        var $firstAriane = $breadCrumb.find('li.fil-ariane-parent');
+        var $firstAriane = $breadCrumb.find("li.fil-ariane-parent");
         expect($firstAriane).to.exist;
 
     });

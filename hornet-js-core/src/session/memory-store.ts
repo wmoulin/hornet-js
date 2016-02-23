@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import Session = require("src/session/session");
@@ -7,8 +6,8 @@ import utils = require("hornet-js-utils");
 var logger = utils.getLogger("hornet-js-core.session.memory-store");
 
 /* istanbul ignore next */
-var defer = typeof setImmediate === "function" ? setImmediate : function(fn, a?, b?) {
-    process.nextTick(fn.bind.apply(fn, arguments))
+var defer = typeof setImmediate === "function" ? setImmediate : function (fn, a?, b?) {
+    process.nextTick(fn.bind.apply(fn, arguments));
 };
 
 
@@ -21,7 +20,7 @@ class MemoryStore extends Store {
      * Constructor
      * @param expiredCheckInterval the interval in ms to check / delete expired sessions (default: 60000ms)
      */
-    constructor(expiredCheckInterval:number = 60000) {
+    constructor(expiredCheckInterval = 60000) {
         super();
         this.expiredCheckInterval = expiredCheckInterval;
         this.sessions = Object.create(null);
@@ -104,8 +103,7 @@ class MemoryStore extends Store {
                 var session:Session = this.sessions[sid];
                 if (now - session.getLastAccessTime().getTime() > session.getMaxInactiveInterval()) {
                     logger.info("session #" + session.getId() + " expired => removed from the MemoryStore");
-                    session.invalidate(()=> {
-                    });
+                    session.invalidate(()=> {});
                 }
             });
         }

@@ -1,8 +1,6 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import utils = require("hornet-js-utils");
-import Logger = require('hornet-js-utils/src/logger');
 
 class ClientLog {
 
@@ -74,7 +72,7 @@ class ClientLog {
                     this.log4jsLogger.addAppender(appender);
                 }
             });
-        }
+        };
     }
 
     private static configureAjaxConsole(appender) {
@@ -89,10 +87,10 @@ class ClientLog {
         ClientLog.defaultRemoteLogTimeout = ClientLog.getLoggerKeyValue("AjaxAppender timeout", appender.timeout, ClientLog.defaultRemoteLogTimeout);
 
         if (appender.url.indexOf("http") > -1) {
-            //On traite les urls complètes, correspond à une url distante autre que celle du serveur d'appli
+            // On traite les urls complètes, correspond à une url distante autre que celle du serveur d'appli
             ClientLog.defaultRemoteUrl = ClientLog.getLoggerKeyValue("AjaxAppender url", appender.url, ClientLog.defaultRemoteUrl);
         } else {
-            //l'url remote est le serveur applicatif
+            // l'url remote est le serveur applicatif
             ClientLog.defaultRemoteUrl = ClientLog.getLoggerKeyValue("AjaxAppender url", utils.buildContextPath(appender.url), ClientLog.defaultRemoteUrl);
         }
 
@@ -121,7 +119,7 @@ class ClientLog {
     }
 
     static getLoggerKeyValue(confKey:string, value:any, defaultValue:any):any {
-        if (!value && String(value) != "false") {
+        if (!value && String(value) !== "false") {
             console.warn("LOGGER WEB : KEY NOT DEFINED : ", confKey, ", DEFAULT VALUE APPLY : ", defaultValue);
         }
         return value || defaultValue;
@@ -164,7 +162,7 @@ class ClientLog {
                     \n\t %[ and %] - define a colored bloc";
 
                 console.log(level + layout + pattern);
-            }
+            };
         }
     }
 
@@ -205,7 +203,7 @@ class ClientLog {
                     var newLogLevel = utils.log4js.Level.INFO.toLevel(logLevel, ClientLog.defaultLogLevel).toString();
                     console.log("New log level :", newLogLevel, ". Reload page (F5) to activate");
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_LEVEL_KEY, newLogLevel);
-                }
+                };
             }
             return window.localStorage.getItem(ClientLog.LOCAL_STORAGE_LOGGER_LEVEL_KEY) || ClientLog.defaultLogLevel;
         } else {
@@ -222,7 +220,7 @@ class ClientLog {
 
                     console.log("New log layout :", logLayout, ". Reload page (F5) to activate");
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_LAYOUT_KEY, logLayout);
-                }
+                };
             }
             return window.localStorage.getItem(ClientLog.LOCAL_STORAGE_LOGGER_LAYOUT_KEY) || ClientLog.defaultLogLayout;
         } else {
@@ -239,7 +237,7 @@ class ClientLog {
 
                     console.log("Remote log (De)Activation :", logRemote, ". Reload page (F5) to activate");
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_REMOTE_KEY, logRemote.toString());
-                }
+                };
             }
             return (window.localStorage.getItem(ClientLog.LOCAL_STORAGE_LOGGER_REMOTE_KEY)) === "true" || ClientLog.defaultRemote;
         } else {
@@ -260,7 +258,7 @@ class ClientLog {
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_REMOTE_LAYOUT_KEY, logLayout.toString());
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_REMOTE_LAYOUT_THRESHOLD_KEY, logTreshold.toString());
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_REMOTE_LAYOUT_TIMEOUT_KEY, logTimeout.toString());
-                }
+                };
             }
             return {
                 layout: window.localStorage.getItem(ClientLog.LOCAL_STORAGE_LOGGER_REMOTE_LAYOUT_KEY) || ClientLog.defaultRemoteLogLayout,
@@ -285,7 +283,7 @@ class ClientLog {
 
                     console.log("New remote url :", logRemoteUrl, ". Reload page (F5) to activate");
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_REMOTE_URL_KEY, logRemoteUrl.toString());
-                }
+                };
             }
             return window.localStorage.getItem(ClientLog.LOCAL_STORAGE_LOGGER_REMOTE_URL_KEY) || defaultUrl;
         } else {
@@ -302,15 +300,15 @@ class ClientLog {
         var newLayout = new utils.log4js.BasicLayout();
         if (logLayout) {
             var isPatternLayout;
-            if (logLayout.indexOf("%") == -1) {
-                //on ne traite pas les patterns
+            if (logLayout.indexOf("%") === -1) {
+                // on ne traite pas les patterns
                 logLayout = logLayout.toLocaleUpperCase();
                 isPatternLayout = false;
             } else {
                 isPatternLayout = true;
             }
             if (logLayout === "BASIC") {
-                newLayout = new utils.log4js.BasicLayout()
+                newLayout = new utils.log4js.BasicLayout();
             } else if (logLayout === "SIMPLE") {
                 newLayout = new utils.log4js.SimpleLayout();
             } else if (logLayout === "THIN") {

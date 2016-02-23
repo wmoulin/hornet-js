@@ -24,10 +24,13 @@ var DatePickerInput = newforms.DateInput.extend({
 DatePickerInput.prototype.render = function (name, value, kwargs) {
     logger.trace("DatePickerInput.prototype.render", name, value, kwargs);
 
-    var defaultYear, title;
+    var defaultYear, title, imgFilePath, disabled, isDatePicker;
     if(this.attrs) {
         defaultYear = this.attrs.defaultYear;
         title = this.attrs.title;
+        imgFilePath = this.attrs.imgFilePath;
+        disabled = this.attrs.disabled;
+        isDatePicker = this.attrs.isDatePicker;
     }
 
     var dateFormats;
@@ -41,7 +44,18 @@ DatePickerInput.prototype.render = function (name, value, kwargs) {
     } else if(this.format) {
         dateFormats = [utils.dateUtils.newformsToGregorianCalFormat(this.format)];
     }
-    return <Calendar thisContext={this} name={name} value={value} attributes={kwargs} dateFormats={dateFormats} defaultYear={defaultYear} title={title}/>;
+    return <Calendar
+        thisContext={this}
+        name={name}
+        value={value}
+        attributes={kwargs}
+        dateFormats={dateFormats}
+        defaultYear={defaultYear}
+        title={title}
+        imgFilePath={imgFilePath}
+        disabled={disabled}
+        isDatePicker={isDatePicker}
+    />;
 };
 
 module.exports = DatePickerInput;

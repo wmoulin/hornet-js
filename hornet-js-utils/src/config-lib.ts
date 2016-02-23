@@ -1,4 +1,3 @@
-/// <reference path="../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import register = require("src/common-register");
@@ -24,28 +23,27 @@ class ConfigLib {
     /**
      * Charge les configurations Serveur.
      *  - répertoire ./config pour le mode DEV
-     *  - répertoire APPLI + INFRA pour le mode PRODUCTION (process.env['HORNET_CONFIG_DIR_APPLI'] & process.env['HORNET_CONFIG_DIR_INFRA'])
-     *   @param configRequireFn Une fonction effectuant le require de la librairie 'config'. Cette fonction est nécessaire afin de ne pas embarquer la librairie côté navigateur
+     *  - répertoire APPLI + INFRA pour le mode PRODUCTION (process.env.HORNET_CONFIG_DIR_APPLI & process.env.HORNET_CONFIG_DIR_INFRA)
      */
     loadServerConfigs() {
-        var appliFolder = process.env["HORNET_CONFIG_DIR_APPLI"];
+        var appliFolder = process.env.HORNET_CONFIG_DIR_APPLI;
         if (appliFolder) {
-            process.env["NODE_CONFIG_DIR"] = appliFolder;
-            console.log("Chargement de la configuration APPLI (Variable process.env['HORNET_CONFIG_DIR_APPLI']) dans ", appliFolder);
+            process.env.NODE_CONFIG_DIR = appliFolder;
+            logger.info("Chargement de la configuration APPLI (Variable process.env.HORNET_CONFIG_DIR_APPLI) dans ", appliFolder);
         } else {
-            console.log("Chargement de la configuration APPLI en mode DEV", "./config");
+            logger.info("Chargement de la configuration APPLI en mode DEV", "./config");
         }
-        this._configObj =  require("config");
-        console.log("Configuration APPLI : ", JSON.stringify(this._configObj));
+        this._configObj = require("config");
+        logger.info("Configuration APPLI : ", JSON.stringify(this._configObj));
 
-        var infraFolder = process.env["HORNET_CONFIG_DIR_INFRA"];
+        var infraFolder = process.env.HORNET_CONFIG_DIR_INFRA;
         if (infraFolder) {
-            process.env["NODE_CONFIG_DIR"] = infraFolder;
-            console.log("Chargement de la configuration INFRA (Variable process.env['HORNET_CONFIG_DIR_INFRA']) dans ", infraFolder);
+            process.env.NODE_CONFIG_DIR = infraFolder;
+            logger.info("Chargement de la configuration INFRA (Variable process.env.HORNET_CONFIG_DIR_INFRA) dans ", infraFolder);
             var infraConf = this._configObj.util.loadFileConfigs();
-            console.log("Configuration INFRA : ", JSON.stringify(infraConf));
+            logger.info("Configuration INFRA : ", JSON.stringify(infraConf));
             this._configObj.util.extendDeep(this._configObj, infraConf);
-            console.log("Configuration mergée : ", JSON.stringify(this._configObj));
+            logger.info("Configuration mergée : ", JSON.stringify(this._configObj));
         }
         this.checkVariables(this._configObj);
 
@@ -119,9 +117,14 @@ class ConfigLib {
      */
     getOrDefault(property:string, defaultValue:Object):any {
         try {
-            return this.get(property)
+            return this.get(property);
         } catch (error) {
-            logger.warn("PROPERTY NOT DEFINED :",property,", DEFAULT VALUE APPLY :", defaultValue);
+            try {
+                logger.warn("PROPERTY NOT DEFINED :", property, ", DEFAULT VALUE APPLY :", defaultValue);
+            } catch (error) {
+                // MBC - fullSpa - logger pas encore disponible
+                console.log("PROPERTY NOT DEFINED :", property, ", DEFAULT VALUE APPLY :", defaultValue);
+            }
             return defaultValue;
         }
     }
@@ -153,7 +156,7 @@ class ConfigLib {
      * @return value {mixed} - Property value, including undefined if not defined.
      */
     private static getImpl(object:any, property:any):any {
-        var elems = Array.isArray(property) ? property : property.split('.');
+        var elems = Array.isArray(property) ? property : property.split(".");
         var name = elems[0];
         var value = object[name];
         if (elems.length <= 1) {

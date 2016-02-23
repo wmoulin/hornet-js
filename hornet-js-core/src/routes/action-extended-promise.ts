@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import ExtendedPromise = require("hornet-js-utils/src/promise-api");
 import ActionsChainData = require("src/routes/actions-chain-data");

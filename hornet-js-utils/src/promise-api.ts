@@ -1,6 +1,24 @@
-///<reference path="../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
-import Promise = require("promise");
+
+import utils = require("src/index");
+import Promise = require("bluebird");
+if (utils.isServer) {
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // wrap bluebird afin de sécuriser l'utilisation de "continuation-local-storage" (perte ou mix de contexte) //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    var shimmer = require("shimmer");
+    var proto = Promise && Promise.prototype;
+    var ns = utils.getContinuationStorage();
+    shimmer.wrap(proto, "_addCallbacks", function (_addCallbacks) {
+        return function ns_addCallbacks(fulfill, reject, progress, promise, receiver, domain) {
+            if (typeof fulfill === "function") fulfill = ns.bind(fulfill);
+            if (typeof reject === "function") reject = ns.bind(reject);
+            if (typeof progress === "function") progress = ns.bind(progress);
+            return _addCallbacks.call(this, fulfill, reject, progress, promise, receiver, domain);
+        };
+    });
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}
 
 class ExtendedPromise<T> implements Thenable<T> {
     promise:Thenable<T>;
@@ -16,7 +34,7 @@ class ExtendedPromise<T> implements Thenable<T> {
     then<TR>(onFulfilled:(value:T) => Thenable<TR>, onRejected?:(error:Error) => TR):ExtendedPromise<TR> {
         var extPromise = new ExtendedPromise(this.promise.then(onFulfilled, onRejected));
         /* On réutilise la fonction onRejected (si elle est définie) pour traiter les erreurs éventuellement déclenchées dans onFulfilled */
-        if(onRejected) {
+        if (onRejected) {
             extPromise = extPromise.fail(onRejected);
         }
         return extPromise;
@@ -33,7 +51,8 @@ class ExtendedPromise<T> implements Thenable<T> {
 
     // permet de couper la chaine des promise
     stop():ExtendedPromise<T> {
-        var stopPromise = new ExtendedPromise(()=>{});
+        var stopPromise = new ExtendedPromise(()=> {
+        });
         stopPromise.then = () => stopPromise;
         return stopPromise;
     }

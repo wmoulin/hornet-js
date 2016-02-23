@@ -1,20 +1,21 @@
 ﻿"use strict";
 
-var React = require('react');
-var TestUtils = require('hornet-js-utils/src/test-utils');
+var React = require("react");
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var logger = TestUtils.getLogger("hornet-js-components.test.upload-file.upload-file-field-spec");
 var render = TestUtils.render;
-var newforms = require('newforms');
-var GridForm = require('src/form/grid-form');
+var newforms = require("newforms");
+var HornetForm = require("src/form/form");
+var GridForm = require("src/form/grid-form");
 var Row = GridForm.Row;
 var Field = GridForm.Field;
-var FileField = require('src/upload-file/upload-file-field');
+var FileField = require("src/upload-file/upload-file-field");
 
-describe('UploadFileField', function () {
+describe("UploadFileField", function () {
     var formConf = {
-        autoId: '{name}',
-        labelSuffix: ''
+        autoId: "{name}",
+        labelSuffix: ""
     };
 
     /**
@@ -28,11 +29,11 @@ describe('UploadFileField', function () {
             file: FileField(
                 {
                     image: false,
-                    label: '',
-                    helpText: 'File',
+                    label: "",
+                    helpText: "File",
                     /*Définir l'url d'accès à l'image affiché en lecture seule*/
-                    fileRoute: 'partenaires/photo/',
-                    fileTitle: 'image alternative'
+                    fileRoute: "partenaires/photo/",
+                    fileTitle: "image alternative"
                 }),
             isClient: newforms.ChoiceField({
                 custom: {
@@ -40,16 +41,14 @@ describe('UploadFileField', function () {
                 },
                 required: false,
                 widget: newforms.RadioSelect,
-                label: 'bale',
+                label: "bale",
                 choices: [[true, "Client"], [false, "Fournisseur"]]
             }),
-            labelSuffix: '',
-            errorCssClass: 'error',
-            requiredCssClass: 'required',
-            validCssClass: 'valid'
+            labelSuffix: "",
+            errorCssClass: "error",
+            requiredCssClass: "required",
+            validCssClass: "valid"
         };
-
-
         return newforms.Form.extend(form);
     }
 
@@ -69,36 +68,35 @@ describe('UploadFileField', function () {
         }
     };
 
-    describe('FileField', function () {
-        it('doit avoir un champ input', function () {
+    describe("FileField", function () {
+        it("doit avoir un champ input", function () {
             // Arrange
             var FormDef = prepareForm(),
                 form = new FormDef(formConf);
 
             var $ = render(() =>(
-                <Row form={form}>
+                <HornetForm form={form}>
                     <Field name="file" span="1"/>
-                </Row>
+                </HornetForm>
             ), context, true);
-            expect($('input')).to.exist;
+            expect($("input")).to.exist;
         });
     });
 
-    describe('isClient', function () {
-        it('doit avoir un champ input en champ caché', function () {
+    describe("isClient", function () {
+        it("doit avoir un champ input en champ caché", function () {
             // Arrange
             var FormDef = prepareForm(),
                 form = new FormDef(formConf);
 
             var $ = render(() =>(
-                <Row form={form}>
+                <HornetForm form={form}>
                     <Field name="isClient"/>
-                </Row>
+                </HornetForm>
             ), context, true);
-            expect($('input')).to.exist;
+            expect($("input")).to.exist;
         });
     });
-
 });
 
 function construitStore() {
@@ -113,8 +111,5 @@ function construitStore() {
             return {}
         }
     }
-
     return store;
 }
-
-

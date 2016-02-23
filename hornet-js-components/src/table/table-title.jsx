@@ -1,5 +1,6 @@
 "use strict";
 var utils = require("hornet-js-utils");
+var _ = utils._;
 var React = require("react");
 
 var HornetComponentMixin = require("hornet-js-core/src/mixins/react-mixins");
@@ -10,9 +11,11 @@ var TableTitle = React.createClass({
     mixins: [HornetComponentMixin],
 
     propTypes: ({
-        title: React.PropTypes.string,
+        title: React.PropTypes.oneOfType([
+            React.PropTypes.string,
+            React.PropTypes.object
+        ]),
         enabled: React.PropTypes.bool,
-
         children: React.PropTypes.oneOfType([
             React.PropTypes.object,
             React.PropTypes.array
@@ -37,14 +40,26 @@ var TableTitle = React.createClass({
         logger.trace("Rendu title Table");
 
         try {
-
-            return (this.props.enabled) ?
-                <div className="hornet-datatable-title">
-                    {this.props.title}
-                    {this.props.children}
-                </div>
-                : null;
-
+            if (this.props.enabled) {
+                if (_.isObject(this.props.title)) {
+                    var {render, ...other} = this.props.title;
+                    return (
+                        <div className="hornet-datatable-title" {...other}>
+                            {render()}
+                            {this.props.children}
+                        </div>
+                    );
+                } else {
+                    return (
+                        <div className="hornet-datatable-title">
+                            {this.props.title}
+                            {this.props.children}
+                        </div>
+                    );
+                }
+            } else {
+                return null;
+            }
         } catch (e) {
             logger.error("Render table-title exception", e);
             throw e;

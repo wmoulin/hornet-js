@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import React = require("react");
@@ -9,6 +8,7 @@ import PropTypesNs = require("src/icon/icon-props");
 var logger = utils.getLogger("hornet-js-components.icon.icon");
 
 @HornetComponent.ApplyMixins()
+@HornetComponent.Error()
 class Icon extends HornetComponent<PropTypesNs.IconProps,any> {
 
     static displayName:string = "Icon";
@@ -18,6 +18,7 @@ class Icon extends HornetComponent<PropTypesNs.IconProps,any> {
         alt: React.PropTypes.string.isRequired,
         idImg: React.PropTypes.string,
         classImg: React.PropTypes.string,
+        name: React.PropTypes.string,
 
         url: React.PropTypes.string.isRequired,
         title: React.PropTypes.string.isRequired,

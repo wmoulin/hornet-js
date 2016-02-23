@@ -1,8 +1,7 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import utils = require("hornet-js-utils");
 import Action = require("src/actions/action");
-import express = require("express");
+
 import ExtendedPromise = require("hornet-js-utils/src/promise-api");
 import ActionExtendedPromise = require("src/routes/action-extended-promise");
 import director = require("director");
@@ -12,17 +11,15 @@ import Matcher = require("src/routes/route-matcher");
 import ServerConfiguration = require("src/server-conf");
 import ClientConfiguration = require("src/client-conf");
 
-//plugin fluxible pour passer les messages d'i18n et les avoir dans les contextes fluxible
 import I18nPlugin = require("src/i18n/i18n-fluxible-plugin");
 import I18nLoader = require("src/i18n/i18n-loader");
 
 import N = require("src/routes/notifications");
 
-var WError = utils.werror;
-
-import react = require("react");
 var logger = utils.getLogger("hornet-js-core.routes.router-abstract");
 var _ = utils._;
+
+var WError = utils.werror;
 
 var DirectorRouter = utils.isServer ? director.http.Router : director.Router;
 
@@ -66,7 +63,7 @@ class RouterAbstract {
                 routesLoaderfn: appConfig1.routesLoaderfn,
                 dispatcherLoaderFn: RouterAbstract.prepareInternationalizationContextFunction(appConfig1),
                 themeUrl: utils.config.getOrDefault("themeUrl", utils.buildStaticPath("/")),
-                menuConfig: appConfig1.menuConfig,
+                menuConfig: appConfig1.menuConfig
             };
         } else {
             var appConfig2:ClientConfiguration = <ClientConfiguration> config;
@@ -79,7 +76,8 @@ class RouterAbstract {
                 dispatcherLoaderFn: function () {
                     return appConfig2.fluxibleContext;
                 },
-                contextPath: utils.buildContextPath("/")
+                contextPath: utils.buildContextPath("/"),
+                directorClientConfiguration: appConfig2.directorClientConfiguration
             };
         }
 
@@ -109,36 +107,35 @@ class RouterAbstract {
         var plugIntl = new I18nPlugin();
         appConfig.dispatcher.plug(plugIntl.createPlugin());
 
-        //détermine le type de loader
+        // détermine le type de loader
         if (appConfig.internationalization && _.isFunction(appConfig.internationalization.getMessages)) {
-            //nous sommes avec un type AppInternationalizationLoader
+            // nous sommes avec un type AppInternationalizationLoader
             var loaderIntl:I18nLoader = appConfig.internationalization;
-            //créer à chaque requête
+            // créer à chaque requête
             getContextFluxiblefunction = (locales:Array<string>):FluxibleContext => {
                 var fluxibleContext:FluxibleContext = appConfig.dispatcher.createContext(loaderIntl.getMessages(locales));
                 return fluxibleContext;
-            }
+            };
         } else if (appConfig.internationalization && _.isObject(appConfig.internationalization)) {
-            //le développeur a passé une chaine de caractère qui doit être un flux JSON représentant les messages de l'application au moins les basics pour les composants
+            // le développeur a passé une chaine de caractère qui doit être un flux JSON représentant les messages de l'application au moins les basics pour les composants
             getContextFluxiblefunction = (locales:Array<String>):FluxibleContext => {
-                //peut import la local toujours les même messages
+                // peut import la local toujours les même messages
 
                 var fluxibleContext = appConfig.dispatcher.createContext({
                     "locale": "",
                     "messages": appConfig.internationalization
                 });
                 return fluxibleContext;
-            }
+            };
         } else {
-            //throw new Error("Vous devez définir une variable internationalization dans la configuration du serveur. Se reporter à la documentation");
-            //messages nécessaire au framework
+            // messages nécessaire au framework
             getContextFluxiblefunction = (locales:Array<string>):FluxibleContext => {
                 var fluxibleContext = appConfig.dispatcher.createContext({
                     "locale": "",
                     "messages": require("../i18n/hornet-messages-components")
                 });
                 return fluxibleContext;
-            }
+            };
         }
         return getContextFluxiblefunction;
     }
@@ -169,7 +166,7 @@ class RouterAbstract {
                 var newRoutes = router.parseRoutes(new routesClass(), lazyRouteInfos.path);
                 router.directorRouter.mount(newRoutes.routes, lazyRouteInfos.path);
 
-                //On charge récursivement si besoin
+                // On charge récursivement si besoin
                 router.loadLazyRoutesRecursively(newRoutes.lazyRoutes);
             });
         }
@@ -191,7 +188,7 @@ class RouterAbstract {
 
     protected loadRoutes(currentPromise:ExtendedPromise<any>, routeInfos:I.IRoutesInfos, routeContext:I.IRouteContext, fluxibleContext:ActionContext):ActionExtendedPromise {
         if (_.isObject(routeInfos.lazyRoutesParam)) {
-            //currentPromise = currentPromise.then(this.buildRoutesLoaderResolver(routeInfos.lazyRoutesParam.fileToLoad));
+            // currentPromise = currentPromise.then(this.buildRoutesLoaderResolver(routeInfos.lazyRoutesParam.fileToLoad));
             fluxibleContext.dispatch(Action.ASYNCHRONOUS_REQUEST_START);
             currentPromise = this.buildRoutesLoaderResolver(currentPromise, routeInfos.lazyRoutesParam.fileToLoad);
             currentPromise = currentPromise.then((routesClass) => {
@@ -208,7 +205,7 @@ class RouterAbstract {
                     }
                 });
 
-                //Suppressions des routes qui n'ont plus lieu d'exister
+                // Suppressions des routes qui n'ont plus lieu d'exister
                 _.forOwn(currentRouteInRouter, function (value, key) {
                     logger.trace("Suppression route:", key);
                     delete currentRouteInRouter[key];
@@ -233,7 +230,7 @@ class RouterAbstract {
                                 clearInterval(cancelIntervalId);
                                 fluxibleContext.dispatch(Action.ASYNCHRONOUS_REQUEST_END_ERROR, err);
                             } else {
-                                //Exception liée au fonctionnement interne de director qui ne met la fonction onPopState qu'après 500ms
+                                // Exception liée au fonctionnement interne de director qui ne met la fonction onPopState qu'après 500ms
                                 logger.debug("Exception prévue, retry");
                             }
                         }
@@ -246,7 +243,7 @@ class RouterAbstract {
 
             });
         }
-        //On arrête le chargement ici
+        // On arrête le chargement ici
         return currentPromise;
     }
 
@@ -261,7 +258,11 @@ class RouterAbstract {
                     if (utils.isServer) {
                         routeContext.res.status(403);
                     }
-                    acd.lastError = new WError(fluxibleContext.getActionContext().i18n("authError"));
+                    var errorMess:string = fluxibleContext.getActionContext().i18n("authError");
+                    logger.error(errorMess);
+                    var error = new WError(errorMess);
+                    error.name = " ";
+                    acd.lastError = error;
                 }
 
                 if (headers["accept"] === utils.CONTENT_JSON) {
@@ -306,7 +307,7 @@ class RouterAbstract {
 
                         var erreurNotification = new N.NotificationType();
                         erreurNotification.id = "ACTION_ERREUR_" + acd.lastError;
-                        erreurNotification.text = "Une erreur technique est survenue:" + acd.lastError;
+                        erreurNotification.text = fluxibleContext.getActionContext().i18n("techError") + acd.lastError;
 
                         notificationsError.addNotification(erreurNotification);
                     }
@@ -381,15 +382,17 @@ class RouterAbstract {
     protected buildComponentResolver(composant:any):ExtendedPromise<any> {
         return new ExtendedPromise((resolveFn, rejectFn) => {
             try {
-                //logger.trace("buildComponentResolver composant : ", composant);
                 if (_.isString(composant)) {
                     this.configuration.componentLoaderFn(composant, resolveFn);
                 } else {
                     resolveFn(composant);
                 }
             } catch (err) {
-                logger.error("Error of component loading :" + err);
-                rejectFn(new WError("Error of component loading :" + err));
+                var errorMess:string = "Error of component loading :" + err;
+                logger.error(errorMess);
+                var error = new WError(err, errorMess);
+                error.name = " ";
+                rejectFn(error);
             }
         });
     }
@@ -419,19 +422,18 @@ class RouterAbstract {
     protected handleErr(err:I.DirectorError, routeContext ?:I.IRouteContext) {
         logger.error("Erreur non gérée par le routeur et transmise au middleware suivant :", err.name, err.message, err);
 
-        //logger.debug("routeContext: ", routeContext);
         if (utils.isServer) {
             if (routeContext.next) {
                 logger.debug("routeContext.next");
                 routeContext.next(err);
             } else {
-                //Pas moyen d'appeler le prochain middleware donc on ferme le flux
+                // Pas moyen d'appeler le prochain middleware donc on ferme le flux
                 routeContext.res.status(500);
                 routeContext.res.send(err);
             }
         } else {
             /* Erreur non gérée par le router côté client : on affiche tout de même une notification d'erreur */
-            if(routeContext && routeContext.actionContext) {
+            if (routeContext && routeContext.actionContext) {
                 var notifs:N.Notifications = N.Notifications.makeSingleNotification("ROUTER_ERROR", "Erreur technique :" + err);
 
                 new SimpleAction(SimpleAction.EMIT_ERR_NOTIFICATION)
@@ -466,21 +468,24 @@ class RouterAbstract {
     startClient(bootstrappedData ?:any) {
         this.bootstrappedData = bootstrappedData;
 
+        // installer la fonction de parametrage "setHornetJsGenerationServer" sur le client
+        RouterAbstract.setHornetJsGenerationServer();
+
         /**
          * Intercept any links that don't have 'data-pass-thru' or '#' and route using pushState.
          */
         document.addEventListener("click", function (e) {
-            if (e.button != 0) return; // On ne prend que les clicks gauche
+            if (e.button !== 0) return; // On ne prend que les clicks gauche
             var el = e.target;
             while (el) {
                 if (el.nodeName === "A") {
-                    var link = el.attributes && el.attributes.href && el.attributes.href.value || '';
+                    var link = el.attributes && el.attributes.href && el.attributes.href.value || "";
 
                     // Cas des liens vides ou les actions
                     if (link.length === 0 || link === "#") {
                         e.preventDefault();
                         return;
-                    }; // On bypass les liens qui ne pointent null part
+                    } // On bypass les liens qui ne pointent null part
                     var params = RouterAbstract.getUrlParameters(link);
                     if (_.isString(params[MediaType.MEDIATYPE_PARAMETER])) {
                         // Demande d'export, on n'appelle pas director
@@ -488,10 +493,10 @@ class RouterAbstract {
                     }
 
                     // Gestion des ancres
-                    if (link.indexOf("#") === 0)return;//startsWith("#")
+                    if (link.indexOf("#") === 0)return; // startsWith("#")
                     var dataset = el && el.getAttribute("data-pass-thru");
                     if (dataset !== "true") {
-                        this.directorRouter.setRoute(link);
+                        this.setRoute(link);
                         e.preventDefault();
                     }
                     return;
@@ -510,15 +515,15 @@ class RouterAbstract {
          * <li>recurse: désactive l'exécution des routes de manière récursive</li>
          * </ul>
          */
-        this.directorRouter.configure({
+        this.directorRouter.configure(_.merge({
             html5history: true,
             strict: false,
             convert_hash_in_init: false,
             recurse: false,
-            'notfound': function () {
+            notfound: function () {
                 logger.error("Erreur. Cette route n'existe pas :'" + this.path + "'");
             }
-        });
+        }, this.configuration.directorClientConfiguration));
 
         /**
          * Démarrage du routeur
@@ -537,9 +542,9 @@ class RouterAbstract {
     setRouteInternal(url, param) {
         this.currentParam = param;
         this.currentUrl = url;
-        if(url) {
+        if (url) {
             this.directorRouter.dispatch("on", url.charAt(0) === "/" ? url : "/" + url);
-        }else{
+        } else {
             logger.warn("setRouteInternal : Routes non définie!!!", param);
         }
     }
@@ -549,7 +554,14 @@ class RouterAbstract {
      * Méthode côté client pour demander un changement d'url dans la barre d'adresse du navigateur (et donc un changement de route)
      */
     setRoute(route:string) {
-        this.directorRouter.setRoute(route);
+        if (!utils.isServer && RouterAbstract.getHornetJsGenerationServer() === "true") {
+            // mantis 0055411 :
+            // côté client, et si l'option est activée, on shunte la route client
+            // et on force la génération de la page par le serveur
+            window.location.href = utils.buildContextPath(route); // appel route serveur node
+        } else {
+            this.directorRouter.setRoute(route);
+        }
     }
 
     /**
@@ -578,7 +590,7 @@ class RouterAbstract {
         var a = url.split("&");
         for (var i = 0; i < a.length; ++i) {
             var p = a[i].split("=");
-            if (p.length != 2)
+            if (p.length !== 2)
                 continue;
             b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
         }
@@ -625,7 +637,7 @@ class RouterAbstract {
             mimeType = MediaType.fromParameter(mediaTypeUrl).MIME;
             logger.trace("MIME correspondant : ", mimeType);
         } else {
-            mimeType = req.headers && req.headers['accept'];
+            mimeType = req.headers && req.headers["accept"];
             logger.trace("Le MIME a été défini dans le header: ", mimeType);
         }
 
@@ -659,6 +671,50 @@ class RouterAbstract {
             });
         }
         return currentPromise;
+    }
+
+    static LOCAL_STORAGE_ENABLE_GENERATION_SERVER_KEY = "hornet-js.enable.generation.server";
+    static defaultGenerationServerEnabled:string = "false";
+
+    /**
+     * mantis 0055411
+     * Met a disposition une fonction sur le browser (window.setHornetJsGenerationServer)
+     * Appellée depuis du code client, cette fonction permet de changer  l'option de paramétrage
+     * pour activer ou désactiver la generation des pages côté serveur (cf usage getHornetJsGenerationServer)
+     * Cette option est stockée dans le navigateur au niveau du localStorage,
+     * elle peut donc aussi être modifié manuellement par l'utilisateur
+     *
+     * Attention, ne pas activer l'option en mode fullSpa
+     * (elle n'a d'interet qu'avec le serveur node)
+     */
+    static setHornetJsGenerationServer():void {
+        if (window.localStorage) {
+            if (!(<any>window).setHornetJsGenerationServer) {
+                (<any>window).setHornetJsGenerationServer = function (enableValue:string) {
+                    var enableGenerationServer:string = (!enableValue || enableValue === "null" || enableValue === "undefined") ? RouterAbstract.defaultGenerationServerEnabled : enableValue;
+                    console.log("New value for setHornetJsGenerationServer :", enableValue, ". Reload page (F5) to activate");
+                    window.localStorage.setItem(RouterAbstract.LOCAL_STORAGE_ENABLE_GENERATION_SERVER_KEY, enableGenerationServer);
+                };
+            }
+        } else {
+            console.log("ERREUR: Browser doesn't support LocalStorage");
+        }
+    }
+
+    /**
+     * Getter pour récuperer la valeur de l'option de paramétrage "hornet-js.enable.generation.server"
+     * Cette option true/false permet d'activer ou désactiver la generation des pages côté serveur
+     * Lecture du localStorage d'abord (si supporté et contient la valeur), et sinon valeur par défaut (false)
+     *
+     * @returns {any}
+     */
+    static getHornetJsGenerationServer():any {
+        if (window.localStorage) {
+            return window.localStorage.getItem(RouterAbstract.LOCAL_STORAGE_ENABLE_GENERATION_SERVER_KEY) || RouterAbstract.defaultGenerationServerEnabled;
+        } else {
+            console.log("ERREUR: Browser doesn't support LocalStorage");
+            return RouterAbstract.defaultGenerationServerEnabled;
+        }
     }
 }
 

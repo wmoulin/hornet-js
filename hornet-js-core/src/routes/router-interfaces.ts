@@ -1,6 +1,4 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
-import utils = require("hornet-js-utils");
 import Action = require("src/actions/action");
 import ActionsChainData = require("src/routes/actions-chain-data");
 import express = require("express");
@@ -15,7 +13,7 @@ export interface IRoutesInfos {
 }
 
 export interface HornetRequest extends director.DirectorRequest, express.Request {
-    generateNewCsrfTokken?:() => string;
+    generateCsrfToken?:() => string;
 }
 
 export interface IRoutesBuilder {
@@ -160,9 +158,19 @@ export interface RouterConfiguration {
      * La configuration du menu
      */
     menuConfig?:Object;
+
+    directorClientConfiguration?:DirectorClientConfiguration;
 }
 
 export interface LazyRouteParam {
     path:string;
     fileToLoad:string;
+}
+
+export interface DirectorClientConfiguration {
+    html5history?: boolean;
+    strict?: boolean;
+    convert_hash_in_init?: boolean;
+    recurse?: boolean;
+    notfound?: Function;
 }

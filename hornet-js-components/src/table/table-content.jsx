@@ -15,11 +15,14 @@ var TableContent = React.createClass({
     propTypes: {
         tableName: React.PropTypes.string.isRequired,
         columns: React.PropTypes.shape({
-            title: React.PropTypes.string,
+            title: React.PropTypes.oneOfType([
+                React.PropTypes.string,
+                React.PropTypes.object
+            ]),
             sort: React.PropTypes.oneOfType([
-                    React.PropTypes.string,
-                    React.PropTypes.object
-                ]),
+                React.PropTypes.string,
+                React.PropTypes.object
+            ]),
             filter: React.PropTypes.object,
             render: React.PropTypes.func,
             icon: React.PropTypes.bool
@@ -37,7 +40,10 @@ var TableContent = React.createClass({
         messages: React.PropTypes.object,
         defaultSort: React.PropTypes.object,
         actionMassEnabled: React.PropTypes.bool,
-        actionMassChecked: React.PropTypes.bool
+        actionMassChecked: React.PropTypes.bool,
+        imgFilePath: React.PropTypes.string,
+        onChangeSortData: React.PropTypes.func,
+        sort: React.PropTypes.object
     },
 
     render: function () {

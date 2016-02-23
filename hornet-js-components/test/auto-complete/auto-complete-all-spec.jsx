@@ -1,23 +1,24 @@
 "use strict";
 
-var React = require('react');
-var TestUtils = require('hornet-js-utils/src/test-utils');
+var React = require("react");
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var logger = TestUtils.getLogger("hornet-js-components.test.auto-complete.auto-complete-all-spec");
 var render = TestUtils.render;
-var newforms = require('newforms');
-var GridForm = require('src/form/grid-form');
+var newforms = require("newforms");
+var GridForm = require("src/form/grid-form");
+var HornetForm = require("src/form/form");
 var Grid = GridForm.GridForm;
 var Row = GridForm.Row;
 var Field = GridForm.Field;
-var AutoCompleteField = require('src/auto-complete/auto-complete-field');
-var AutoCompleteSelector = require('src/auto-complete/auto-complete-selector');
-var i18n = require('hornet-js-core/src/i18n/i18n-fluxible-plugin').i18n;
+var AutoCompleteField = require("src/auto-complete/auto-complete-field");
+var AutoCompleteSelector = require("src/auto-complete/auto-complete-selector");
+var i18n = require("hornet-js-core/src/i18n/i18n-fluxible-plugin").i18n;
 
-describe('AutoComplete', () => {
+describe("AutoComplete", () => {
     var formConf = {
-        autoId: '{name}',
-        labelSuffix: ''
+        autoId: "{name}",
+        labelSuffix: ""
     };
 
     /**
@@ -31,20 +32,20 @@ describe('AutoComplete', () => {
             autocomplete: AutoCompleteField({
                 store: {
                     class: construitStore(),
-                    functionName: 'getListe'
+                    functionName: "getListe"
                 },
                 actionClass: {},
-                label: 'label',
+                label: "label",
                 required: true,
                 errorMessages: {
-                    required: 'champ obligatoire'
+                    required: "champ obligatoire"
                 },
                 i18n: {}
             }),
-            labelSuffix: '',
-            errorCssClass: 'error',
-            requiredCssClass: 'required',
-            validCssClass: 'valid'
+            labelSuffix: "",
+            errorCssClass: "error",
+            requiredCssClass: "required",
+            validCssClass: "valid"
         };
 
 
@@ -66,70 +67,70 @@ describe('AutoComplete', () => {
         executeAction: () => {
         }
     };
-    describe('Champ AutoComplete', () => {
-        it('doit avoir un champ input', () => {
+    describe("Champ AutoComplete", () => {
+        it("doit avoir un champ input", () => {
             // Arrange
             var FormDef = prepareForm(),
                 form = new FormDef(formConf);
 
 
             var $ = render(() =>(
-                <Row form={form}>
+                <HornetForm form={form}>
                     <Field name="autocomplete" span="1"/>
-                </Row>
+                </HornetForm>
             ), context, true);
-            expect($('input')).to.exist;
+            expect($("input")).to.exist;
         });
-        it('la liste doit être alimentée', () => {
+        it("la liste doit être alimentée", () => {
 
             // Act
             var $ = render(() =>
                     <div>
                         <AutoCompleteSelector
                             choices={getAutoCompleteChoices()}
-                            currentTyppedText='fra'
-                            selectorId='nationalite$select'
+                            currentTyppedText="fra"
+                            selectorId="nationalite$select"
                             showComponent={true}
                         />
                     </div>
                 , context
             );
-            logger.error('RENDER', $.html());
+            logger.error("RENDER", $.html());
             expect($('li[data-real-text="francaise"]')).to.exist;
         });
-        it('Aucun résultat proposé', () => {
+        it("Aucun résultat proposé", () => {
 
             // Act
             var $ = render(() =>
                     <div>
                         <AutoCompleteSelector
                             choices={getAutoCompleteChoices()}
-                            currentTyppedText='frasdeg'
-                            selectorId='nationalite$select'
+                            currentTyppedText="frasdeg"
+                            selectorId="nationalite$select"
                             showComponent={true}
                             />
                     </div>
                 , context
             );
-            logger.error('RENDER', $('ul.hornet-autocomplete-list li').length);
-            expect($('ul.hornet-autocomplete-list li').length).is.equal(0);
+            logger.error("RENDER", $("ul.hornet-autocomplete-list li").length);
+            expect($("ul.hornet-autocomplete-list li").length).is.equal(0);
         });
-        it('La liste est masquée', () => {
+        it("La liste est masquée", () => {
 
             // Act
             var $ = render(() =>
                     <div>
                         <AutoCompleteSelector
                             choices={getAutoCompleteChoices()}
-                            currentTyppedText='fra'
-                            selectorId='nationalite$select'
+                            currentTyppedText="fra"
+                            selectorId="nationalite$select"
                             showComponent={false}
                             />
                     </div>
                 , context
             );
-            logger.error('RENDER', $.html());
-            expect($('.hornet-autocomplete-hidden')).to.exist;
+            logger.error("RENDER", $.html());
+            expect($(".hornet-autocomplete-hidden")).to.exist;
         });
     });
 });
@@ -138,16 +139,16 @@ function getAutoCompleteChoices() {
     return (
         [
             {
-                'value': 'fr',
-                'text': 'francaise'
+                value: "fr",
+                text: "francaise"
             },
             {
-                'value': 'en',
-                'text': 'anglaise'
+                value: "en",
+                text: "anglaise"
             },
             {
-                'value': 'nz',
-                'text': 'newzélandaise'
+                value: "nz",
+                text: "newzélandaise"
             }
         ]
     )
@@ -159,13 +160,13 @@ function getForm() {
         autocomplete: AutoCompleteField({
             store: {
                 class: construitStore(),
-                functionName: 'getListe'
+                functionName: "getListe"
             },
             actionClass: {},
-            label: 'label',
+            label: "label",
             required: true,
             errorMessages: {
-                required: 'champ obligatoire'
+                required: "champ obligatoire"
             },
             i18n: {}
         })

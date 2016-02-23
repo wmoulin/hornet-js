@@ -1,11 +1,9 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
-// suppression du typage suite aux erreurs typescript liées à la nouvelle version 1.6.3 avec resolver désactivé
-//import SessionManager = require("src/session/session-manager");
 import utils = require("hornet-js-utils");
 var logger = utils.getLogger("hornet-js-core.session.session");
 
 var sessionManager = null;
+
 class Session {
     private sid:string;
     private data:any = {};
@@ -19,9 +17,6 @@ class Session {
         this.creationTime = this.lastAccessedTime = new Date();
 
         if (typeof data === "object" && data !== null) {
-            //for (var prop in data) {
-            //    this.data[prop] = data[prop];
-            //}
             this.data = data;
         }
         if (utils.isServer && !sessionManager) sessionManager = require("src/session/session-manager");

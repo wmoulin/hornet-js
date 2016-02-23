@@ -9,9 +9,9 @@ var _ = utils._;
 var keyEvent = utils.keyEvent;
 var logger = utils.getLogger("hornet-js-components.auto-complete.auto-complete");
 
-var HIDDEN_INPUT_FIELD_REF = "AutoCompleteComponent#InputField";
+var HIDDEN_INPUT_FIELD_REF = "AutoComplete#InputField";
 
-var AutoCompleteComponent = React.createClass({
+var AutoComplete = React.createClass({
     mixins: [HornetComponentMixin],
 
     propTypes: {
@@ -47,7 +47,7 @@ var AutoCompleteComponent = React.createClass({
             initialValue: "",
             initialText: "",
             i18n: {
-                "inputWidgetTitle": "Aide à la saisie d\"un champ auto-completion"
+                "inputWidgetTitle": "Aide à la saisie d'un champ auto-completion"
             },
             readOnly: false,
             disabled: false,
@@ -72,6 +72,19 @@ var AutoCompleteComponent = React.createClass({
         };
     },
 
+    componentWillReceiveProps(nextProps) {
+        logger.trace("auto-complete componentWillReceiveProps");
+        if (nextProps.disabled != this.props.disabled) {
+            if (nextProps.disabled) {
+                /* Passage en lecture seule : la valeur initiale est rétablie */
+                this.setState({
+                    "inputTextWidgetValue": nextProps.initialText,
+                    "inputValueWidgetValue": nextProps.initialValue
+                });
+            }
+        }
+    },
+
     componentDidMount: function componentDidMount() {
         logger.trace("auto-complete componentDidMount");
         this._throttledTriggerAction = _.throttle(this._triggerAction, this.props.delay);
@@ -84,20 +97,24 @@ var AutoCompleteComponent = React.createClass({
 
     /**
      * Gère l'appel du composant parent ainsi que l'appel de l'action lorsque les valeurs ont changées.
-     * Note: Ce traitement est présent dans cette fonction afin de fournir un objet DOM correcte à la fonction de callBack du composant parent (newForms...)
+     * Note: Ce traitement est présent dans cette fonction afin de fournir un objet DOM correct à la fonction de callBack du composant parent (newForms...)
      * @param prevProps
      * @param prevState
      */
     componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
         logger.trace("auto-complete componentDidUpdate");
-        if (this._hasChanged(prevState)) {
+        /* Lorsque le champ est en lecture seule, les changements de valeur sont réalisés de façon programmatique,
+         et les données newforms sont donc censées être déjà maintenues à jour via la fonction form.updateData().
+          Si on déclenchait maintenant l'évènement newforms, il affecterait la valeur nulle dans form.data.nomDuChamp,
+           car le champ est désactivé. */
+        if (this._hasChanged(prevState) && !this.props.disabled) {
             logger.trace("auto-complete componentDidUpdate _hasChanged");
             var newText = this.state.inputTextWidgetValue;
             var newValue = this.state.inputValueWidgetValue;
             var canScheduleAction = this._callParentOnUserInputChange(prevState);
             canScheduleAction = canScheduleAction !== false && this.props.actionClass && _.isUndefined(newValue);
 
-            // Check si le callback ne désactive pas l'appel et si le texte saisie peut déclencher l'action
+            // Check si le callback ne désactive pas l'appel et si le texte saisi peut déclencher l'action
             if (canScheduleAction && this._isValidTextWidgetInput(newText)) {
                 logger.trace("Prise en compte:", newText);
                 this._throttledTriggerAction(newText);
@@ -168,7 +185,20 @@ var AutoCompleteComponent = React.createClass({
                 value: this.state.inputValueWidgetValue,
                 text: this.state.inputTextWidgetValue
             };
-            return this.props.onUserInputChange(oldValues, newValues, this.props.maxElements, hiddenInputFieldReactElement.getDOMNode());
+
+            /* L'état du champ de saisie libre doit également être maintenu à jour dans le formulaire newforms,
+            * notamment pour le cas où ce composant est démonté puis remonté par react.
+            * On peut utiliser ici getElementById car cette méthode est appelée côté client sur les évènements de saisie */
+            if(oldValues.text != newValues.text) {
+                var inputFieldDOMNode = document.getElementById(this.props.inputFieldName + "$text");
+                if(inputFieldDOMNode) {
+                    this.props.onUserInputChange(inputFieldDOMNode);
+                }
+            }
+
+            if(oldValues.value != newValues.value) {
+                return this.props.onUserInputChange(hiddenInputFieldReactElement.getDOMNode());
+            }
         }
     },
 
@@ -217,8 +247,9 @@ var AutoCompleteComponent = React.createClass({
      * @param event
      */
     _onListWidgetSelected: function (event) {
-        var selectedText = event.currentTarget.dataset.realText;
-        var selectedValue = event.currentTarget.dataset.realValue;
+        /* On n'utilise pas la syntaxe getAttribute dataset.realText car la propriété dataset n'est pas définie sous IE10 */
+        var selectedText = event.currentTarget.getAttribute("data-real-text");
+        var selectedValue = event.currentTarget.getAttribute("data-real-value");
         logger.trace("Selection click [", selectedValue, "]:", selectedText);
         this.changeInputTextWidgetValue(selectedText, selectedValue);
     },
@@ -360,7 +391,10 @@ var AutoCompleteComponent = React.createClass({
         logger.trace("auto-complete shouldComponentUpdate");
         return (
             this.state.inputTextWidgetValue !== nextState.inputTextWidgetValue ||
-            this.state.choiceValues !== nextState.choiceValues
+            this.state.choiceValues !== nextState.choiceValues ||
+            this.props.readOnly != nextProps.readOnly ||
+            this.props.disabled != nextProps.disabled ||
+            this.state.selectedIndex != nextState.selectedIndex
         );
     },
 
@@ -419,4 +453,4 @@ var AutoCompleteComponent = React.createClass({
 
 });
 
-module.exports = AutoCompleteComponent;
+module.exports = AutoComplete;

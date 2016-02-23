@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require('react/addons');
+var React = require("react/addons");
 
 /**
  * Composant react générique utilisé pour les TU.
@@ -37,7 +37,7 @@ function SpinnerReactMock() {
             lastRenderedState = this.state;
             isVisible = lastRenderedProps.isVisible;
             nbRendering++;
-            return (<div name='simuleReactModal'>{this.props.children}</div>);
+            return (<div name="simuleReactModal">{this.props.children}</div>);
         }
     });
 }

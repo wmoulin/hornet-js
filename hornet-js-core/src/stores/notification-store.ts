@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import BaseStore = require("fluxible/addons/BaseStore");
@@ -47,7 +46,7 @@ class NotificationStore extends BaseStore {
             logger.debug("notification Store : " + Action.REMOVE_MODAL_NOTIFICATION);
             this.handleRemove(notifs, this.modal_notifications);
         };
-        handlers[Action.REMOVE_ALL_ERR_NOTIFICATIONS] =  function () {
+        handlers[Action.REMOVE_ALL_ERR_NOTIFICATIONS] = function () {
             logger.debug("notification Store : " + Action.REMOVE_ALL_ERR_NOTIFICATIONS);
             this.err_notifications = Array<N.INotificationType>();
             this.modal_notifications = Array<N.INotificationType>();
@@ -86,8 +85,8 @@ class NotificationStore extends BaseStore {
         this.canRenderRealComponent = true;
     }
 
-    private testIntance(notifs:N.Notifications){
-        if(!(notifs instanceof N.Notifications)){
+    private testIntance(notifs:N.Notifications) {
+        if (!(notifs instanceof N.Notifications)) {
             throw new Error("La notification n'est pas du type N.Notifications");
         }
     }
@@ -113,7 +112,7 @@ class NotificationStore extends BaseStore {
         }
 
         for (var i = 0; i < notifStore.length; i++) {
-            if (notif.id == notifStore[i].id) {
+            if (notif.id === notifStore[i].id) {
                 logger.debug("Suppression de la notif " + notif.id);
                 notifStore.splice(i, 1);
                 this.emitChange();
@@ -148,7 +147,7 @@ class NotificationStore extends BaseStore {
         }
 
         for (var i = 0; i < notifStore.length; i++) {
-            if (notif.id == notifStore[i].id) {
+            if (notif.id === notifStore[i].id) {
                 logger.debug("Notif déja présente, on remplace : ", notif.toString());
                 notifStore[i] = notif;
                 needToAdd = false;

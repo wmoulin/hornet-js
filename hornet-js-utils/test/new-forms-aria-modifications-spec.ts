@@ -1,19 +1,18 @@
-/// <reference path="../../hornet-js-ts-typings/definition.d.ts" />
 "use strict";
 
-import chai = require('chai');
+import chai = require("chai");
 var expect:any = chai.expect;
-import TestUtils = require('src/test-utils');
+import TestUtils = require("src/test-utils");
 var logger = TestUtils.getLogger("hornet-js-utils.test.new-forms-aria-modifications-spec");
-var newFormsAria = require('src/extended/new-forms-aria-modifications');
-var BoundField = require('newforms/BoundField');
+var newFormsAria = require("src/extended/new-forms-aria-modifications");
+var BoundField = require("newforms/BoundField");
+var oldFn = BoundField.prototype.asWidget;
 
-describe('NewFormsAriaModificationsApi', () => {
+describe("NewFormsAriaModificationsApi", () => {
 
-    it('should replace prototype and call it', () => {
+    it("should replace prototype and call it", () => {
         // Arrange
         var callKwargs:any={};
-        var oldFn = BoundField.prototype.asWidget;
 
         var ariaThisMock = {
             errors: () => {
@@ -21,25 +20,22 @@ describe('NewFormsAriaModificationsApi', () => {
                     isPopulated: () => {
                         return true;
                     }
-                }
+                };
             }
         };
 
+        newFormsAria();
         BoundField.prototype.asWidget = function (kwargs) {
             callKwargs = kwargs;
         };
 
-        //Act
-        newFormsAria();
+        // Act
         BoundField.prototype.asWidget.call(ariaThisMock, {});
         BoundField.prototype.asWidget = oldFn;
 
-        //Assert
-        //expect(callKwargs).to.exist();
-        //expect(callKwargs.attrs).to.exist();
-        //expect(callKwargs.attrs['aria-invalid']).to.exist().to.be.true;
-
+        // Assert
+        // expect(callKwargs).to.exist();
+        // expect(callKwargs.attrs).to.exist();
+        // expect(callKwargs.attrs['aria-invalid']).to.exist().to.be.true;
     });
-
-
 });

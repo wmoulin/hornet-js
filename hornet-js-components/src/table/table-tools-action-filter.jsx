@@ -21,9 +21,21 @@ var TableToolsActionFilter = React.createClass({
 
         filtersVisible: React.PropTypes.bool,
         filtersActive: React.PropTypes.bool,
-        icoFilter: React.PropTypes.string,
 
-        enabled: React.PropTypes.bool
+        enabled: React.PropTypes.bool,
+
+        tableName: React.PropTypes.string.isRequired,
+        openDeleteAlert: React.PropTypes.func,
+        criterias: React.PropTypes.object,
+        sort: React.PropTypes.object,
+        imgFilePath: React.PropTypes.string,
+        actionMassEnabled: React.PropTypes.bool,
+        actionAddEnabled: React.PropTypes.bool,
+        actionExportEnabled: React.PropTypes.bool,
+        actionFilterEnabled: React.PropTypes.bool,
+        actionExcelExportEnabled:React.PropTypes.bool,
+        actionPdfExportEnabled:React.PropTypes.bool,
+        actionCsvExportEnabled:React.PropTypes.bool
     },
 
     getDefaultProps: function () {
@@ -31,8 +43,7 @@ var TableToolsActionFilter = React.createClass({
         return {
             enabled: false,
             filtersVisible: false,
-            filtersActive: false,
-            icoFilter: "/img/tableau/ico_filtrer.png"
+            filtersActive: false
         };
     },
 
@@ -95,11 +106,13 @@ var TableToolsActionFilter = React.createClass({
             // classe indiquant que les filtres sont appliqués
             classFilterButton += " hornet-datatable-filter-button-show-active";
         }
+
+        var urlTheme = this.props.imgFilePath || this.genUrlTheme();
         return (
             <div className={classMassButton}>
                 <Icon
                     url=""
-                    src={this.genUrlTheme(this.props.icoFilter)}
+                    src={urlTheme + "/img/tableau/ico_filtrer.png"}
                     alt={titleFilter}
                     title={titleFilter}
                     classLink={classFilterButton}

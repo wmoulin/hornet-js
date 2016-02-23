@@ -1,4 +1,3 @@
-///<reference path='../../../hornet-js-ts-typings/definition.d.ts'/>
 "use strict";
 import HornetSuperAgentRequest = require("src/services/hornet-superagent-request");
 import ServiceApi = require("src/services/service-api");
@@ -47,14 +46,18 @@ class MediaType {
 
         // Le 'on()' est sur SuperAgent, pas sur le stream (attention, le 'pipe()' retourne le stream)
         agent.on("end", () => {
-            var res = agent.res; // (this = request superagent)
-            if (res) {
-                var responseContentType = res.headers["content-type"];
-                resolve(new ActionsChainData().withBody(stream).withResponseMimeType(responseContentType));
-            } else {
-                reject(new WError(undefined, "[KO]: " + message));
-            }
-        })
+                var res = agent.res; // (this = request superagent)
+                if (res) {
+                    var responseContentType = res.headers["content-type"];
+                    resolve(new ActionsChainData().withBody(stream).withResponseMimeType(responseContentType));
+                } else {
+                    var errorMess:string = "[KO] : " + message;
+                    logger.error(errorMess);
+                    var error = new WError(errorMess);
+                    error.name = " ";
+                    reject(error);
+                }
+            })
             .pipe(stream); // Le pipe() appelle la méthode end() sur la request
 
     }

@@ -1,0 +1,10 @@
+test
+istanbul
+.gitignore
+.svn
+*.txt
+node_modules
+target
+definition-ts
+builder.js
+tsconfig.json

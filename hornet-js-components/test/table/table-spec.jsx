@@ -1,21 +1,21 @@
 "use strict";
 
-var React = require('react');
-var utils = require('hornet-js-utils');
-var TestUtils = require('hornet-js-utils/src/test-utils');
+var React = require("react");
+var utils = require("hornet-js-utils");
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var render = TestUtils.render;
 var _ = utils._;
 
 var logger = TestUtils.getLogger("hornet-js-components.test.table.table-spec"); //permet d'initiliser le logger pour les tests
 
-var Table = require('src/table/table');
-var Pagination = require('src/table/pagination');
+var Table = require("src/table/table");
+var TableToolsActionPagination = require("src/table/table-tools-action-pagination");
 
-var i18n = require('hornet-js-core/src/i18n/i18n-fluxible-plugin').i18n;
+var i18n = require("hornet-js-core/src/i18n/i18n-fluxible-plugin").i18n;
 
-describe('Table', () => {
-    it('doit prendre la configuration....', () => {
+describe("Table", () => {
+    it("doit prendre la configuration....", () => {
         // Arrange
         var store = construitStore();
         var props = construitsLesProperties(store);
@@ -30,11 +30,11 @@ describe('Table', () => {
         );
 
         // Assert
-        var $titre = $('h3.tableTitle');
+        var $titre = $("div.hornet-datatable-title");
         expect($titre).to.exist;
     });
 
-    it('doit avoir une entête triable sur le Nom', () => {
+    it("doit avoir une entête triable sur le Nom", () => {
         // Arrange
         var store = construitStore();
         var props = construitsLesProperties(store);
@@ -49,11 +49,11 @@ describe('Table', () => {
         );
 
         // Assert
-        var $lienTriNom = $('div.hornet-datatable-sort-liner a');
+        var $lienTriNom = $("div.hornet-datatable-header-sort-liner a");
         expect($lienTriNom).to.exist
     });
 
-    it('doit ajouter une ligne dans le Table', () => {
+    it("doit ajouter une ligne dans le Table", () => {
         // Arrange
         var store = construitStore();
         var props = construitsLesProperties(store);
@@ -68,13 +68,13 @@ describe('Table', () => {
         );
 
         // Assert
-        var $tr = $('table.hornet-datatable-table tbody tr');
+        var $tr = $("table tbody tr");
         expect($tr).to.exist;
         expect($tr).to.have.length(1);
 
     });
 
-    it('doit avoir des boutons de suppression', () => {
+    it("doit avoir des boutons de suppression", () => {
         // Arrange
         var store = construitStore();
         var props = construitsLesProperties(store);
@@ -89,11 +89,11 @@ describe('Table', () => {
         );
 
         // Assert
-        var $boutonSuppression = $('input.hijaxSupAllAction');
+        var $boutonSuppression = $("input.hijaxSupAllAction");
         //expect($boutonSuppression).to.exist;
     });
 
-    it('doit avoir de boutons de pagination', () => {
+    it("doit y avoir des boutons de pagination", () => {
         // Arrange
         var store = construitStore();
         var props = construitsLesProperties(store);
@@ -108,12 +108,12 @@ describe('Table', () => {
         );
 
         // Assert
-        var $divPagination = $('div.hornet-datatable-paginator-controls');
+        var $divPagination = $("div.hornet-datatable-pagination-controls");
         expect($divPagination).to.exist;
     });
 
 
-    it('doit etre un Table sans actions de masse', () => {
+    it("doit etre un Table sans actions de masse", () => {
         // Arrange
         var store = construitStore();
         var props = construitsLesProperties(store);
@@ -131,18 +131,18 @@ describe('Table', () => {
         );
 
         // Assert
-        var $boutonCheckAll = $('#listePartenairesContainer table thead tr th a.hijackCheckboxAll');
+        var $boutonCheckAll = $("#listePartenairesContainer table thead tr th a.hijackCheckboxAll");
         expect($boutonCheckAll).to.not.exist;
 
-        var $boutonUnCheckAll = $('#listePartenairesContainer table thead tr th a.hijackCheckboxNone');
+        var $boutonUnCheckAll = $("#listePartenairesContainer table thead tr th a.hijackCheckboxNone");
         expect($boutonUnCheckAll).to.not.exist;
 
-        var $checkBoxLinel = $('#listePartenairesContainer table tbody tr td.hornet-datatable-col-selection.hornet-datatable-cell input.hijackCheckbox');
+        var $checkBoxLinel = $("#listePartenairesContainer table tbody tr td.hornet-datatable-col-selection.hornet-datatable-cell input.hijackCheckbox");
         expect($checkBoxLinel).to.not.exist;
 
     });
 
-    it('Aucun résultat dans le table', () => {
+    it("Aucun résultat dans le table", () => {
         // Arrange
         var store = construitStore();
         var props = construitsLesProperties(store);
@@ -165,13 +165,13 @@ describe('Table', () => {
         );
 
         // Assert
-        var $selectLines = $('.listeTableContainer table tbody tr');
+        var $selectLines = $(".hornet-datatable-content table tbody tr");
         logger.error($selectLines.html());
         expect($selectLines.length).to.equal(1);
 
     });
 
-    it('currentPage à 1', () => {
+    it("currentPage à 1", () => {
         // Arrange
         var store = construitStore();
         var props = construitsLesProperties(store);
@@ -186,13 +186,13 @@ describe('Table', () => {
         );
 
         // Assert
-        var $currentPage = $('.id_for_indexPage').val();
-        logger.error('page courante', $currentPage);
+        var $currentPage = $("[name=indexPage]").val();
+        logger.error("page courante", $currentPage);
         expect($currentPage).to.equal("1");
     });
 
 
-    it('afficher tous les résultats', () => {
+    it("afficher tous les résultats", () => {
         // Arrange
         var store = construitStore();
         var contexte = construitLeContext(store);
@@ -210,7 +210,8 @@ describe('Table', () => {
         // Act
         var $ = render(() =>
                 <div>
-                    <Pagination
+                    <TableToolsActionPagination
+                        enabled="true"
                         tableName='table-spec'
                         onchangePaginationData={onchangePaginationData}
                         pagination={pagination}/>
@@ -219,19 +220,21 @@ describe('Table', () => {
         );
 
         // Assert
-        var $currentPage = $('[name="itemsPerPage"]').val();
-        logger.error('items per page', $currentPage);
+
+        // Le nom du select pour la taille de page est construit en concaténant {nom de la table} avec "itemsPerPage"
+        var $currentPage = $('[name="table-specitemsPerPage"]').val();
+        logger.error("items per page", $currentPage);
         expect($currentPage).to.equal("-1");
     });
 
-    it('Tri activé', () => {
+    it("Tri activé", () => {
         // Arrange
         var store = construitStore();
 
         store.getSortData = () => {
             return ({
-                key: 'nom',
-                dir: 'ASC'
+                key: "nom",
+                dir: "ASC"
             })
 
         };
@@ -248,11 +251,11 @@ describe('Table', () => {
         );
 
         // Assert
-        $('table thead tr th').each(() => {
-            if ($(this).find('div').html() == 'Nom') {
-                expect($(this).attr('aria-sort')).to.equal('ascending');
-                expect($(this).attr('title')).to.equal("Trier par Nom  dans l'ordre croissant");
-                expect($(this).attr('class')).to.equal("hornet-datatable-sorted ");
+        $("table thead tr th").each(() => {
+            if ($(this).find("div").html() == "Nom") {
+                expect($(this).attr("aria-sort")).to.equal("ascending");
+                expect($(this).attr("title")).to.equal("Trier par Nom  dans l'ordre croissant");
+                expect($(this).attr("class")).to.equal("hornet-datatable-sorted ");
             }
         });
     });
@@ -277,7 +280,7 @@ describe('Table', () => {
     //    expect($formFilter).to.exist;
     //
     //});
-    it('Export désactivé', () => {
+    it("Export désactivé", () => {
         // Arrange
         var store = construitStore();
         var props = construitsLesProperties(store);
@@ -303,16 +306,16 @@ function construitStore() {
             return {
                 items: [
                     {
-                        "id": "56",
-                        "nom": "ALBERT",
-                        "prenom": "Renaud",
-                        "courriel": "renaud.albert@msn.com",
-                        "organisme": "Organisme 2",
-                        "vip": "oui",
-                        "datemodification": "09/12/2015",
-                        "secteur": "1",
-                        "nationalite": "Française",
-                        "civilite": "M."
+                        id: "56",
+                        nom: "ALBERT",
+                        prenom: "Renaud",
+                        courriel: "renaud.albert@msn.com",
+                        organisme: "Organisme 2",
+                        vip: "oui",
+                        datemodification: "09/12/2015",
+                        secteur: "1",
+                        nationalite: "Française",
+                        civilite: "M."
                     }
                 ]
                 , nbTotal: 1
@@ -322,12 +325,15 @@ function construitStore() {
             return [];
         },
         getThemeCss: () => {
-            return 'cssTest'
+            return "cssTest"
         },
         getThemeUrl: () => {
-            return 'themeTestUrl';
+            return "themeTestUrl";
         },
         getPaginationData() {
+            return {};
+        },
+        getPaginationNewData() {
             return {};
         },
         getSortData() {
@@ -347,6 +353,9 @@ function construitStore() {
         },
         getCurrentCsrf() {
             return {}
+        },
+        getCriterias() {
+            return {}
         }
 
     };
@@ -357,29 +366,41 @@ function construitStore() {
 function construitsLesProperties(TableTestStore) {
 
     var config = {
-        name: 'PARTENAIRES',
+        name: "PARTENAIRES",
         columns: {
-            nom: {titre: 'Nom', sort: 'text', filter: {type: 'text'}},
-            prenom: {titre: 'Prénom', sort: 'text', filter: {type: 'text'}},
-            courriel: {titre: 'Courriel', sort: 'text', filter: {type: 'text'}},
-            organisme: {titre: 'Organisme', sort: 'text', filter: {type: 'text'}},
-            vip: {titre: 'VIP', sort: 'text', filter: {type: 'checkbox'}},
-            datemodification: {titre: 'Date de modification', sort: 'text', filter: {type: 'date'}}
+            nom: {titre: "Nom", sort: "text", filter: {type: "text"}},
+            prenom: {titre: "Prénom", sort: "text", filter: {type: "text"}},
+            courriel: {titre: "Courriel", sort: "text", filter: {type: "text"}},
+            organisme: {titre: "Organisme", sort: "text", filter: {type: "text"}},
+            vip: {titre: "VIP", sort: "text", filter: {type: "checkbox"}},
+            datemodification: {titre: "Date de modification", sort: "text", filter: {type: "date"}}
         },
         store: TableTestStore,
         messages: {
-            titleTable: "Liste des partenaires correspondant à la recherche",
-            massDeletion: "Suppression en masse",
-            emptyResult: "Aucune information à présenter.",
+            tableTitle: "Liste des partenaires correspondant à la recherche",
+            emptyResult: "Aucun partenaire présent.",
+            deleteAllConfirmation: "Etes-vous sûr(e) de vouloir supprimer ce(s) partenaire(s) ?",
+            deleteAllTitle: "Supprimer ce(s) partenaire(s)",
+            deleteAllActionTitle: "Suppression multiple de partenaires",
             captionText: "Liste des partenires avec fontionnalités d'export (csv, xls, pdf) suppression de masse, filtres avancés, ajout/édition/suppression d'un partenaire",
-            deleteAllConfirmation: "Etes-vous sûr(e) de vouloir supprimer ce(s) élément(s)",
-            addTitle: "Ajouter",
+            addTitle: "Ajouter un partenaire",
             filterValid: "Filtrer",
-            filterValidTitle: "Filtrer",
+            filterValidTitle: "Filtrer sur les partenaires",
             filterCancel: "Annuler",
-            filterCancelTitle: "Annuler",
-            hideFiltering: "Cacher le filtrage",
-            hideFilteringTitle: "Cacher le filtrage"
+            filterCancelTitle: "Annuler les filtres sur les partenaires",
+            hideFiltering: "Cacher le filtre en cours sur les partenaires",
+            hideFilteringTitle: "Cacher le filtre en cours sur les partenaires",
+            hideFilter: "Cacher le filtre sur les partenaires",
+            hideFilterTitle: "Cacher le filtre sur les partenaires",
+            showFilter: "Afficher le filtre sur les partenaires",
+            showFiltering: "Afficher le filtre en cours sur les partenaires",
+            selectedAllTitle: "Sélectionner tous les partenaires",
+            deselectedAllTitle: "Désélectionner tous les partenaires",
+            sortedByTitle: "Trier les partenaires par {columnTitle} {sortTitle}",
+            exportTitle: "Exporter les partenaires au format {format}",
+            exportExcelTitle: "Excel",
+            exportPdfTitle: "PDF",
+            exportCsvTitle: "CSV"
         },
         options: {
             itemsPerPage: 10,
@@ -390,41 +411,42 @@ function construitsLesProperties(TableTestStore) {
             hasDelAllButton: true
         },
         routes: {
-            search: '/partenaires/rechercher',
-            delete: '/partenaires/supprimer',
-            deleteAll: '/partenaires/supprimer/0',
-            add: '/partenaires/creer',
-            modify: '/partenaires/editer',
-            view: '/partenaires/consulter'
+            search: "/partenaires/rechercher",
+            delete: "/partenaires/supprimer",
+            deleteAll: "/partenaires/supprimer/0",
+            add: "/partenaires/creer",
+            modify: "/partenaires/editer",
+            view: "/partenaires/consulter"
         }
     };
 
     var props = {
-        'config': config
+        config: config
     };
     return props;
 }
 
 function construitLeContext(TableTestStore) {
     var messages = {
-        "table": {
-            "filter": "Filtrer",
-            "cancelFilter": "Annuler",
-            "hideFiltering": "Cacher le filtrage",
-            "hideFilter": "Cacher le filtre",
-            "showFilter": "Afficher le filtrage",
-            "emptyData": "Aucune information à présenter.",
-            "addTitle": "Ajouter un partenaire",
-            "selectedAllAlt": "Tout sélectionner",
-            "selectedAllTitle": "Tout sélectionner",
-            "deselectedAllAlt": "Tout désélectionner",
-            "deselectedAllTitle": "Tout désélectionner",
-            "sortedBy": "Trier par {columnTitle}",
-            "descending": " dans l'ordre décroissant",
-            "ascending": " dans l'ordre croissant",
-            "rowNumber": "Lignes : ",
-            "pageFooter": "Page :",
-            "pageFooterOn": "sur"
+        table: {
+            filter: "Filtrer",
+            cancelFilter: "Annuler",
+            hideFiltering: "Cacher le filtrage",
+            hideFilter: "Cacher le filtre",
+            showFilter: "Afficher le filtrage",
+            emptyData: "Aucune information à présenter.",
+            addTitle: "Ajouter un partenaire",
+            selectedAllAlt: "Tout sélectionner",
+            selectedAllTitle: "Tout sélectionner",
+            deselectedAllAlt: "Tout désélectionner",
+            deselectedAllTitle: "Tout désélectionner",
+            sortedBy: "Trier par {columnTitle}",
+            descending: " dans l'ordre décroissant",
+            ascending: " dans l'ordre croissant",
+            rowNumber: "Lignes : ",
+            pageFooter: "Page :",
+            pageFooterOn: "sur",
+            "formatDateInvalid": "Le format du champ « {title} » est incorrect."
         }
     };
     var context = {

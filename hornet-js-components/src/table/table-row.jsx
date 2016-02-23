@@ -13,7 +13,10 @@ var TableRow = React.createClass({
         tableName: React.PropTypes.string.isRequired,
         item: React.PropTypes.object,
         columns: React.PropTypes.shape({
-            title: React.PropTypes.string,
+            title: React.PropTypes.oneOfType([
+                React.PropTypes.string,
+                React.PropTypes.object
+            ]),
             sort: React.PropTypes.oneOfType([
                 React.PropTypes.string,
                 React.PropTypes.object
@@ -21,7 +24,6 @@ var TableRow = React.createClass({
             hide: React.PropTypes.bool
         }).isRequired,
         options: React.PropTypes.object,
-        routes: React.PropTypes.object,
         sort: React.PropTypes.object,
         selectedItems: React.PropTypes.array,
         onChangeSelectedItems: React.PropTypes.func,
@@ -68,12 +70,12 @@ var TableRow = React.createClass({
     _toggleSelection: function () {
         logger.trace("_toggleSelection");
 
-            var selectedItems = this.props.selectedItems || [];
-            // TODO: faire en sorte que la clé soit passée par une props pour gérer les cas où il n'y a pas de clé 'id' dans les VO.
-            var index = this._getIndexOfItem(selectedItems,
-                [this.props.options.selectedKey], this.props.item[this.props.options.selectedKey]);
-            if (index !== -1) {
-                //Suppression de l'item
+        var selectKey = this.props.options && this.props.options.selectedKey || "id";
+
+        var selectedItems = this.props.selectedItems || [];
+        var index = this._getIndexOfItem(selectedItems, [selectKey], this.props.item[selectKey]);
+        if (index !== -1) {
+            //Suppression de l'item
             selectedItems.splice(index, 1);
         } else {
             //ajout de l'item
@@ -92,15 +94,16 @@ var TableRow = React.createClass({
      */
     _getColonneCheckbox: function () {
         logger.trace("_getColonneCheckbox");
+        var selectKey = this.props.options && this.props.options.selectedKey || "id";
         return (
             <td className="hornet-datatable-cell hornet-datatable-cell-select">
                 <input
                     type="checkbox"
                     title={this._getSelectedTitle()}
-                    value={this.props.item[this.props.options.selectedKey]}
-                    name={this.props.tableName + "-selectedItems-" + this.props.item[this.props.options.selectedKey]}
+                    value={this.props.item[selectKey]}
+                    name={this.props.tableName + "-selectedItems-" + this.props.item[selectKey]}
                     checked={this.props.selected ? "checked" : ""}
-                    data-id={this.props.item[this.props.options.selectedKey]}
+                    data-id={this.props.item[selectKey]}
                     onChange={this._toggleSelection}
                 />
             </td>
@@ -132,7 +135,7 @@ var TableRow = React.createClass({
             }
 
             classes["hornet-datatable-cell-custom"] = columns[prop].custom;
-            classes["hornet-datatable-cell-custom-"+columnKey] = columns[prop].custom;
+            classes["hornet-datatable-cell-custom-" + columnKey] = columns[prop].custom;
 
             var className = classNames(classes);
 

@@ -32,7 +32,30 @@ var TableHeaderMass = React.createClass({
             deselectedAllTitle: React.PropTypes.string
         }),
         enabled: React.PropTypes.bool,
-        checked: React.PropTypes.bool
+        checked: React.PropTypes.bool,
+        columns: React.PropTypes.shape({
+            title: React.PropTypes.oneOfType([
+                React.PropTypes.string,
+                React.PropTypes.object
+            ]),
+            sort: React.PropTypes.oneOfType([
+                React.PropTypes.string,
+                React.PropTypes.object
+            ]),
+            filter: React.PropTypes.object,
+            render: React.PropTypes.func,
+            icon: React.PropTypes.bool
+        }).isRequired,
+        options: React.PropTypes.object,
+        routes: React.PropTypes.object,
+        store: React.PropTypes.func.isRequired,
+        onChangeSortData: React.PropTypes.func,
+        sort: React.PropTypes.object,
+        selectedItems: React.PropTypes.array,
+        captionText: React.PropTypes.string,
+        actionMassEnabled: React.PropTypes.bool,
+        actionMassChecked: React.PropTypes.bool,
+        imgFilePath: React.PropTypes.string
     }),
 
     getDefaultProps: function () {

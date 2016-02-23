@@ -1,9 +1,10 @@
 "use strict";
 
 var utils = require("hornet-js-utils");
+var logger = utils.getLogger("hornet-js-components.table.table");
 var React = require("react");
 
-var Alert = require('hornet-js-components/src/dialog/alert');
+var Alert = require("hornet-js-components/src/dialog/alert");
 
 var TableTitle = require("src/table/table-title");
 var TableFilters = require("src/table/table-filters");
@@ -14,10 +15,9 @@ var TableToolsBottom = require("src/table/table-tools-bottom");
 var TableActions = require("src/table/actions/table-actions");
 
 var TableStore = require("src/table/store/table-store");
+var I = require("src/table/store/table-store-data");
 
 var HornetComponentMixin = require("hornet-js-core/src/mixins/react-mixins");
-
-var logger = utils.getLogger("hornet-js-components.table.table");
 var _ = utils._;
 
 var Table = React.createClass({
@@ -30,7 +30,10 @@ var Table = React.createClass({
         config: React.PropTypes.shape({
             name: React.PropTypes.string.isRequired,
             columns: React.PropTypes.shape({
-                title: React.PropTypes.string,
+                title: React.PropTypes.oneOfType([
+                    React.PropTypes.string,
+                    React.PropTypes.object
+                ]),
                 sort: React.PropTypes.string,
                 filter: React.PropTypes.string,
                 render: React.PropTypes.func,
@@ -76,6 +79,9 @@ var Table = React.createClass({
                 hasFilter: React.PropTypes.bool,
                 clientSideSorting: React.PropTypes.bool,
                 hasExportButtons: React.PropTypes.bool,
+                hasExcelExportButton: React.PropTypes.bool,
+                hasPdfExportButton: React.PropTypes.bool,
+                hasCsvExportButton: React.PropTypes.bool,
                 hasAddButton: React.PropTypes.bool,
                 hasDelAllButton: React.PropTypes.bool,
                 selectedKey: React.PropTypes.string,
@@ -85,9 +91,17 @@ var Table = React.createClass({
                     type: React.PropTypes.string
                 })
             }),
+            /** Choix de taille de page proposés */
+            pageSizeSelect: React.PropTypes.arrayOf(React.PropTypes.shape({
+                /** Taille de page */
+                value: React.PropTypes.number.isRequired,
+                /** Clé du libellé à rechercher dans messages ou dans le bloc de messages du composant "table" */
+                textKey: React.PropTypes.string.isRequired
+            })),
             actions: React.PropTypes.object,
-            routes: React.PropTypes.object
-
+            routes: React.PropTypes.object,
+            /** Path permettant de surcharger les pictogrammes/images **/
+            imgFilePath: React.PropTypes.string
         }).isRequired,
         isVisible: React.PropTypes.bool,
 
@@ -103,12 +117,15 @@ var Table = React.createClass({
     getDefaultProps: function () {
         logger.trace("Table getDefaultProps");
         return {
-            config:{
+            config: {
                 options: {
                     itemsPerPage: 10,
                     hasFilter: false,
                     clientSideSorting: false,
                     hasExportButtons: false,
+                    hasExcelExportButton: false,
+                    hasPdfExportButton: false,
+                    hasCsvExportButton: false,
                     hasAddButton: false,
                     hasDelAllButton: false,
                     selectedKey: "id"
@@ -138,8 +155,8 @@ var Table = React.createClass({
 
         var isFiltersVisible = this.props.config.options.isFiltersVisible || false;
         var isFiltersActive = false;
-        if(isFiltersVisible) {
-            var filter = tableStore.getFilterData(this.props.config.name);
+        if (isFiltersVisible) {
+            var filter = _.cloneDeep(tableStore.getFilterData(this.props.config.name));
             if (filter && !_.isEmpty(filter)) {
                 isFiltersActive = true;
             } else {
@@ -157,7 +174,9 @@ var Table = React.createClass({
             actionMassChecked: false,
             actionMassEnabled: this._isActionMassEnabled(),
             actionAddEnabled: this._isActionAddEnabled(),
-            actionExportEnabled: this._isActionExportEnabled(),
+            actionExcelExportEnabled: this._isActionExcelExportEnabled(),
+            actionPdfExportEnabled: this._isActionPdfExportEnabled(),
+            actionCsvExportEnabled: this._isActionCsvExportEnabled(),
             actionFilterEnabled: this._isActionFilterEnabled(),
             actionPaginationEnabled: this._isActionPaginationEnabled(),
             tableTitleEnabled: this._isTableTitleEnabled(),
@@ -187,11 +206,11 @@ var Table = React.createClass({
         var itemsPerPage;
         var pageIndex;
         var totalItems = data.nbTotal || 0;
-        if (paginationStore  && !_.isEmpty(paginationStore)) {
+        if (paginationStore && !_.isEmpty(paginationStore)) {
             itemsPerPage = paginationStore.itemsPerPage;
             pageIndex = paginationStore.pageIndex;
         } else {
-            var paginationNewStore = tableStore.getPaginationNewData(this.props.config.name);
+            var paginationNewStore = new I.TableStoreDataPagination();
             itemsPerPage = paginationNewStore.itemsPerPage;
             pageIndex = paginationNewStore.pageIndex;
             if (this.props.config.options && this.props.config.options.itemsPerPage) {
@@ -226,7 +245,7 @@ var Table = React.createClass({
     getData: function () {
         logger.trace("Table getData");
         var store = this.getStore(this.props.config.store);
-        return store.getAllResults() || {};
+        return store.getAllResults(this.props.config.name) || {};
     },
 
     /**
@@ -263,7 +282,7 @@ var Table = React.createClass({
             selectedItems: selectedItems
         };
 
-        var filter = tableStore.getFilterData(this.props.config.name);
+        var filter = _.cloneDeep(tableStore.getFilterData(this.props.config.name));
         if (filter && !_.isEmpty(filter)) {
             changeState.isFiltersActive = true;
         } else {
@@ -273,87 +292,88 @@ var Table = React.createClass({
     },
 
     render: function () {
-        try {
-            logger.trace("Table render");
+        logger.trace("Table render");
+        return (
+            (this.props.isVisible) ?
+                <div className="hornet-datatable" id={"hornet-datatable-" + this.props.config.name}>
+                    <TableTitle title={this._getTableTitle()} enabled={this.state.tableTitleEnabled}/>
+                    <TableToolsTop
+                        tableName={this.props.config.name}
+                        options={this.props.config.options}
+                        routes={this.props.config.routes}
+                        actions={this.props.config.actions}
+                        toggleFilters={this._toggleFilters}
+                        filtersVisible={this.state.isFiltersVisible}
+                        filtersActive={this.state.isFiltersActive}
+                        openDeleteAlert={this._openDeleteAlert}
+                        criterias={this.getStore(this.props.config.store).getCriterias(this.props.config.name)}
+                        sort={this.state.sort}
+                        messages={this.props.config.messages}
+                        imgFilePath={this.props.config.imgFilePath}
 
-            return (
-                (this.props.isVisible) ?
-                    <div className="hornet-datatable">
-                        <TableTitle title={this._getTableTitle()} enabled={this.state.tableTitleEnabled}/>
-                        <TableToolsTop
-                            tableName={this.props.config.name}
-                            options={this.props.config.options}
-                            routes={this.props.config.routes}
-                            actions={this.props.config.actions}
-                            toggleFilters={this._toggleFilters}
-                            filtersVisible={this.state.isFiltersVisible}
-                            filtersActive={this.state.isFiltersActive}
-                            openDeleteAlert={this._openDeleteAlert}
-                            criterias={this.getStore(this.props.config.store).getCriterias()}
-                            sort={this.state.sort}
-                            messages={this.props.config.messages}
+                        actionMassEnabled={this.state.actionMassEnabled}
+                        actionAddEnabled={this.state.actionAddEnabled}
+                        actionExcelExportEnabled={this.state.actionExcelExportEnabled}
+                        actionPdfExportEnabled={this.state.actionPdfExportEnabled}
+                        actionCsvExportEnabled={this.state.actionCsvExportEnabled}
+                        actionFilterEnabled={this.state.actionFilterEnabled}
+                    />
+                    <TableFilters
+                        tableName={this.props.config.name}
+                        columns={this.props.config.columns}
+                        routes={this.props.config.routes}
+                        store={this.props.config.store}
+                        messages={this.props.config.messages}
+                        toggle={this._toggleFilters}
+                        activate={this._activateFilters}
+                        visible={this.state.isFiltersVisible}
+                        enabled={this.state.actionFilterEnabled}
+                        active={this.state.isFiltersActive}
+                        imgFilePath={this.props.config.imgFilePath}
+                    />
+                    <TableContent
+                        tableName={this.props.config.name}
+                        items={this.state.items}
+                        columns={this.props.config.columns}
+                        options={this.props.config.options}
+                        routes={this.props.config.routes}
+                        store={this.props.config.store}
+                        onChangeSortData={this._onChangeSortData}
+                        sort={this.state.sort}
+                        onChangeSelectedItems={this._onChangeSelectedItems}
+                        selectedItems={this.state.selectedItems}
+                        captionText={this.props.config.messages.captionText}
+                        messages={this.props.config.messages}
+                        actionMassEnabled={this.state.actionMassEnabled}
+                        actionMassChecked={this.state.actionMassChecked}
+                        imgFilePath={this.props.config.imgFilePath}
+                    />
+                    <TableToolsBottom
+                        tableName={this.props.config.name}
+                        pagination={this.state.pagination}
+                        onchangePaginationData={this._onchangePaginationData}
+                        pageSizeSelect={this.props.config.pageSizeSelect}
+                        options={this.props.config.options}
+                        actions={this.props.config.actions}
+                        routes={this.props.config.routes}
+                        openDeleteAlert={this._openDeleteAlert}
+                        messages={this.props.config.messages}
+                        imgFilePath={this.props.config.imgFilePath}
 
-                            actionMassEnabled={this.state.actionMassEnabled}
-                            actionAddEnabled={this.state.actionAddEnabled}
-                            actionExportEnabled={this.state.actionExportEnabled}
-                            actionFilterEnabled={this.state.actionFilterEnabled}
-                        />
-                        <TableFilters
-                            tableName={this.props.config.name}
-                            columns={this.props.config.columns}
-                            routes={this.props.config.routes}
-                            store={this.props.config.store}
-                            messages={this.props.config.messages}
-                            toggle={this._toggleFilters}
-                            activate={this._activateFilters}
-                            visible={this.state.isFiltersVisible}
-                            enabled={this.state.actionFilterEnabled}
-                            active={this.state.isFiltersActive}
-                        />
-                        <TableContent
-                            tableName={this.props.config.name}
-                            items={this.state.items}
-                            columns={this.props.config.columns}
-                            options={this.props.config.options}
-                            routes={this.props.config.routes}
-                            store={this.props.config.store}
-                            onChangeSortData={this._onChangeSortData}
-                            sort={this.state.sort}
-                            onChangeSelectedItems={this._onChangeSelectedItems}
-                            selectedItems={this.state.selectedItems}
-                            captionText={this.props.config.messages.captionText}
-                            messages={this.props.config.messages}
-                            actionMassEnabled={this.state.actionMassEnabled}
-                            actionMassChecked={this.state.actionMassChecked}
-                        />
-                        <TableToolsBottom
-                            tableName={this.props.config.name}
-                            pagination={this.state.pagination}
-                            onchangePaginationData={this._onchangePaginationData}
-                            options={this.props.config.options}
-                            actions={this.props.config.actions}
-                            routes={this.props.config.routes}
-                            openDeleteAlert={this._openDeleteAlert}
-                            messages={this.props.config.messages}
+                        actionMassEnabled={this.state.actionMassEnabled}
+                        actionAddEnabled={this.state.actionAddEnabled}
+                        actionPaginationEnabled={this.state.actionPaginationEnabled}
+                    />
+                    <Alert message={this._getDeleteAllConfirmation()}
+                           isVisible={this.state.isOpenAlertDelete}
+                           onClickOk={this._delete}
+                           onClickCancel={this._closeDeleteAlert}
+                           onClickClose={this._closeDeleteAlert}
+                           title={this._getDeleteAllTitle()}
+                    />
+                </div> : null
 
-                            actionMassEnabled={this.state.actionMassEnabled}
-                            actionAddEnabled={this.state.actionAddEnabled}
-                            actionPaginationEnabled={this.state.actionPaginationEnabled}
-                        />
-                        <Alert message={this._getDeleteAllConfirmation()}
-                               isVisible={this.state.isOpenAlertDelete}
-                               onClickOk={this._delete}
-                               onClickCancel={this._closeDeleteAlert}
-                               onClickClose={this._closeDeleteAlert}
-                               title={this._getDeleteAllTitle()}
-                        />
-                    </div> : null
-
-            );
-        } catch (e) {
-            logger.error("Render table exception", e);
-            throw e;
-        }
+        );
     },
 
     _isActionMassEnabled: function () {
@@ -372,10 +392,26 @@ var Table = React.createClass({
             || (this.props.config.routes && this.props.config.routes.add)));
     },
 
-    _isActionExportEnabled: function () {
+    _isActionExcelExportEnabled: function () {
         return Boolean(
             this.props.config.options
-            && this.props.config.options.hasExportButtons
+            && (this.props.config.options.hasExcelExportButton || this.props.config.options.hasExportButtons)
+            && this.props.config.routes
+            && this.props.config.routes.export);
+    },
+
+    _isActionPdfExportEnabled: function () {
+        return Boolean(
+            this.props.config.options
+            && (this.props.config.options.hasPdfExportButton || this.props.config.options.hasExportButtons)
+            && this.props.config.routes
+            && this.props.config.routes.export);
+    },
+
+    _isActionCsvExportEnabled: function () {
+        return Boolean(
+            this.props.config.options
+            && (this.props.config.options.hasCsvExportButton || this.props.config.options.hasExportButtons)
             && this.props.config.routes
             && this.props.config.routes.export);
     },
@@ -446,10 +482,10 @@ var Table = React.createClass({
         var tableStore = this.context.getStore(TableStore);
         var data = {
             key: this.props.config.name,
-            criterias: this.getStore(this.props.config.store).getCriterias(),
+            criterias: this.getStore(this.props.config.store).getCriterias(this.props.config.name),
             pagination: pagination,
             sort: this.state.sort,
-            filters: tableStore.getFilterData(this.props.config.name),
+            filters: _.cloneDeep(tableStore.getFilterData(this.props.config.name)),
             selectedItems: [],
             emit: false
         };
@@ -460,6 +496,14 @@ var Table = React.createClass({
             this.throttledSetRouteInternal(this.props.config.routes.search, data);
         } else {
             logger.warn("_onchangePaginationData : Routes Search undefined");
+        }
+
+        // Fait défiler la page courante de façon à remonter en haut du tableau
+        var element = document.getElementById("hornet-datatable-" + this.props.config.name);
+        if (element && element.scrollIntoView) {
+            element.scrollIntoView();
+        } else {
+            logger.warn("Impossible de scroller sur le tableau.");
         }
     },
 
@@ -488,10 +532,10 @@ var Table = React.createClass({
             var tableStore = this.context.getStore(TableStore);
             var data = {
                 key: this.props.config.name,
-                criterias: this.getStore(this.props.config.store).getCriterias(),
+                criterias: this.getStore(this.props.config.store).getCriterias(this.props.config.name),
                 pagination: tableStore.getPaginationData(this.props.config.name),
                 sort: sort,
-                filters: tableStore.getFilterData(this.props.config.name),
+                filters: _.cloneDeep(tableStore.getFilterData(this.props.config.name)),
                 selectedItems: []
             };
 
@@ -545,16 +589,16 @@ var Table = React.createClass({
         var data = {
             key: this.props.config.name,
             selectedItems: tableStore.getSelectedItems(this.props.config.name),
-            criterias: this.getStore(this.props.config.store).getCriterias(),
+            criterias: this.getStore(this.props.config.store).getCriterias(this.props.config.name),
             sort: this.state.sort,
             pagination: tableStore.getPaginationData(this.props.config.name),
-            filters: tableStore.getFilterData(this.props.config.name)
+            filters: _.cloneDeep(tableStore.getFilterData(this.props.config.name))
         };
 
         this._onChangeSelectedItems([]);
 
         if (this.props.config.routes.deleteAll) {
-            this.throttledSetRouteInternal(this.props.config.routes.deleteAll, data);
+            window.routeur.setRouteInternal(this.props.config.routes.deleteAll, data);
         } else {
             logger.warn("_delete : Routes deleteAll undefined");
         }

@@ -34,8 +34,11 @@ var TableToolsTop = React.createClass({
 
         actionMassEnabled: React.PropTypes.bool,
         actionAddEnabled: React.PropTypes.bool,
-        actionExportEnabled: React.PropTypes.bool,
+        actionExcelExportEnabled: React.PropTypes.bool,
+        actionPdfExportEnabled: React.PropTypes.bool,
+        actionCsvExportEnabled: React.PropTypes.bool,
         actionFilterEnabled: React.PropTypes.bool,
+        imgFilePath: React.PropTypes.string,
 
         children: React.PropTypes.oneOfType([
             React.PropTypes.object,
@@ -47,7 +50,6 @@ var TableToolsTop = React.createClass({
         return {
             actionMassEnabled: false,
             actionAddEnabled: false,
-            actionExportEnabled: false,
             actionFilterEnabled: false
         };
     },
@@ -62,7 +64,7 @@ var TableToolsTop = React.createClass({
                                                           classAction="pure-u-2-24"/>
                     <TableToolsActionAdd {...this.props} enabled={this.props.actionAddEnabled}
                                                          classAction="pure-u-14-24"/>
-                    <TableToolsActionExport {...this.props} enabled={this.props.actionExportEnabled}
+                    <TableToolsActionExport {...this.props} excelEnabled={this.props.actionExcelExportEnabled} pdfEnabled={this.props.actionPdfExportEnabled} csvEnabled={this.props.actionCsvExportEnabled}
                                                             classAction="pure-u-4-24" classExport="pure-u-6-24"/>
 
                     {this.props.children}

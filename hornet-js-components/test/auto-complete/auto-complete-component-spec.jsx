@@ -1,22 +1,22 @@
 "use strict";
 
-var React = require('react');
-var TestUtils = require('hornet-js-utils/src/test-utils');
+var React = require("react");
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var render = TestUtils.render;
 var sinon = TestUtils.sinon;
 
-var proxyquire = require('proxyquire').noCallThru();
+var proxyquire = require("proxyquire").noCallThru();
 
-var AutoComplete = proxyquire('src/auto-complete/auto-complete', {
-    './auto-complete-selector': require('test/auto-complete/react-dummy-component-mock')
+var AutoComplete = proxyquire("src/auto-complete/auto-complete", {
+    "./auto-complete-selector": require("test/auto-complete/react-dummy-component-mock")
 });
 
 var logger = TestUtils.getLogger("hornet-js-components.test.auto-complete.auto-complete-component-spec");
 
-describe('AutoCompleteComponentSpec', () => {
+describe("AutoCompleteComponentSpec", () => {
 
-    describe('_selectCurrentIndex', () => {
+    describe("_selectCurrentIndex", () => {
 
         beforeEach(() => {
 
@@ -40,7 +40,7 @@ describe('AutoCompleteComponentSpec', () => {
             }
         );
 
-        it('ne doit rien selectionner si liste de choix inexistante', () => {
+        it("ne doit rien selectionner si liste de choix inexistante", () => {
             // Arrange
             this.instance.state.selectedIndex = 1;
 
@@ -52,7 +52,7 @@ describe('AutoCompleteComponentSpec', () => {
 
         });
 
-        it('doit selectionner si liste de choix avec 2 elements', () => {
+        it("doit selectionner si liste de choix avec 2 elements", () => {
             // Arrange
             var inst = this.instance;
             var choice = {

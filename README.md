@@ -1,6 +1,5 @@
 # hornet-js
 
-
 ![Presentation generale](.//architecture/hornet-flux-diagramme-5.0.png)
 
 Le framework `Hornet` est conçu selon le principe d'`isomorphisme`, c'est à dire que le code d'une application Hornet s'exécute aussi bien dans un navigateur web que sur un serveur d'application Node.js.
@@ -44,10 +43,10 @@ Ajouter au package.json
 
 ```shell
   "appDependencies": {
-    "hornet-js-components": "5.0.0",
-    "hornet-js-core": "5.0.0",
-    "hornet-js-ts-typings": "5.0.0",
-    "hornet-js-utils": "5.0.0"
+    "hornet-js-components": "5.0.X",
+    "hornet-js-core": "5.0.X",
+    "hornet-js-ts-typings": "5.0.X",
+    "hornet-js-utils": "5.0.X"
   }
 ```
 
@@ -180,7 +179,6 @@ Les composants graphiques sont implémentés avec la librairie React et les form
 
 ## Licence
 
-applitutoriel-service est sous [licence cecill 2.1](./LICENCE.md).
+`hornet-js` est sous [licence cecill 2.1](./LICENSE.md).
 
-Site web : [![http://www.cecill.info](http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html)](http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html)
-
+Site web : [http://www.cecill.info](http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html)

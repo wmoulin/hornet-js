@@ -8,7 +8,7 @@ class I18nLoader {
     }
 
     getMessages(locale:Array<string>):string {
-        throw new Error('You should extend this class to use it');
+        throw new Error("You should extend this class to use it");
     }
 }
 export = I18nLoader;

@@ -1,23 +1,23 @@
 "use strict";
 
-var React = require('react');
-var TestUtils = require('hornet-js-utils/src/test-utils');
+var React = require("react");
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var render = TestUtils.render;
 
-var Notification = require('src/notification/notification');
+var Notification = require("src/notification/notification");
 
 var logger = TestUtils.getLogger("hornet-js-components.test.notification.notification-spec");
 
-describe('Notification', () => {
-    it('Affichage du bloc de notifications Erreur avec une erreur...', () => {
+describe("Notification", () => {
+    it("Affichage du bloc de notifications Erreur avec une erreur...", () => {
         // Arrange
 
         var errors = [
             {
-                id: 'error1',
-                anchor: 'error1',
-                text: 'erreur sur la page 1'
+                id: "error1",
+                anchor: "error1",
+                text: "erreur sur la page 1"
             }
         ];
         var infos = [];
@@ -34,22 +34,22 @@ describe('Notification', () => {
         );
 
         // Assert
-        var $box = $('.errorBox');
+        var $box = $(".errorBox");
         expect($box).to.exist;
 
-        var $listErrors = $('.errorBox ul li');
+        var $listErrors = $(".errorBox ul li");
         expect($listErrors.length).is.equal(1);
     });
 
-    it('Affichage du bloc de notifications Informations avec une info...', () => {
+    it("Affichage du bloc de notifications Informations avec une info...", () => {
         // Arrange
 
         var errors = [];
         var infos = [
             {
-                id: 'info1',
-                anchor: 'info1',
-                text: 'info sur la page 1'
+                id: "info1",
+                anchor: "info1",
+                text: "info sur la page 1"
             }
         ];
 
@@ -65,10 +65,10 @@ describe('Notification', () => {
         );
 
         // Assert
-        var $box = $('.infoBox');
+        var $box = $(".infoBox");
         expect($box).to.exist;
 
-        var $listInfos = $('.infoBox ul li');
+        var $listInfos = $(".infoBox ul li");
         expect($listInfos.length).is.equal(1);
     });
 });

@@ -25,7 +25,9 @@ var MenuLink = React.createClass({
         /* Fonction servant à propager la modification l'état de visibilité du sous-menu*/
         setSubmenuVisibleHandler:React.PropTypes.func,
         /* Indique si le lien ne passe par le routeur */
-        dataPassThru:React.PropTypes.bool
+        dataPassThru:React.PropTypes.bool,
+        /** Path permettant de surcharger les pictogrammes/images **/
+        imgFilePath: React.PropTypes.string
     },
 
     getDefaultProps: function () {
@@ -57,6 +59,16 @@ var MenuLink = React.createClass({
         this.props.setSubmenuVisibleHandler(true);
     },
 
+    _handleMouseLeave: function(e) {
+        var element = document.getElementById(this.props.item.id);
+
+        if(element && element.blur)
+        var func = function() {
+            element.blur();
+        }
+        setTimeout(func, 200);
+    },
+
     render: function () {
         var {item} = this.props;
         logger.trace("MenuLink.render item.id : ", item.id);
@@ -81,6 +93,7 @@ var MenuLink = React.createClass({
         /* On se branche sur les évènements React onMouseEnter et onMouseLeave car plusieurs évènements
          onMouseOver et onMouseOut sont déclenchés et génèrent donc un rendu React pour le survol d'un même élément de menu */
         attributesA["onMouseEnter"] = this._handleMouseEnter;
+        attributesA["onMouseLeave"] = this._handleMouseLeave;
         /* On n'accède pas aux éléments de menu (autres que le premier) via la tabulation */
         if(item.id == MenuConstants.MENU_ROOT + "0") {
             attributesA["tabIndex"] = 0;
@@ -122,10 +135,12 @@ var MenuLink = React.createClass({
         var imgSubMenu = "";
 
         if (item.submenu && this.hasVisibleSubMenu(item)) {
-            var props = {};
-            var srcImg = (item.level == 0) ? "/img/menu/picto_fleche.png" : "/img/menu/vertical-menu-submenu-indicator.png";
+            var props = {},
+                srcImg = (item.level == 0) ? "/img/menu/picto_fleche.png" : "/img/menu/vertical-menu-submenu-indicator.png",
+                urlTheme = this.props.imgFilePath || this.genUrlTheme();
+
             props["alt"] = libelle + this.i18n(item.text);
-            props["src"] = this.genUrlTheme(srcImg);
+            props["src"] = urlTheme + srcImg;
             props["className"] = "subnav-0";
             imgSubMenu = <img {...props}/>;
         }

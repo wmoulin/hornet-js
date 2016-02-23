@@ -1,40 +1,112 @@
-///<reference path="../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import utils = require("hornet-js-utils");
-import AppSharedProps = require("hornet-js-utils/src/app-shared-props");
+(<any> Error).stackTraceLimit = utils.config.getOrDefault("server.stackTraceLimit", 100);
+import KeyStoreHelper = require("hornet-js-utils/src/key-store-helper");
 
 var logger = utils.getLogger("hornet-js-core.server");
+
+var parseUrl = require("parseurl");
 import http = require("http");
+import https = require("https");
 import ServerConfiguration = require("src/server-conf");
 import express = require("express");
 import expstate = require("express-state");
 import HornetMiddlewares = require("src/middleware/middlewares");
+import HornetMonitor = require("src/monitoring/monitor");
+
+process.on("uncaughtException", function (error) {
+    logger.error("Exception non catchée : ", error);
+});
 
 class Server {
 
     private app:express.Express;
     private server;
+    private monitor:HornetMonitor;
+    private keepAlive:boolean;
+    private keepAliveTimeout:number;
+    private port:number;
+    private maxConnections:number;
+    private timeout:number;
+    private protocol:string;
 
-    constructor(appConfig:ServerConfiguration, middlewares:Array<typeof HornetMiddlewares.AbstractHornetMiddleware>) {
-        this.app = this.init(appConfig, middlewares);
-        this.server = http.createServer(this.app);
+    constructor(appConfig:ServerConfiguration, hornetMiddlewareList:HornetMiddlewares.HornetMiddlewareList) {
+        this.server = this.createServer(appConfig.httpsOptions);
+
+        this.maxConnections = utils.config.getOrDefault("server.maxConnections", 300);
+        this.timeout = utils.config.getOrDefault("server.timeout", 300000);
+
+        this.server.maxConnections = this.maxConnections;
+        this.server.timeout = this.timeout;
+
+        this.monitor = new HornetMonitor(this.server);
+        this.app = this.init(appConfig, hornetMiddlewareList);
+        this.server.addListener("request", this.app);
+
+        this.port = utils.config.getOrDefault("server.port", 8888);
+        this.keepAlive = utils.config.getOrDefault("server.keepAlive", true);
+        this.keepAliveTimeout = utils.config.getOrDefault("server.keepAliveTimeout", 150000);
+
+        // Auto configuration du keystore
+        KeyStoreHelper.KeyStoreBuilder.setHttpsGlobalAgent(null, utils.config.getOrDefault("keystore", {}));
     }
 
     public start():void {
-        var port = utils.config.getOrDefault("server.port", 8888);
-        var maxConnections = utils.config.getOrDefault("server.maxConnections", 300);
-        var timeout = utils.config.getOrDefault("server.timeout", 300000);
-        this.server.maxConnections = maxConnections;
-        this.server.timeout = timeout;
-        this.server.listen(port, "0.0.0.0");
-
-        logger.info("Application démarrée côté serveur !");
-        logger.info("MODE :", process.env.NODE_ENV);
-        logger.info("Listening on port", port, " with params", {
-            maxConnections: maxConnections,
-            timeout: timeout,
-            keepAlive: utils.config.getOrDefault("server.keepAlive", true)
+        this.server.listen(this.port, "0.0.0.0", () => {
+            logger.info("Application démarrée côté serveur !");
+            logger.info("Mode :", process.env.NODE_ENV);
+            logger.info("Protocole :", this.protocol);
+            logger.info("Listening on port", this.port, " with params", {
+                maxConnections: this.maxConnections,
+                timeout: this.timeout,
+                keepAlive: this.keepAlive,
+                keepAliveTimeout: this.keepAliveTimeout
+            });
+        }).on("error", (err) => {
+            logger.error("Impossible de démarrer le serveur ... : ", err);
+            process.exit(1);
         });
+
+
+        // Gestion à la main du keep-alive
+        this.server.on("request", (req, res) => {
+            if (this.keepAlive !== false) {
+                req.connection.setKeepAlive(true);
+
+                // On utilise le timeout par défaut lors d'une requête entrante
+                req.connection.setTimeout(this.timeout);
+
+                // On ajoute les entêtes
+                if (!res._headerSent) {
+                    res.setHeader("Connection", "keep-alive");
+                    res.setHeader("Keep-Alive", "timeout=" + (this.keepAliveTimeout / 1000));
+                }
+                // On utilise le timeout keepAlive lorsque la requête est terminée
+                res.once("finish", () => {
+                    req.connection.setTimeout(this.keepAliveTimeout);
+                });
+            } else {
+                req.connection.setKeepAlive(false);
+
+                if (!res._headerSent) {
+                    res.setHeader("Connection", "close");
+                }
+            }
+        });
+    }
+
+    /**
+     * Création du serveur web en mode http ou bien https
+     * @param httpsOptions option pour le mode https
+     * @returns {Server} le serveur instancié
+     */
+    private createServer(httpsOptions?:https.ServerOptions):http.Server | https.Server {
+        if (httpsOptions) {
+            this.protocol = "https";
+            return https.createServer(httpsOptions);
+        }
+        this.protocol = "http";
+        return http.createServer();
     }
 
     /**
@@ -45,10 +117,10 @@ class Server {
      *     <li>Application des middlewares</li>
      * </ul>
      * @param appConfig
-     * @param middlewares? : liste ordonnées des middlewares à utiliser, si pas fournies, la liste par défaut d'hornet est utilisée.
+     * @param hornetMiddlewareList
      * @returns {"express".e.Express}
      */
-    private init(appConfig:ServerConfiguration, middlewares?:Array<typeof HornetMiddlewares.AbstractHornetMiddleware>):express.Express {
+    private init(appConfig:ServerConfiguration, hornetMiddlewareList:HornetMiddlewares.HornetMiddlewareList):express.Express {
         logger.debug("Initialisation du serveur");
         // on place par défaut les clés "loginUrl" & "logoutUrl" & "welcomePageUrl" dans les AppSharedProps
         utils.appSharedProps.set("loginUrl", appConfig.loginUrl);
@@ -63,7 +135,7 @@ class Server {
 
         // on surcharge les méthodes de définition de routes Express afin de gérer automatiquement le prefixage du contextPath
         var extendedMethods = ["use", "all", "get", "post", "put", "patch", "trace", "options", "delete", "patch", "head"];
-        for (var i=0;i<extendedMethods.length;i++) {
+        for (var i = 0; i < extendedMethods.length; i++) {
             extendsExpressMethods(app, extendedMethods[i]);
         }
 
@@ -71,12 +143,20 @@ class Server {
         expstate.extend(app);
 
         // si pas de liste fournie >> on prend la liste des middlewares par défaut d'hornet
-        var serverMiddlewares = middlewares ? middlewares : HornetMiddlewares.DEFAULT_HORNET_MIDDLEWARES;
         // Instanciation et insertion des middlewares dans l'application
-        for (var i=0;i<serverMiddlewares.length;i++) {
-            var middleware = serverMiddlewares[i];
-            var inst = new middleware(appConfig);
-            inst.insertMiddleware(app);
+        for (var i = 0; i < hornetMiddlewareList.length; i++) {
+            var middleware = hornetMiddlewareList[i];
+            if (middleware === undefined || middleware === null) {
+                logger.warn("Un middleware de valeur '" + middleware + "' a été trouvé dans le tableau des middlewares.");
+            } else {
+                try {
+                    var inst = new middleware(appConfig);
+                    inst.insertMiddleware(app);
+                } catch (e) {
+                    logger.error("Une erreur a été levée lors de l'instanciation d'un middleware > erreur:", e);
+                    throw e;
+                }
+            }
         }
 
         return app;
@@ -84,11 +164,11 @@ class Server {
 }
 
 function joinUrl(...paths:string[]) {
-    return Array.prototype.slice.call(paths).join('/')
-        .replace(/[\/]+/g, '/')
-        .replace(/\/\?/g, '?')
-        .replace(/\/\#/g, '#')
-        .replace(/\:\//g, '://');
+    return Array.prototype.slice.call(paths).join("/")
+        .replace(/[\/]+/g, "/")
+        .replace(/\/\?/g, "?")
+        .replace(/\/\#/g, "#")
+        .replace(/\:\//g, "://");
 }
 
 function extendsExpressMethods(app:express.Express, routine:string) {
@@ -104,9 +184,9 @@ function extendsExpressMethods(app:express.Express, routine:string) {
         if (typeof arguments[0] === "string") {
             args[0] = joinUrl(utils.getContextPath(), arguments[0]);
 
-        // si pas de path > on créé le path avec le contextPath comme valeur
+            // si pas de path > on créé le path avec le contextPath comme valeur
         } else {
-            args.unshift(utils.getContextPath())
+            args.unshift(utils.getContextPath());
         }
         logger.trace("Route Express : " + routine + "(", args, ")");
 
@@ -114,7 +194,7 @@ function extendsExpressMethods(app:express.Express, routine:string) {
     };
 }
 
-var parseUrl = require('parseurl');
+
 function extendsExpressForPublicZones(appConfig:ServerConfiguration) {
     if (appConfig.publicZones && appConfig.publicZones.length > 0) {
         var contextPath = utils.getContextPath();

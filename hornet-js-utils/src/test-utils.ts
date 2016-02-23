@@ -1,4 +1,3 @@
-/// <reference path="../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import React = require("react/addons");
@@ -102,11 +101,11 @@ var getLogger = (function () {
     var config = require.resolve("./log-config.json");
     console.log("log-config.json: " + config);
     Log4jsNode.configure(config);
-    var LoggerBuilder = loggerBuilder(Log4jsNode, "TRACE");
+    Logger.prototype.buildLogger = loggerBuilder(Log4jsNode, "TRACE");
 
     return function (category):Logger {
         console.log("category: " + category);
-        var logger:Logger = register.getLogger(category, LoggerBuilder);
+        var logger:Logger = register.getLogger(category);
         logger.info("Configuré");
         return logger;
     };

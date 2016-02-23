@@ -18,7 +18,36 @@ var TableToolsActionAdd = React.createClass({
         classAction: React.PropTypes.string,
 
         enabled: React.PropTypes.bool,
-        icoAjouter: React.PropTypes.string
+        icoAjouter: React.PropTypes.string,
+        imgFilePath: React.PropTypes.string,
+        tableName: React.PropTypes.string.isRequired,
+        pagination: React.PropTypes.object,
+        onchangePaginationData: React.PropTypes.func,
+        /** Choix de taille de page proposés */
+        pageSizeSelect: React.PropTypes.arrayOf(React.PropTypes.shape({
+            /** Taille de page */
+            value: React.PropTypes.number.isRequired,
+            /** Clé du libellé à rechercher dans messages ou dans le bloc de messages du composant "table" */
+            textKey: React.PropTypes.string.isRequired
+        })),
+        openDeleteAlert: React.PropTypes.func,
+        actionMassEnabled: React.PropTypes.bool,
+        actionAddEnabled: React.PropTypes.bool,
+        actionPaginationEnabled: React.PropTypes.bool,
+
+        toggleFilters: React.PropTypes.func,
+        filtersVisible: React.PropTypes.bool,
+        filtersActive: React.PropTypes.bool,
+        criterias: React.PropTypes.object,
+        sort: React.PropTypes.object,
+        actionExportEnabled:React.PropTypes.bool,
+        actionFilterEnabled: React.PropTypes.bool,
+        actionExcelExportEnabled:React.PropTypes.bool,
+        actionPdfExportEnabled:React.PropTypes.bool,
+        actionCsvExportEnabled:React.PropTypes.bool,
+        excelEnabled:React.PropTypes.bool,
+        pdfEnabled:React.PropTypes.bool,
+        csvEnabled:React.PropTypes.bool
     },
 
     getDefaultProps: function () {
@@ -55,8 +84,9 @@ var TableToolsActionAdd = React.createClass({
 
     _renderAddButton: function () {
 
-            var addAction = this.props.actions && this.props.actions.add;
-            var addRoute = this.props.routes && this.props.routes.add;
+            var addAction = this.props.actions && this.props.actions.add,
+                addRoute = this.props.routes && this.props.routes.add,
+                urlTheme = this.props.imgFilePath || this.genUrlTheme();
 
             if (addRoute || addAction) {
 
@@ -66,7 +96,7 @@ var TableToolsActionAdd = React.createClass({
                         <Icon
                             url={addRoute || "#"}
                             onClick={addAction}
-                            src={this.genUrlTheme(this.props.icoAjouter)}
+                            src={urlTheme + this.props.icoAjouter}
                             alt={addTitle}
                             title={addTitle}
                         />

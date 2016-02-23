@@ -1,6 +1,7 @@
-///<reference path='../../hornet-js-ts-typings/definition.d.ts'/>
 "use strict";
-import I = require('./routes/router-interfaces');
+import I = require("./routes/router-interfaces");
+
+import https = require("https");
 
 interface ServerConfiguration {
 
@@ -95,6 +96,11 @@ interface ServerConfiguration {
      * Les prefixes de chemin considérés comme publiques (sans authentification)
      */
     publicZones?:String[];
+
+    /**
+     * Déclaration des options pour exécuter un serveur en mode https
+     */
+    httpsOptions?:https.ServerOptions;
 
 }
 

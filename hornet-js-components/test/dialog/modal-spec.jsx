@@ -1,9 +1,9 @@
 "use strict";
 
-var utils = require('hornet-js-utils');
+var utils = require("hornet-js-utils");
 
-var React = require('react');
-var TestUtils = require('hornet-js-utils/src/test-utils');
+var React = require("react");
+var TestUtils = require("hornet-js-utils/src/test-utils");
 var expect = TestUtils.chai.expect;
 var sinon = TestUtils.sinon;
 var render = TestUtils.render;
@@ -11,18 +11,18 @@ var render = TestUtils.render;
 var logger = TestUtils.getLogger("hornet-js-components.test.dialog.dialog-spec");
 
 //noCallThru >>> le stub n'appelle AUCUNE des méthode du module mocké
-var proxyquire = require('proxyquire').noCallThru();
+var proxyquire = require("proxyquire").noCallThru();
 
-var modaleMock = require('test/dialog/generic-react-mock')();
+var modaleMock = require("test/dialog/generic-react-mock")();
 
 utils.isServer = false;
 //fourni un composant React qui sert de mock
-var Dialog = proxyquire('src/dialog/modal', {
-    'react-modal': modaleMock
+var Dialog = proxyquire("src/dialog/modal", {
+    "./react-aria-modal": modaleMock
 });
 
 utils.isServer = true;
-describe('DialogueSpec', () => {
+describe("DialogueSpec", () => {
     beforeEach(() => {
         utils.isServer = false;
         this.context = {
@@ -36,17 +36,17 @@ describe('DialogueSpec', () => {
         };
     });
 
-    it('Test la construction de la boîte de dialogue', () => {
+    it("Test la construction de la boîte de dialogue", () => {
         global.document = {
             getElementById: () => {
-                return 'toto'
+                return "toto"
             }
         };
 
-        var contenuDeLaDialogue = 'Contenu de la dialogue';
+        var contenuDeLaDialogue = "Contenu de la dialogue";
         var $ = render(() =>
                 <Dialog isVisible={true}>
-                    <div id='toto'>
+                    <div id="toto">
                         {contenuDeLaDialogue}
                     </div>
                 </Dialog>,
@@ -54,10 +54,10 @@ describe('DialogueSpec', () => {
         );
 
         //vérfie des élément de contenus
-        expect($('div#toto')).to.exist
+        expect($("div#toto")).to.exist
             .to.have.text(contenuDeLaDialogue);
-        expect($('button.hornet-dialogue-croix')).to.exist;
-        expect($('div.widget-dialogue-title')).to.exist;
+        expect($("button.hornet-dialogue-croix")).to.exist;
+        expect($("div.widget-dialogue-title")).to.exist;
 
         global.document = null;
 

@@ -1,7 +1,6 @@
-///<reference path='../../../hornet-js-ts-typings/definition.d.ts'/>
 "use strict";
-import TestUtils = require('hornet-js-utils/src/test-utils');
-import ActionsChainData = require('src/routes/actions-chain-data')
+import TestUtils = require("hornet-js-utils/src/test-utils");
+import ActionsChainData = require("src/routes/actions-chain-data")
 
 var chai = TestUtils.chai;
 var sinon = TestUtils.sinon;
@@ -9,12 +8,12 @@ var expect:any = chai.expect;
 
 // initialisation du logger
 var logger = TestUtils.getLogger("hornet-js-core.test.action.action-spec");
-import action = require('src/actions/action');
+import action = require("src/actions/action");
 
 
-describe('ActionSpec', () => {
+describe("ActionSpec", () => {
 
-    it('should dispatch starting and ending event', () => {
+    it("should dispatch starting and ending event", () => {
         // Arrange
         var payload = TestUtils.randomString();
         var actionChain = new ActionsChainData();
@@ -37,7 +36,7 @@ describe('ActionSpec', () => {
         });
     });
 
-    it('should change actionChainData', () => {
+    it("should change actionChainData", () => {
         // Arrange
         var payload = TestUtils.randomString();
         var actionChain = new ActionsChainData();
@@ -56,7 +55,7 @@ describe('ActionSpec', () => {
         });
     });
 
-    it('should dispatch starting and error ending event', () => {
+    it("should dispatch starting and error ending event", () => {
         // Arrange
         var payload = TestUtils.randomString();
         var errorPayload = TestUtils.randomString();
@@ -79,5 +78,4 @@ describe('ActionSpec', () => {
             expect(actionContext.dispatch).to.have.been.calledWith(action.ASYNCHRONOUS_REQUEST_END_ERROR);
         });
     });
-
 });

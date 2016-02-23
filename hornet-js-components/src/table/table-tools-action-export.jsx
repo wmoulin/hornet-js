@@ -18,19 +18,39 @@ var TableToolsActionExport = React.createClass({
         actions: React.PropTypes.object,
         messages: React.PropTypes.object,
 
-        enabled: React.PropTypes.bool,
+        excelEnabled: React.PropTypes.bool,
+        csvEnabled: React.PropTypes.bool,
+        pdfEnabled: React.PropTypes.bool,
         classExport: React.PropTypes.string,
+        imgFilePath: React.PropTypes.string,
 
         children: React.PropTypes.oneOfType([
             React.PropTypes.object,
             React.PropTypes.array
-        ])
+        ]),
 
+        toggleFilters: React.PropTypes.func,
+        filtersVisible: React.PropTypes.bool,
+        filtersActive: React.PropTypes.bool,
+        openDeleteAlert: React.PropTypes.func,
+        criterias: React.PropTypes.object,
+        sort: React.PropTypes.object,
+        actionMassEnabled: React.PropTypes.bool,
+        actionAddEnabled: React.PropTypes.bool,
+        actionExportEnabled: React.PropTypes.bool,
+        actionFilterEnabled: React.PropTypes.bool,
+        classAction: React.PropTypes.string,
+
+        actionExcelExportEnabled:React.PropTypes.bool,
+        actionPdfExportEnabled:React.PropTypes.bool,
+        actionCsvExportEnabled:React.PropTypes.bool
     },
 
     getDefaultProps: function () {
         return {
-            enabled: false,
+            excelEnabled: false,
+            csvEnabled: false,
+            pdfEnabled: false,
             classExport: "pure-u-1-3"
         };
     },
@@ -44,7 +64,9 @@ var TableToolsActionExport = React.createClass({
 
     shouldComponentUpdate: function (nextProps, nextState) {
         logger.trace("shouldComponentUpdate");
-        return this.props.enabled !== nextProps.enabled;
+        return this.props.excelEnabled !== nextProps.excelEnabled ||
+            this.props.pdfEnabled !== nextProps.pdfEnabled ||
+            this.props.csvEnabled !== nextProps.csvEnabled;
     },
 
     render: function () {
@@ -52,15 +74,15 @@ var TableToolsActionExport = React.createClass({
         try {
             var classExport = "hornet-datatable-export " + this.props.classExport;
             return (
-                (this.props.enabled) ?
+                (this.props.excelEnabled || this.props.pdfEnabled || this.props.csvEnabled) ?
                     <div className={classExport}>
                         <div className="pure-g">
-                            <TableToolsActionExportButton {...this.props}
-                                mediaType="xls" mediaTypeTitle={this._getExportExcelTitle()}/>
-                            <TableToolsActionExportButton {...this.props}
-                                mediaType="pdf" mediaTypeTitle={this._getExportPdfTitle()}/>
-                            <TableToolsActionExportButton {...this.props}
-                                mediaType="csv" mediaTypeTitle={this._getExportCsvTitle()}/>
+                            {this.props.excelEnabled ? <TableToolsActionExportButton {...this.props} enabled={true}
+                                mediaType="xls" mediaTypeTitle={this._getExportExcelTitle()}/> : null}
+                            {this.props.pdfEnabled ? <TableToolsActionExportButton {...this.props} enabled={true}
+                                mediaType="pdf" mediaTypeTitle={this._getExportPdfTitle()}/> : null}
+                            {this.props.csvEnabled ? <TableToolsActionExportButton {...this.props} enabled={true}
+                                mediaType="csv" mediaTypeTitle={this._getExportCsvTitle()}/> : null}
 
                             {this.props.children}
                         </div>

@@ -1,4 +1,3 @@
-///<reference path="../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 import register = require("src/common-register");
 
@@ -90,14 +89,14 @@ class DateUtils {
                     try {
                         calendar = DateUtils.parseWithFormat(dateStr, dateFormats[index], calendarLocale);
                     } catch (err) {
-                        logger.debug("Erreur pour parser la date avec le format : ", dateFormats[index])
+                        logger.debug("Erreur pour parser la date avec le format : ", dateFormats[index]);
                     }
                     if (calendar) {
                         break;
                     }
                 }
                 if (!calendar) {
-                    logger.warn("La date n'a pu être parsée avec aucun des formats indiqués")
+                    logger.warn("La date n'a pu être parsée avec aucun des formats indiqués");
                 }
             }
         }
@@ -261,6 +260,5 @@ class DateUtils {
         return result;
     }
 }
-
 
 export = DateUtils;

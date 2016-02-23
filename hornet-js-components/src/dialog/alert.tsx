@@ -1,4 +1,3 @@
-///<reference path="../../../hornet-js-ts-typings/definition.d.ts"/>
 "use strict";
 
 import React = require("react");
@@ -11,6 +10,7 @@ import utils = require("hornet-js-utils");
 var logger = utils.getLogger("hornet-js-components.dialog.alert");
 
 @HornetComponent.ApplyMixins()
+@HornetComponent.Error()
 class Alert extends HornetComponent<PropTypesNs.AlertProps,any> {
 
     static displayName:string = "Alert";

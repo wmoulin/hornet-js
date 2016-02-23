@@ -17,8 +17,35 @@ var TableToolsActionMass = React.createClass({
         messages: React.PropTypes.object,
         classAction: React.PropTypes.string,
         openDeleteAlert: React.PropTypes.func,
+        enabled: React.PropTypes.bool,
+        pagination: React.PropTypes.object,
+        onchangePaginationData: React.PropTypes.func,
+        /** Choix de taille de page proposés */
+        pageSizeSelect: React.PropTypes.arrayOf(React.PropTypes.shape({
+            /** Taille de page */
+            value: React.PropTypes.number.isRequired,
+            /** Clé du libellé à rechercher dans messages ou dans le bloc de messages du composant "table" */
+            textKey: React.PropTypes.string.isRequired
+        })),
+        /** Path permettant de surcharger les pictogrammes/images **/
+        imgFilePath: React.PropTypes.string,
+        actionMassEnabled: React.PropTypes.bool,
+        actionAddEnabled: React.PropTypes.bool,
+        actionPaginationEnabled: React.PropTypes.bool,
+        toggleFilters: React.PropTypes.func,
+        filtersVisible: React.PropTypes.bool,
+        filtersActive: React.PropTypes.bool,
+        criterias: React.PropTypes.object,
+        sort: React.PropTypes.object,
+        actionExportEnabled:React.PropTypes.bool,
+        actionFilterEnabled: React.PropTypes.bool,
 
-        enabled: React.PropTypes.bool
+        actionExcelExportEnabled:React.PropTypes.bool,
+        actionPdfExportEnabled:React.PropTypes.bool,
+        actionCsvExportEnabled:React.PropTypes.bool,
+        excelEnabled:React.PropTypes.bool,
+        pdfEnabled:React.PropTypes.bool,
+        csvEnabled:React.PropTypes.bool
     },
 
     getDefaultProps: function () {
@@ -55,8 +82,9 @@ var TableToolsActionMass = React.createClass({
 
     _renderActionMassButton: function () {
 
-        var massTitle = this._getMassTitle();
-        var classMassButton = "hornet-datatable-action " + this.props.classAction;
+        var massTitle = this._getMassTitle(),
+            classMassButton = "hornet-datatable-action " + this.props.classAction,
+            urlTheme = this.props.imgFilePath || this.genUrlTheme();
 
         return ( (this.props.enabled) ?
                 <div className={classMassButton}>
@@ -64,7 +92,7 @@ var TableToolsActionMass = React.createClass({
                            title={massTitle}
                            value="Submit"
                            name={this.props.tableName + "-selectedAllItems"}
-                           src={this.genUrlTheme("/img/tableau/ico_supprimer.png")}
+                           src={urlTheme + "/img/tableau/ico_supprimer.png"}
                            alt={massTitle}
                            onClick={this.props.openDeleteAlert}
                     />
