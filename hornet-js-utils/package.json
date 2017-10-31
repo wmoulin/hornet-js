@@ -1,6 +1,6 @@
 {
   "name": "hornet-js-utils",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "license": "CECILL-2.1",
   "description": "Partie commune et utilitaire à tous les composants hornet-js",
   "bugs": {
@@ -12,57 +12,37 @@
   },
   "main": "./src/index.js",
   "tsDefinitionDependencies": {
-    "hornet-js-ts-typings": "5.0.1"
+    "hornet-js-ts-typings": "5.1.0",
+    "hornet-js-test-dts": "5.1.0"
   },
   "appDependencies": {
-    "bluebird": "2.3.11",
+    "bluebird": "3.5.0",
     "config": "1.19.0",
-    "continuation-local-storage": "3.1.4",
-    "gregorian-calendar": "3.0.0",
-    "gregorian-calendar-format": "3.0.1",
-    "json5": "0.4.0",
-    "lodash": "3.10.1",
-    "log4js": "0.6.26",
-    "memorystream": "0.3.1",
-    "moment": "2.11.1",
-    "moment-timezone": "0.5.0",
-    "newforms": "0.12.1",
-    "promise": "6.1.0",
-    "react": "0.13.3",
-    "source-map-support": "0.4.0",
-    "verror": "1.6.0"
+    "continuation-local-storage": "3.2.0",
+    "json5": "0.5.1",
+    "lodash": "4.13.1",
+    "log4js": "0.6.38",
+    "moment-timezone": "0.5.13",
+    "source-map-support": "0.4.14",
+    "tslib": "1.8.0"
   },
-  "buildAndTestDependencies": {
-    "chai": "3.5.0",
-    "chai-jquery": "2.0.0",
-    "cheerio": "0.19.0",
-    "sinon": "1.17.3",
-    "sinon-chai": "2.8.0"
+  "buildDependencies": {},
+  "testDependencies": {
+    "hornet-js-test": "5.1.0"
   },
-  "author": "MAEDI",
+  "author": "MEAE - Ministère de l'Europe et des Affaires étrangères",
 
 
 
 
 
   "____HORNET-BUILDER____DO_NOT_MODIFY_THIS_OBJECT____": {
-    "current": "d822336c514299b06455552dd46cb208bbcccb5c",
+    "current": "bd32b8bdfd7e59648052e042e8e201049e03fd25",
     "history": {
-      "1cebbf131240d4a86b74528d9cc01de3f2e45bb5": {
-        "date": "2016-01-29T10:52:43.319Z",
-        "deps": {"Concur":"0.3.0","amdefine":"1.0.0","asap":"1.0.0","async":"0.2.10","async-listener":"0.5.6","core-util-is":"1.0.2","emitter-listener":"1.0.1","envify":"3.4.0","get-form-data":"1.2.5","gregorian-calendar":"3.2.2","inherits":"2.0.1","isomorph":"0.3.0","jstransform":"10.1.0","moment":"2.11.1","punycode":"1.4.0","readable-stream":"1.0.33","semver":"4.3.6","string_decoder":"0.10.31","through":"2.3.8","validators":"0.3.1"}
-      },
-      "d1df3e1f5687e08e4f43735f099a59ff4b663a67": {
-        "date": "2016-02-01T17:02:57.177Z",
-        "deps": {"Concur":"0.3.0","amdefine":"1.0.0","asap":"1.0.0","async":"0.2.10","async-listener":"0.5.6","core-util-is":"1.0.2","emitter-listener":"1.0.1","envify":"3.4.0","get-form-data":"1.2.5","gregorian-calendar":"3.2.2","inherits":"2.0.1","isomorph":"0.3.0","jstransform":"10.1.0","moment":"2.11.1","punycode":"1.4.0","readable-stream":"1.0.33","semver":"4.3.6","string_decoder":"0.10.31","through":"2.3.8","validators":"0.3.1"}
-      },
-      "ee2416e6a8e7ce39322c0de5dbf9bf3bc60ab7a6": {
-        "date": "2016-02-08T08:39:01.569Z",
-        "deps": {"Concur":"0.3.0","amdefine":"1.0.0","asap":"1.0.0","async":"0.2.10","async-listener":"0.5.6","core-util-is":"1.0.2","emitter-listener":"1.0.1","envify":"3.4.0","get-form-data":"1.2.5","gregorian-calendar":"3.2.2","inherits":"2.0.1","isomorph":"0.3.0","jstransform":"10.1.0","moment":"2.11.1","punycode":"1.4.0","readable-stream":"1.0.33","semver":"4.3.6","string_decoder":"0.10.31","through":"2.3.8","validators":"0.3.1"}
-      },
-      "d822336c514299b06455552dd46cb208bbcccb5c": {
-        "date": "2016-02-10T07:13:45.911Z",
-        "deps": {"Concur":"0.3.0","amdefine":"1.0.0","asap":"1.0.0","async":"0.2.10","async-listener":"0.5.6","core-util-is":"1.0.2","emitter-listener":"1.0.1","envify":"3.4.0","get-form-data":"1.2.5","gregorian-calendar":"3.2.2","inherits":"2.0.1","isomorph":"0.3.0","jstransform":"10.1.0","moment":"2.11.1","punycode":"1.4.0","readable-stream":"1.0.33","semver":"4.3.6","string_decoder":"0.10.31","through":"2.3.8","validators":"0.3.1"}
+      "bd32b8bdfd7e59648052e042e8e201049e03fd25": {
+        "version": "5.1.0",
+        "date": "2017-10-30T08:32:08.791Z",
+        "deps": {"async-listener":"0.6.8","bluebird":"3.5.0","config":"1.19.0","continuation-local-storage":"3.2.0","core-util-is":"1.0.2","emitter-listener":"1.0.1","inherits":"2.0.3","json5":"0.5.1","lodash":"4.13.1","log4js":"0.6.38","moment":"2.19.1","moment-timezone":"0.5.13","readable-stream":"1.0.34","semver":"5.4.1","shimmer":"1.1.0","source-map":"0.5.7","source-map-support":"0.4.14","string_decoder":"0.10.31","tslib":"1.8.0"}
       }
     }
   }

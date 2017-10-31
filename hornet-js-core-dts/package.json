@@ -1,6 +1,6 @@
 {
   "name": "hornet-js-core-dts",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "license": "CECILL-2.1",
   "description": "Définition Typescript du module hornet-js-core",
   "bugs": {
@@ -12,20 +12,8 @@
   },
   "tsDefinitionDependencies": {},
   "appDependencies": {},
-  "buildAndTestDependencies": {},
-  "author": "MAEDI",
-
-
-
-
-
-  "____HORNET-BUILDER____DO_NOT_MODIFY_THIS_OBJECT____": {
-    "current": "0426c65f9613a523407c71497c3795ae931bf5cc",
-    "history": {
-      "0426c65f9613a523407c71497c3795ae931bf5cc": {
-        "date": "2016-01-29T10:53:42.498Z",
-        "deps": {}
-      }
-    }
-  }
+  "buildDependencies": {},
+  "testDependencies": {},
+  "author": "MEAE - Ministère de l'Europe et des Affaires étrangères",
+  "types": "./hornet-js-core.d.ts"
 }

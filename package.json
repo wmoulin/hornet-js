@@ -1,8 +1,8 @@
 {
   "name": "hornet-js",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "license": "CECILL-2.1",
-  "description": "Projet permettant de builder les modules de hornet-js",
+  "description": "Projet parent permettant de builder les modules de hornet-js",
   "bugs": {
     "url": "https://github.com/diplomatiegouvfr/hornet-js/issues"
   },
@@ -10,7 +10,5 @@
     "type": "git",
     "url": "git+https://github.com/diplomatiegouvfr/hornet-js.git"
   },
-  "buildAndTestDependencies": {
-  },
-  "author": "MAEDI"
+  "author": "MEAE - Ministère de l'Europe et des Affaires étrangères"
 }

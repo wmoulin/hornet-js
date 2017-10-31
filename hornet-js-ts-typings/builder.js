@@ -1,5 +1,5 @@
 module.exports = {
-    type: 'custom',
+    type: "custom",
 
 
     gulpTasks: function (gulp, project, conf, helper) {

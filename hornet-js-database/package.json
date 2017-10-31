@@ -1,0 +1,49 @@
+{
+  "name": "hornet-js-database",
+  "version": "5.1.0",
+  "license": "CECILL-2.1",
+  "description": "Ensemble des composants de gestion de base hornet-js",
+  "bugs": {
+    "url": "https://github.com/diplomatiegouvfr/hornet-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diplomatiegouvfr/hornet-js.git"
+  },
+  "tsDefinitionDependencies": {
+    "hornet-js-ts-typings": "5.1.0",
+    "hornet-js-utils-dts": "5.1.0",
+    "hornet-js-core-dts": "5.1.0",
+    "hornet-js-components-dts": "5.1.0",
+    "hornet-js-test-dts": "5.1.0"
+  },
+  "appDependencies": {
+    "hornet-js-utils": "5.1.0",
+    "hornet-js-core": "5.1.0",
+    "hornet-js-components": "5.1.0",
+    "sequelize": "4.11.1",
+    "terraformer": "1.0.8",
+    "terraformer-wkt-parser": "1.1.2"
+  },
+  "buildDependencies": {},
+  "testDependencies": {
+    "hornet-js-test": "5.1.0",
+    "sqlite3": "3.1.8"
+  },
+  "author": "MEAE - Ministère de l'Europe et des Affaires étrangères",
+
+
+
+
+
+  "____HORNET-BUILDER____DO_NOT_MODIFY_THIS_OBJECT____": {
+    "current": "726d7ebf45002f05cb0ba0610e50e88dfb71f1ab",
+    "history": {
+      "726d7ebf45002f05cb0ba0610e50e88dfb71f1ab": {
+        "version": "5.1.0",
+        "date": "2017-10-30T08:32:43.428Z",
+        "deps": {"bluebird":"3.5.1","cls-bluebird":"2.0.1","debug":"3.1.0","dottie":"2.0.0","generic-pool":"3.2.0","hornet-js-components":"5.1.0","hornet-js-core":"5.1.0","hornet-js-utils":"5.1.0","is-bluebird":"1.0.2","retry-as-promised":"2.3.2","sequelize":"4.11.1","terraformer":"1.0.8","terraformer-wkt-parser":"1.1.2","toposort-class":"1.0.1","uuid":"3.1.0","validator":"8.2.0","wkx":"0.4.2"}
+      }
+    }
+  }
+}

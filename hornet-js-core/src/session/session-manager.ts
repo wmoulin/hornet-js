@@ -1,19 +1,104 @@
-"use strict";
+/**
+ * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * Ce logiciel est un programme informatique servant à faciliter la création
+ * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
+ * <p/>
+ * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * respectant les principes de diffusion des logiciels libres. Vous pouvez
+ * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+ * sur le site "http://www.cecill.info".
+ * <p/>
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordés par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concédants successifs.
+ * <p/>
+ * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement,  à l'utilisation,  à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur étant
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
+ * avertis possédant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+ * <p/>
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * termes.
+ * <p/>
+ * <p/>
+ * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * This software is a computer program whose purpose is to facilitate creation of
+ * web application in accordance with french general repositories : RGI, RGS and RGAA.
+ * <p/>
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ * <p/>
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
+ * <p/>
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
+ * <p/>
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ *
+ */
 
-var cookie = require("cookie");
+/**
+ * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
+ *
+ * @author MEAE - Ministère de l'Europe et des Affaires étrangères
+ * @version v5.1.0
+ * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
+ * @license CECILL-2.1
+ */
+
+import { Utils } from "hornet-js-utils";
+import { Logger } from "hornet-js-utils/src/logger";
+const logger: Logger = Utils.getLogger("hornet-js-core.session.session-manager");
+
+import * as cookie from "cookie";
 var crc = require("crc").crc32;
 var parseUrl = require("parseurl");
 var uid = require("uid-safe").sync;
 var onHeaders = require("on-headers");
 var signature = require("cookie-signature");
 
+import { Session } from "src/session/session";
+import { MemoryStore } from "src/session/memory-store";
+import { Store } from "src/session/store";
+import { CookieManager } from "src/session/cookie-manager"
 
-import utils = require("hornet-js-utils");
-import Session = require("src/session/session");
-import MemoryStore = require("src/session/memory-store");
-import Store = require("src/session/store");
-
-var logger = utils.getLogger("hornet-js-core.session.session-manager");
+declare module "express" {
+    export interface Request {
+        getSession?: () => Session;
+    }
+}
 
 /**
  * Node.js 0.8+ async implementation.
@@ -22,7 +107,7 @@ var logger = utils.getLogger("hornet-js-core.session.session-manager");
 /* istanbul ignore next */
 var defer = typeof setImmediate === "function" ?
     setImmediate :
-    function (fn, a?, b?) {
+    function(fn, a?, b?) {
         process.nextTick(fn.bind.apply(fn, arguments))
     };
 
@@ -34,24 +119,6 @@ var defer = typeof setImmediate === "function" ?
  */
 function generateSessionId(req) {
     return uid(24);
-}
-
-/**
- * Verify and decode the given `val` with `secret`.
- *
- * @param {String} val
- * @param {String} secret
- * @returns {String|Boolean}
- * @private
- */
-function unsigncookie(val, secret) {
-    var result = signature.unsign(val, secret);
-
-    if (result !== false) {
-        return result;
-    }
-
-    return false;
 }
 
 /**
@@ -78,7 +145,7 @@ function getcookie(req, name, secret, route) {
 
         if (raw) {
             if (secret.length > 0 && raw.substr(0, 2) === "s:") {
-                val = unsigncookie(raw.slice(2), secret);
+                val = CookieManager.unsignCookie(raw.slice(2), secret);
 
                 if (val === false) {
                     logger.debug("cookie signature invalid");
@@ -100,7 +167,7 @@ function getcookie(req, name, secret, route) {
  * @return {String}
  * @private
  */
-function hash(session:Session) {
+function hash(session: Session) {
     return crc(JSON.stringify(session.getData()));
 }
 
@@ -165,10 +232,10 @@ function setcookie(res, name, val, secret, options, route) {
     res.setHeader("set-cookie", header)
 }
 
-class SessionManager {
-    private static STORE:Store;
+export class SessionManager {
+    private static STORE: Store;
 
-    static invalidate(session:Session, fn:Function) {
+    static invalidate(session: Session, fn: Function) {
     }
 
     /**
@@ -187,12 +254,12 @@ class SessionManager {
      * @return {Function} middleware
      * @public
      */
-    static middleware(options:any) {
+    static middleware(options: any) {
         var options = options || {}
             , name = options.name || "NODESESSIONID"
             , store = options.store || new MemoryStore
             , cookie = options.cookie || {}
-            , trustProxy = options.proxy
+            , trustProxy = options.trustProxy
             , alwaysSetCookie = options.alwaysSetCookie || false
             , saveUnmodifiedSession = options.saveUnmodifiedSession
             , secret = options.secret || ""
@@ -209,7 +276,7 @@ class SessionManager {
         };
 
         // implementation dynamique pour accès à la conf
-        SessionManager.invalidate = function (session:Session, fn:Function) {
+        SessionManager.invalidate = function(session: Session, fn: Function) {
             var res = session["currentResponse"];
             onHeaders(res, () => {
                 setcookie(res, name, "", "", cookieDestroy, null);
@@ -243,7 +310,7 @@ class SessionManager {
             logger.debug("undefined saveUnmodifiedSession option; default = !store.isTouchImplemented() = " + saveUnmodifiedSession);
         }
 
-        return function session(req, res, next) {
+        return (req, res, next) => {
             // self-awareness
             if (typeof req.getSession === "function") return next();
 
@@ -255,7 +322,7 @@ class SessionManager {
             var sessionId = getcookie(req, name, secret, route);
 
             // set-cookie listener
-            onHeaders(res, function () {
+            onHeaders(res, function() {
                 if (!req.getSession()) {
                     logger.debug("no session");
                     return;
@@ -273,12 +340,12 @@ class SessionManager {
             });
 
             var requestUrl = parseUrl.original(req).path;
-            var hashBeforeRequest:String;
-            var hashAfterRequest:String;
+            var hashBeforeRequest: String;
+            var hashAfterRequest: String;
 
             logger.trace("incoming request with " + name + "=" + sessionId + " (path=" + requestUrl + ")");
 
-            function extendsRequest(req, res, returnedSession:Session) {
+            function extendsRequest(req, res, returnedSession: Session) {
                 // extends request with "getSession" method
                 req.getSession = () => returnedSession;
 
@@ -321,7 +388,7 @@ class SessionManager {
 
                 var ret;
                 var sync = true;
-                var session:Session = req.getSession();
+                var session: Session = req.getSession();
                 hashAfterRequest = hash(session);
 
                 function writeend() {
@@ -377,7 +444,7 @@ class SessionManager {
             }
 
             // get the session from the store if exists
-            store.get(sessionId, function (err, session:Session) {
+            store.get(sessionId, function(err, session: Session) {
                 if (err) {
                     logger.trace("error trying to get session in the store : %j", err);
                     if (err.code !== "ENOENT") {
@@ -399,6 +466,5 @@ class SessionManager {
             });
         };
     }
-}
 
-export = SessionManager;
+}

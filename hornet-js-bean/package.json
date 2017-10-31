@@ -1,0 +1,47 @@
+{
+  "name": "hornet-js-bean",
+  "version": "5.1.0",
+  "license": "CECILL-2.1",
+  "description": "Ensemble des décorateurs pour les beans hornet-js",
+  "bugs": {
+    "url": "https://github.com/diplomatiegouvfr/hornet-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diplomatiegouvfr/hornet-js.git"
+  },
+  "main": "./index.js",
+  "tsDefinitionDependencies": {
+    "hornet-js-ts-typings": "5.1.0",
+    "hornet-js-utils-dts": "5.1.0",
+    "hornet-js-test-dts": "5.1.0"
+  },
+  "appDependencies": {
+    "hornet-js-utils": "5.1.0",
+    "lodash": "4.16.4",
+    "reflect-metadata": "0.1.10"
+  },
+  "buildDependencies": {},
+  "testDependencies": {
+    "hornet-js-test": "5.1.0",
+    "moment-timezone": "0.5.13",
+    "log4js": "0.6.38",
+    "config": "1.19.0"
+  },
+  "author": "MEAE - Ministère de l'Europe et des Affaires étrangères",
+
+
+
+
+
+  "____HORNET-BUILDER____DO_NOT_MODIFY_THIS_OBJECT____": {
+    "current": "d0e6c7129759c28b58027123cc1b844bed3d29e3",
+    "history": {
+      "d0e6c7129759c28b58027123cc1b844bed3d29e3": {
+        "version": "5.1.0",
+        "date": "2017-10-30T08:32:58.032Z",
+        "deps": {"hornet-js-utils":"5.1.0","lodash":"4.16.4","reflect-metadata":"0.1.10"}
+      }
+    }
+  }
+}

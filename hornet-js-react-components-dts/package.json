@@ -1,0 +1,19 @@
+{
+  "name": "hornet-js-react-components-dts",
+  "version": "5.1.0",
+  "license": "CECILL-2.1",
+  "description": "Définition Typescript du module hornet-js-core",
+  "bugs": {
+    "url": "https://github.com/diplomatiegouvfr/hornet-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diplomatiegouvfr/hornet-js.git"
+  },
+  "tsDefinitionDependencies": {},
+  "appDependencies": {},
+  "buildDependencies": {},
+  "testDependencies": {},
+  "author": "MEAE - Ministère de l'Europe et des Affaires étrangères",
+  "types": "./hornet-js-react-components.d.ts"
+}

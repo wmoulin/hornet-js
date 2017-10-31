@@ -1,71 +1,163 @@
-"use strict";
-import HornetSuperAgentRequest = require("src/services/hornet-superagent-request");
-import ServiceApi = require("src/services/service-api");
-import ActionsChainData = require("src/routes/actions-chain-data");
-import utils = require("hornet-js-utils");
+/**
+ * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * Ce logiciel est un programme informatique servant à faciliter la création
+ * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
+ * <p/>
+ * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * respectant les principes de diffusion des logiciels libres. Vous pouvez
+ * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+ * sur le site "http://www.cecill.info".
+ * <p/>
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordés par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concédants successifs.
+ * <p/>
+ * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement,  à l'utilisation,  à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur étant
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
+ * avertis possédant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+ * <p/>
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * termes.
+ * <p/>
+ * <p/>
+ * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * This software is a computer program whose purpose is to facilitate creation of
+ * web application in accordance with french general repositories : RGI, RGS and RGAA.
+ * <p/>
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ * <p/>
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
+ * <p/>
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
+ * <p/>
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ *
+ */
 
-var logger = utils.getLogger("hornet-js-core.protocol.media-type");
-var WError = utils.werror;
-var _ = utils._;
-var memorystream = utils.memorystream;
+/**
+ * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
+ *
+ * @author MEAE - Ministère de l'Europe et des Affaires étrangères
+ * @version v5.1.0
+ * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
+ * @license CECILL-2.1
+ */
 
-class MediaType {
+import * as _ from "lodash";
 
-    static MEDIATYPE_PARAMETER = "mediaType";
+export interface MediaType {
+    /** Représentation simplifiée du type MIME */
+    SHORT: string;
+    /** Type MIME (https://www.iana.org/assignments/media-types/media-types.xhtml) */
+    MIME: string;
+}
+
+export class MediaTypes {
+
+    static MEDIATYPE_PARAMETER: string = "mediaType";
 
     static JSON = {
-        PARAMETER: "json",
-        MIME: "application/json",
-        readFromSuperAgent: MediaType.readJsonFromSuperAgent
+        SHORT: "json",
+        MIME: "application/json"
     };
+
     static XLS = {
-        PARAMETER: "xls",
-        MIME: "application/vnd.ms-excel",
-        readFromSuperAgent: MediaType.readStreamFromSuperAgent
+        SHORT: "xls",
+        MIME: "application/vnd.ms-excel"
     };
+
     static CSV = {
-        PARAMETER: "csv",
-        MIME: "text/csv",
-        readFromSuperAgent: MediaType.readStreamFromSuperAgent
+        SHORT: "csv",
+        MIME: "text/csv"
     };
+
     static PDF = {
-        PARAMETER: "pdf",
+        SHORT: "pdf",
         MIME: "application/pdf",
-        readFromSuperAgent: MediaType.readStreamFromSuperAgent
     };
+
+    static DOC = {
+        SHORT: "doc",
+        MIME: "application/msword"
+    };
+
+    static TXT = {
+        SHORT: "txt",
+        MIME: "text/plain"
+    };
+
+    static PNG = {
+        SHORT: "png",
+        MIME: "image/png"
+    };
+
+    static BMP = {
+        SHORT: "bmp",
+        MIME: "image/x-ms-bmp"
+    };
+
+    static JPG = {
+        SHORT: "jpg",
+        MIME: "image/jpeg"
+    };
+
+    static OCTETSTREAM = {
+        SHORT: "octet-stream",
+        MIME: "application/octet-stream"
+    };
+
+    static ODS = {
+        SHORT: "ods",
+        MIME: "application/vnd.oasis.opendocument.spreadsheet"
+    };
+
+    static ODT = {
+        SHORT: "odt",
+        MIME: "application/vnd.oasis.opendocument.text"
+    };
+
     // Attention à ne pas déclarer le DEFAUT avant sa valeur
-    static DEFAULT = MediaType.JSON;
+    static DEFAULT = MediaTypes.JSON;
 
-    static readJsonFromSuperAgent(api:ServiceApi, agent:HornetSuperAgentRequest, resolve, reject, message:string) {
-        agent.end(api.endFunction(resolve, reject, message));
-
-    }
-
-    static readStreamFromSuperAgent(api:ServiceApi, agent:HornetSuperAgentRequest, resolve, reject, message:string) {
-        var stream = new memorystream();
-
-        // Le 'on()' est sur SuperAgent, pas sur le stream (attention, le 'pipe()' retourne le stream)
-        agent.on("end", () => {
-                var res = agent.res; // (this = request superagent)
-                if (res) {
-                    var responseContentType = res.headers["content-type"];
-                    resolve(new ActionsChainData().withBody(stream).withResponseMimeType(responseContentType));
-                } else {
-                    var errorMess:string = "[KO] : " + message;
-                    logger.error(errorMess);
-                    var error = new WError(errorMess);
-                    error.name = " ";
-                    reject(error);
-                }
-            })
-            .pipe(stream); // Le pipe() appelle la méthode end() sur la request
-
-    }
-
-    static _fromParameter(parameter:string):any {
-        var mediaType = null;
-        _.forOwn(MediaType, function (value) {
-            if (value && value.PARAMETER && value.PARAMETER === parameter) {
+    private static _fromShortValue(parameter: string): MediaType {
+        let mediaType: MediaType = null;
+        _.forOwn(MediaTypes, function(value) {
+            if (value && value.SHORT && value.SHORT === parameter) {
                 mediaType = value;
                 return false;
             }
@@ -73,9 +165,9 @@ class MediaType {
         return mediaType;
     }
 
-    static _fromMime(mimeType:string):any {
-        var mediaType = null;
-        _.forOwn(MediaType, function (value) {
+    private static _fromMime(mimeType: string): MediaType {
+        let mediaType: MediaType = null;
+        _.forOwn(MediaTypes, function(value) {
             if (value && value.MIME && value.MIME === mimeType) {
                 mediaType = value;
                 return false;
@@ -84,33 +176,22 @@ class MediaType {
         return mediaType;
     }
 
-    static fromParameter(parameter:string):any {
-        return MediaType._fromParameter(parameter) || MediaType.DEFAULT;
-    }
-
-    static fromMime(parameter:string):any {
-        return MediaType._fromMime(parameter) || MediaType.DEFAULT;
+    /**
+     * Rerouve la constante MediaType suivant la valeur abrégée
+     * @param {string} shortValue
+     * @return MediaTypes or MediaTypes.JSON si non pris en charge
+     */
+    static fromShortValue(shortValue: string): MediaType {
+        return MediaTypes._fromShortValue(shortValue) || MediaTypes.DEFAULT;
     }
 
     /**
-     * Renvoie true si le format demandé par le client demande un rendu de composant ou redirect
-     * Renvoie false si le format est géré par l'application et doit envoyé tel quel au client.
-     * @param mimeType
-     * @returns {boolean}
+     * Rerouve la constante MediaType suivant la valeur de l'entête Accept
+     * @param {string} shortValue
+     * @return MediaTypes or MediaTypes.JSON si non pris en charge
      */
-    static isRenderNeeded(mimeType:string):boolean {
-        return MediaType._fromMime(mimeType) === null;
-    }
-
-    /**
-     * Renvoie true si le format demandé par le client est en fait une redirection serveur (json)
-     * @param mimeType
-     * @returns {boolean}
-     */
-    static isRedirect(mimeType:string):boolean {
-        return mimeType === this.JSON.MIME;
+    static fromMime(accept: string): MediaType {
+        return MediaTypes._fromMime(accept) || MediaTypes.DEFAULT;
     }
 
 }
-
-export = MediaType;

@@ -1,9 +1,15 @@
 {
   "applicationTitle": "Titre de l'Application",
+  "labelLanguage": "Français",
   "errorsTitle": "Une erreur est survenue",
-  "authError": "Authentification refusée: l'utilisateur ne possède pas les droits suffisants pour accéder cette page",
-  "techError": "Une erreur technique est survenue",
+  "applicationLoading": "Chargement de l'application, veuillez patienter ...",
+  "topButtonTitle" : "Retour vers le haut de la page",
+  "nfePage":{
+    "title" : "Oops! Nous ne trouvons pas ce que vous cherchez!",
+    "backToHome" : "Retour à la page d'accueil"
+  },
   "form": {
+    "requiredLabel": "Saisie obligatoire",
     "valid": "Valider",
     "validTitle": "Valider la saisie du formulaire",
     "cancel": "Annuler",
@@ -13,7 +19,49 @@
     "search": "Rechercher",
     "searchTitle": "Rechercher à partir des données du formulaire",
     "fillField": "Les champs marqués d'un astérisque (*) doivent être renseignés.",
-    "submitData": "Données soumises:"
+    "submitData": "Données soumises:",
+    "atLine": ", à la ligne {line}",
+    "checkbox": {
+      "booleanOui": "Oui",
+      "booleanNon": "Non"
+    },
+    "accordion": {
+      "errors": "erreurs",
+      "error": "erreur"
+    },
+    "autoCompleteField":{
+      "title": "Aide à la saisie d'un champ d'auto-completion",
+      "toolTip": "Commencez la saisie et des propositions vous seront faites. Vous pouvez naviguer dans ces propositions à partir des flèches du clavier",
+      "selectedItem" : "{count, plural, =0 {aucun item sélectionné } =1 {1 item sélectionné} other {# items sélectionnés}}",
+      "noResultLabel": "pas de résultat."
+    },
+    "validation" : {
+      "generic": "La valeur du champ « {field} » est incorrecte.",
+      "multipleOf": "La valeur du champ « {field} » est incorrecte.",
+      "maximum": "La valeur du champ « {field} » est supérieure au maximum autorisé.",
+      "exclusiveMaximum": "La valeur du champ « {field} » est supérieure au maximum autorisé.",
+      "minimum": "La valeur du champ « {field} » est inférieure au minimum requis.",
+      "exclusiveMinimum": "La valeur du champ « {field} » est inférieure au minimum requis.",
+      "maxLength": "Le champ « {field} » excède le nombre maximum de caractères autorisé. Veuillez corriger la saisie de ce champ.",
+      "minLength": "Le nombre de caractères du champ « {field} » est inférieur au minimum requis.",
+      "pattern": "Le format du champ « {field} » est incorrect.",
+      "format": "Le format du champ « {field} » est incorrect.",
+      "additionalItems": "Un ou plusieurs éléments non valides ont été sélectionnés dans le champ « {field} ».",
+      "items": "Un ou plusieurs éléments non valides ont été sélectionnés dans le champ « {field} ».",
+      "maxItems": "Le nombre d'éléments sélectionnés pour le champ « {field} » est supérieur au maximum autorisé.",
+      "minItems": "Le nombre d'éléments sélectionnés pour le champ « {field} » est inférieur au minimum requis.",
+      "uniqueItems": "Le champ « {field} » ne doit pas contenir de doublons.",
+      "enum": "Le champ « {field} » a une propriété dont la valeur n'est pas dans la liste de valeurs autorisées.",
+      "required": "Le champ « {field} » est obligatoire. Veuillez saisir ce champ.",
+      "formatMinimum": "La valeur du champ « {field} » est inférieure au minimum requis.",
+      "formatMaximum": "La valeur du champ « {field} » est supérieure au maximum autorisé.",
+      "switch": "La valeur du champ « {field} » est incorrecte."
+    }
+  },
+  "uploadFile" : {
+    "selectedFile" : "{count, plural, =0 {aucun fichier sélectionné } =1 {1 fichier sélectionné} other {# items fichiers sélectionnés}}",
+    "buttonLabel": "Choisir un fichier",
+    "labelSupprimer": "Supprimer"
   },
   "dialog": {
     "closeSymbole": "X",
@@ -21,20 +69,51 @@
     "title": "Boîte de dialogue"
   },
   "notification": {
-    "errorsTitle": "Erreurs",
-    "infosTitle": "Messages d'information"
+    "errorsTitle": "Cette page contient des erreurs",
+    "warningsTitle" : "Message d'alerte",
+    "infosTitle": "Messages d'information",
+    "personnalsTitle" : "Message personnel"
   },
   "spinner": {
     "loadingTitle": "Chargement...",
     "loadingText": "Action en cours, veuillez patienter ..."
   },
   "menu": {
-    "mainMenu": "Menu principal"
+    "mainMenu": "Menu principal",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu" : "Fermer le menu",
+    "shortcuts":{
+      "enterSpace":"Entre dans le menu ou le sous menu ou active le lien",
+      "escape": "Ferme le menu",
+      "arrowLeft": "Passe au suivant ou au sous-menu",
+      "arrowUp": "Element précédent",
+      "arrowRight": "Passe au menu suivant ou dans un sous menu si on se trouve dans un menu",
+      "arrowDown": "Passe au contenu du menu ou à l'item suivant",
+      "shiftTab": "Fait sortir du menu. Ferme le menu si la tabulation sort de la barre de menu",
+      "tab": "Fait sortir du menu. Ferme le menu si la tabulation sort de la barre de menu"
+    }
   },
   "breadcrumb": {
     "arialabel": "Fil d'ariane"
   },
+  "shortcuts":{
+    "iconTitle" : "Informations raccourcis",
+    "modalTitle" : "Accessibilité Tableau",
+    "modalContentTitle" : "Raccourcis clavier"
+  },
+  "toggleColumnsButton": {
+    "title": "Colonnes à afficher/masquer"
+  },
+  "user": {
+    "title": "Gestion de l'utilisateur"
+  },
   "table": {
+    "pager": {
+      "dropdownTitle": "Nombre d'élément"
+    },
+    "menuActions": {
+      "title": "Menu d'actions"
+    },
     "filterValid": "Filtrer",
     "filterValidTitle": "Filtrer",
     "filterCancel": "Annuler",
@@ -46,161 +125,154 @@
     "showFilter": "Afficher le filtrage",
     "showFiltering": "Afficher le filtre en cours",
     "emptyResult": "Aucune information à présenter.",
+    "loading" : "chargement...",
     "addTitle": "Ajouter",
     "selectedTitle": "Sélectionner",
     "selectedAllTitle": "Tout sélectionner",
     "deselectedAllTitle": "Tout désélectionner",
-    "deleteAllConfirmation": "Etes-vous sûr(e) de vouloir supprimer ce(s) élément(s)",
-    "deleteAllTitle": "Supprimer ce(s) élément(s)",
-    "deleteAllActionTitle":"Suppression multiple",
-    "sortedByTitle": "Trier par {columnTitle} {sortTitle}",
+    "massActionConfirmMessage": "Etes-vous sûr(e) de vouloir supprimer ce(s) élément(s)",
+    "massActionConfirmTitle": "Supprimer ce(s) élément(s)",
+    "massActionTitle": "Suppression multiple",
+    "sortByTitle": "Trier par {columnTitle} {sortTitle}",
+    "sortedByTitle": "Trié par {columnTitle}",
     "descending": "dans l'ordre décroissant",
     "ascending": "dans l'ordre croissant",
     "rowNumber": "Lignes : ",
-    "pageFooter": "Page :",
+    "pageFooter": "Afficher ",
     "pageFooterOn": "sur",
     "exportTitle": "Exporter au format {format}",
-    "exportExcelTitle": "Excel",
-    "exportPdfTitle": "PDF",
-    "exportCsvTitle": "CSV",
-    "firstPage": "<<",
+    "numberElementTitle":  "{count, plural, =0 {(aucun élément) } =1 {(1 élément)} other {(# éléments)}}",
+    "mediaTypeTitle" : {
+      "xls": "Excel",
+      "csv": "CSV",
+      "pdf": "PDF"
+    },
+    "firstPage": "|< Début",
     "prevPage": "< Précédent",
     "nextPage": "Suivant >",
-    "lastPage": ">>",
+    "lastPage": "Fin >|",
+    "inputPage": "Saisie de la page à afficher",
     "10": "10",
+    "20": "20",
     "50": "50",
     "100": "100",
     "displayAll": "Afficher tout",
-    "formatDateInvalid": "Le format du champ « {title} » est incorrect."
+    "formatDateInvalid": "Le format du champ « {title} » est incorrect.",
+    "shortcuts": {
+      "iconTitle" : "Informations raccourcis",
+      "modalTitle" : "Accessibilité Tableau",
+      "modalContentTitle" : "Raccourcis clavier",
+      "navigation": "Navigation au sein du tableau",
+      "firstLine": "Première ligne",
+      "lastLine": "Dernière ligne",
+      "lineBeginning" : "Début de ligne",
+      "lineEnd" : "Fin de ligne",
+      "selectAll" : "Sélectionner toutes les lignes",
+      "selectCurrentLine" : "Sélectionner la ligne courante",
+      "toggleMode" : "Basculer entre mode navigation simple (la tabulation fait sortir du tableau) et mode édition (la tabulation navigue entre les différents boutons d'action)",
+      "escape" : "Retourner au mode navigation simple (la tabulation fait sortir du tableau)"
+    },
+    "booleanOui": "oui",
+    "booleanNon": "non"
   },
   "calendar": {
-    "agendaTitle": "Calendrier",
+    "agendaTitle": "Agenda",
     "choiceDate": "Choisir une date",
     "today": "Aujourd'hui",
+    "now": "Maintenant",
+    "ok": "Ok",
     "clear": "Effacer",
+    "month": "Mois",
+    "year": "Année",
     "hourPanelTitle": "Choisir une heure",
     "minutePanelTitle": "Choisir une minute",
     "secondPanelTitle": "Choisir une seconde",
     "monthSelect": "Choisir un mois",
     "yearSelect": "Choisir une année",
     "decadeSelect": "Choisir une décade",
-    "yearFormat": "yyyy",
-    "dateFormat": "dd/MM/yyyy",
-    "monthYearFormat": "MMMM yyyy",
-    "previousMonth": "Mois précédent (PageHaut)",
-    "nextMonth": "Mois suivant (PageBas)",
-    "hourInput": "Heure précédente(Haut), Heure suivante(Bas)",
-    "minuteInput": "Minute précédente(Haut), Minute suivante(Bas)",
-    "secondInput": "Seconde précédente(Haut), Seconde suivante(Bas)",
-    "previousYear": "Année précédente (Ctrl + gauche)",
-    "nextYear": "Année suivante (Ctrl + droite)",
-    "previousDecade": "Décennie précédente",
-    "nextDecade": "Décennie suivante",
-    "previousCentury": "Siècle précédent",
-    "nextCentury": "Siècle suivant",
+    "yearFormat": "YYYY",
+    "dateFormat": "DD/MM/YYYY",
+    "monthYearFormat": "MMMM YYYY",
+    "monthFormat": "MMMM",
+    "monthBeforeYear": true,
     "timezoneOffset": 60,
     "firstDayOfWeek": 1,
     "minimalDaysInFirstWeek": 1,
-    "format": {
-      "eras": [
-        "BC",
-        "AD"
-      ],
-      "months": [
-        "Janvier",
-        "Février",
-        "Mars",
-        "Avril",
-        "Mai",
-        "Juin",
-        "Juillet",
-        "Août",
-        "Septembre",
-        "Octobre",
-        "Novembre",
-        "Decembre"
-      ],
-      "shortMonths": [
-        "Jan",
-        "Fev",
-        "Mar",
-        "Avr",
-        "Mai",
-        "Jun",
-        "Jul",
-        "Aou",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ],
-      "weekdays": [
-        "Dimanche",
-        "Lundi",
-        "Mardi",
-        "Mercredi",
-        "Jeudi",
-        "Vendredi",
-        "Samedi"
-      ],
-      "shortWeekdays": [
-        "Dim",
-        "Lun",
-        "Mar",
-        "Mer",
-        "Jeu",
-        "Ven",
-        "Sam"
-      ],
-      "veryShortWeekdays": [
-        "D",
-        "L",
-        "M",
-        "M",
-        "J",
-        "V",
-        "S"
-      ],
-      "ampms": [
-        "AM",
-        "PM"
-      ],
-      "datePatterns": [
-        "EEEE, MMMM d, yyyy",
-        "MMMM d, yyyy",
-        "MMM d, yyyy",
-        "M/d/yy"
-      ],
-      "timePatterns": [
-        "h:mm:ss a 'GMT'Z",
-        "h:mm:ss a",
-        "h:mm:ss a",
-        "h:mm a"
-      ],
-      "dateTimePattern": "{date} {time}"
-    }
+    "placeHolder" : "JJ/MM/AAAA"
+  },
+  "changeLanguage":{
+    "title": "Changer la langue"
   },
   "header": {
     "logoTitle": "Accueil - ",
-    "contentTitle": "Aller au contenu de l' ",
-    "menuTitle": "Aller au menu de l' ",
-    "planTitle": "Plan de l'application l' ",
-    "accessTitle": "Politique d'accessibilité de l' ",
+    "contentTitle": "Aller au contenu de l'",
+    "menuTitle": "Aller au menu de l'",
+    "planTitle": "Plan de l'",
+    "accessTitle": "Politique d'accessibilité de l'",
     "content": "Aller au contenu",
     "menu": "Aller au menu",
     "plan": "Plan de l'application",
     "access": "Accessibilité",
     "help": "Aide",
-    "contact": "Contact"
+    "contact": "Contact",
+    "contactTitle": "Contact de l'",
+    "expand" : "Agrandir la page",
+    "contract" : "Réduire la page"
   },
   "navigation": {
     "welcome": "Accueil",
     "accessibility": "Accessibilité",
+    "declarationconformity":"Déclaration de conformité",
     "contact": "Contact",
     "plan": "Plan de l'application",
     "help": "Aide",
     "connect": "Connexion",
     "disconnect": "{userLogin} (Déconnexion)",
     "submenu": "Sous-menu de "
+  },
+  "error": {
+    "message": {
+      "ERR_HORNET_SECURITY": "Authentification refusée: l'utilisateur ne possède pas les droits suffisants pour accéder cette page",
+      "ERR_HORNET_RESOURCE_NOTFOUND": "Ressource non trouvée",
+      "ERR_TECH_UNKNOWN": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_AUTHENTICATION_FAILED": "Votre identifiant ou votre mot de passe est incorrect",
+      "ER-GE-APP-01": "HornetApp : Le composant à rendre est null",
+      "ER-CL-CLI-01": "Une erreur technique est survenue: {error}",
+      "ERR-CODE-MAIL-001": "Un problème réseau (erreur SMTP) est survenu lors de l'envoi de mail",
+      "ERR_TECH_10001": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_TECH_10002": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_TECH_10003": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_TECH_10004": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_TECH_10005": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_TECH_10006": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_TECH_10007": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_TECH_10008": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_TECH_10009": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_TECH_10010": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_TECH_10011": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10012": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",
+      "ERR_TECH_10013": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10014": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10015": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10301": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10302": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10303": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10304": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10305": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10306": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10400": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10401": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10402": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10500": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10501": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10502": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10599": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10600": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10601": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10602": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10603": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10604": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}",            
+      "ERR_TECH_10700": "Une erreur technique est survenue : {errorMessage} / rapport d'incident : {reportId}"
+    }
   }
 }

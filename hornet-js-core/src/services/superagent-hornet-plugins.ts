@@ -1,28 +1,126 @@
-
-"use strict";
-import utils = require("hornet-js-utils");
-var browser = require('detect-browser');
-import HornetSuperAgentRequest = require("src/services/hornet-superagent-request");
-import HornetCache = require("src/cache/hornet-cache");
-
-var logger = utils.getLogger("hornet-js-core.services.superagent-hornet-plugins");
-var _ = utils._;
-
-var HEADER_CSRF_NAME:string = "x-csrf-token";
-var HEADER_LOGIN_PAGE:string = "x-is-login-page";
+/**
+ * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * Ce logiciel est un programme informatique servant à faciliter la création
+ * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
+ * <p/>
+ * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * respectant les principes de diffusion des logiciels libres. Vous pouvez
+ * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+ * sur le site "http://www.cecill.info".
+ * <p/>
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordés par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concédants successifs.
+ * <p/>
+ * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement,  à l'utilisation,  à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur étant
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
+ * avertis possédant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+ * <p/>
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * termes.
+ * <p/>
+ * <p/>
+ * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * This software is a computer program whose purpose is to facilitate creation of
+ * web application in accordance with french general repositories : RGI, RGS and RGAA.
+ * <p/>
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ * <p/>
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
+ * <p/>
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
+ * <p/>
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ *
+ */
 
 /**
+ * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
+ *
+ * @author MEAE - Ministère de l'Europe et des Affaires étrangères
+ * @version v5.1.0
+ * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
+ * @license CECILL-2.1
+ */
+
+import { Utils } from "hornet-js-utils";
+import { HornetSuperAgentRequest } from "src/services/hornet-superagent-request";
+import { TechnicalError } from "hornet-js-utils/src/exception/technical-error";
+
+
+const logger = Utils.getLogger("hornet-js-core.services.superagent-hornet-plugins");
+const browser = require("detect-browser");
+
+const HEADER_CSRF_NAME:string = "x-csrf-token";
+const HEADER_LOGIN_PAGE:string = "x-is-login-page";
+
+
+export abstract class HornetPlugin {
+    static getPlugin(...args) : (request:HornetSuperAgentRequest) => void {
+        throw new TechnicalError("NOT IMPLEMENTED")
+    }
+     
+}
+
+/**HornetPlugin
  * Plugin SuperAgent ajoutant le header csrf lors de l'envoi des requêtes et gérant la récupération du nouveau token lors du retour
  * @param request
  * @return {HornetSuperAgentRequest}
  * @constructor
  */
-export function CsrfPlugin(request:HornetSuperAgentRequest) {
-    if (!utils.isServer) {
-        // Ajout du token à l'envoi
-        request.set(HEADER_CSRF_NAME, utils.csrf || "no-token");
+export class CsrfPlugin extends HornetPlugin{
+    static getPlugin() : (request:HornetSuperAgentRequest) => void{
+        return function (request:HornetSuperAgentRequest) {
+            logger.trace("Ajout du token csrf.");
+            if (!Utils.isServer) {
+                logger.trace("Ajout du token csrf valeur : ", Utils.getCls("hornet.csrf") || "no-token");
+                // Ajout du token à l'envoi
+                request.set(HEADER_CSRF_NAME, Utils.getCls("hornet.csrf") || "no-token");
+            }
+        }
     }
 }
+/*export function CsrfPlugin(request:HornetSuperAgentRequest) {
+    if (!Utils.isServer) {
+        // Ajout du token à l'envoi
+        request.set(HEADER_CSRF_NAME, Utils.getCls("hornet.csrf") || "no-token");
+    }
+}*/
 
 
 /**
@@ -31,115 +129,20 @@ export function CsrfPlugin(request:HornetSuperAgentRequest) {
  * @return {HornetSuperAgentRequest}
  * @constructor
  */
-export function noCacheIEPlugin(request:HornetSuperAgentRequest) {
-    if (!utils.isServer && browser.name === "ie") {
-        request.set("If-Modified-Since", "Sun, 12 Jul 1998 05:00:00 GMT");
-        request.set("Cache-Control", "no-cache, no-store, must-revalidate");
-        request.set("Pragma", "no-cache");
-        request.set("Expires", "0");
-    }
-}
-
-/**
- * Plugin SuperAgent ajoutant la gestion du cache sur la requête courante
- * @param request
- * @return {HornetSuperAgentRequest}
- * @constructor
- */
-export function CachePlugin(timetoliveInCache:number = -1) {
-    return function (request:HornetSuperAgentRequest) {
-        var url = request.url;
-        var oldEndFunction = request.end;
-        var oldSetFunction = request.set;
-        var storedSetParameters = [];
-
-        // On remplace la fonction end pour aller chercher dans le cache avant de lancer l'api
-        request.end = function (callbackEndMethod:Function) {
-            HornetCache
-                .getInstance()
-                .getItem(url)
-                .then(function (response) {
-                logger.debug("Bypass appel API: retour du contenu du cache");
-                // if (utils.isServer) {
-                //    try {
-                //        // Sur le client il n'y a rien à annuler mais sur NodeJS il faut effectuer une annulation sinon un event est envoyé et fait planter le serveur
-                //        request.abort();
-                //    } catch (error) {
-                //        logger.warn("Erreur d'annulation de la requête car présence de cache:", error);
-                //    }
-                // }
-                callbackEndMethod(undefined, response);
-            }).catch(function () {
-                logger.debug("Pas de valeur en cache, appel de l'API");
-
-                _.forEach(storedSetParameters, function (param) {
-                    logger.debug("Rejoue du header:", param.field);
-                    oldSetFunction.call(request, param.field, param.val);
-                });
-
-                oldEndFunction.call(request, (<any>CachePlugin)._getMethodeEndForCache(url, callbackEndMethod, timetoliveInCache));
-                return null;
-            });
-
-            return request;
-        };
-
-        // On remplace la fonction 'set' pour ne pas instancier la requête malgré tout (sur NodeJs), voir superagent/lib/node/index.js, fonction Request.prototype.set
-        request.set = <any>function (field:any, val:any) {
-            var param = {field: field, val: val};
-            logger.trace("Enregistrement de l'appel à set avec:", param);
-            storedSetParameters.push(param);
-            return this;
+export class noCacheIEPlugin extends HornetPlugin{
+  static getPlugin() : (request:HornetSuperAgentRequest) => void{
+        return function (request:HornetSuperAgentRequest) {
+            if (!Utils.isServer && browser.name === "ie") {
+                request.set("If-Modified-Since", "Sun, 12 Jul 1998 05:00:00 GMT");
+                request.set("Cache-Control", "no-cache, no-store, must-revalidate");
+                request.set("Pragma", "no-cache");
+                request.set("Expires", "0");
+            }
         }
-    }
+  }
 }
 
 
-/**
- * Function du plugin CachePlugin qui modifie le callback du service pour stocker dans le cache le résultat de la requête
- * @param url clé dans le cache
- * @param callback callback passé à la méthode end
- * @returns {function(any, any): undefined} fonction
- * @private
- */
-(<any>CachePlugin)._getMethodeEndForCache = function _getMethodeEndForCache(url:string, callbackEndMethod:Function, timetoliveInCache:number) {
-    return function (err, res) {
-        if (!err && res) {
-            logger.debug("Mise en cache de la réponse à l'appel de l url:", url);
-            var reponseCopy = (<any>CachePlugin)._cloneResponse(res);
-            HornetCache
-                .getInstance()
-                .setCacheAsynchrone(url, reponseCopy, timetoliveInCache)
-                .finally(function () {
-                    logger.debug("Sauvegarde dans le cache effectuée, appel de la méthode de callback");
-                    // On appelle la vrai méthode avec la copie pour s'assurer de ne pas avoir de différence de comportement entre cache / pas de cache
-                    callbackEndMethod(err, reponseCopy);
-                }
-            );
-        } else {
-            logger.debug("Retour en erreur, aucune mise en cache");
-            callbackEndMethod(err, res);
-        }
-    };
-};
-
-/**
- * Fonction du plugin CachePlugin qui clone les paramètres interessants d'une réponse.
- * La raison est que sur NodeJs la propriété 'body' n'est pas énumérable, on reconstruit donc un objet spécial pour le cache
- * Note: Possible de d'override cette méthode si d'autres paramètres doivent être ajoutés
- * @param res
- * @return {{body: (any|HTMLElement|req.body|{x-csrf-token}), header: any, ok: any, status: any, type: any}}
- * @private
- */
-(<any>CachePlugin)._cloneResponse = function _cloneResponse(res:any) {
-    return {
-        body: res.body,
-        header: res.header,
-        ok: res.ok,
-        status: res.status,
-        type: res.type
-    };
-}
 
 
 /**
@@ -149,19 +152,23 @@ export function CachePlugin(timetoliveInCache:number = -1) {
  * @return {HornetSuperAgentRequest}
  * @constructor
  */
-export function RedirectToLoginPagePlugin(request:HornetSuperAgentRequest) {
-    if (!utils.isServer) {
-        // Gestion du header
-        var realRequest = request.callback;
-        request.callback = function (err, res) {
-            if (res && res.get(HEADER_LOGIN_PAGE) == "true") {
-                var loginUrl = utils.buildContextPath(utils.appSharedProps.get("loginUrl"));
-                logger.debug("Redirection vers la page:", loginUrl);
-                window.location.href = loginUrl + "?previousUrl=" + window.location.href;
-            } else {
-                realRequest.call(this, err, res);
-            }
-        };
+export class RedirectToLoginPagePlugin extends HornetPlugin{
+  static getPlugin() : (request:HornetSuperAgentRequest) => void{
+        return function (request:HornetSuperAgentRequest) {
+                if (!Utils.isServer) {
+                    // Gestion du header
+                    var realRequest = request.callback;
+                    request.callback = function (err, res) {
+                        if (res && res.get(HEADER_LOGIN_PAGE) == "true") {
+                            var loginUrl = Utils.buildContextPath(Utils.appSharedProps.get("loginUrl"));
+                            logger.debug("Redirection vers la page:", loginUrl);
+                            window.location.href = loginUrl + "?previousUrl=" + window.location.href;
+                        } else {
+                            realRequest.call(this, err, res);
+                        }
+                    };
+             }
+        }
     }
 }
 
@@ -171,17 +178,20 @@ export function RedirectToLoginPagePlugin(request:HornetSuperAgentRequest) {
  * @return {HornetSuperAgentRequest}
  * @constructor
  */
-export function addParamFromLocalStorage(param:string, localStorageName?:string) {
-    return (request:HornetSuperAgentRequest) => {
-        if (utils.isServer) {
-            var callbacksStorage = utils.getContinuationStorage(localStorageName);
-           // var callbacksStorage = require("hornet-js-utils/src/callbacks-local-storage").getStorage(localStorageName);
-            var paramValue = callbacksStorage.get(param);
-            var query = request.query;
-            query[param] = paramValue;
+export class AddParamFromLocalStorage extends HornetPlugin{
+    static getPlugin(param:string, localStorageName?:string)  : (request:HornetSuperAgentRequest) => void {
+        return  (request:HornetSuperAgentRequest) => {
+            logger.trace("Ajout Param request from local storage.");
+            if (Utils.isServer) {
+                var callbacksStorage = Utils.getContinuationStorage(localStorageName);
+                // var callbacksStorage = require("hornet-js-utils/src/callbacks-local-storage").getStorage(localStorageName);
+                var paramValue = callbacksStorage.get(param);
+                var query = request.query;
+                query[param] = paramValue;
 
-            logger.trace("Ajout des paramètres superAgent,", param,":", paramValue);
-            request.query(query);
+                logger.trace("Ajout des paramètres superAgent,", param, ":", paramValue);
+                request.query(query);
+            }
         }
     };
 }
@@ -192,14 +202,16 @@ export function addParamFromLocalStorage(param:string, localStorageName?:string)
  * @return {HornetSuperAgentRequest}
  * @constructor
  */
-export function addParam(param:string, paramValue:any) {
-    return (request:HornetSuperAgentRequest) => {
-        if (utils.isServer) {
-            var query = request.query;
-            query[param] = paramValue;
-
-            logger.trace("Ajout des paramètres superAgent,", param,":", paramValue);
-            request.query(query);
-        }
-    };
+export class AddParam extends HornetPlugin{
+  static getPlugin(param:string, paramValue:any) : (request:HornetSuperAgentRequest) => void {
+        return (request:HornetSuperAgentRequest) => {
+            logger.trace("Ajout Param request.");
+            if (Utils.isServer) {
+                var query = request.query;
+                query[param] = paramValue;
+                logger.trace("Ajout des paramètres superAgent,", param,":", paramValue);
+                request.query(query);
+            }
+        };
+  }
 }

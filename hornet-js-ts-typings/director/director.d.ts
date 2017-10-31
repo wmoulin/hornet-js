@@ -43,6 +43,8 @@ declare module "director" {
             strict?: boolean;
             convert_hash_in_init?: boolean;
             'notfound'?: Function;
+            /* patch hornet */
+            async?: boolean;
         }
     }
 

@@ -1,6 +1,26 @@
 {
-  "contextPath": "applitutoriel-5.0.0",
-
+  "contextPath": "applitutoriel",
+  "welcomePage": "/accueil",
+	"database":{
+    "configApplituto": {
+      "name": "applitutorielDB",
+      "user": "hornetjs",
+      "password": "",
+      "host": "localhost",
+      "port": "5433",
+      "type": "postgres",
+      "uri": "postgres://${database.configApplituto.user}:${database.configApplituto.password}@${database.configApplituto.host}:${database.configApplituto.port}/${database.configApplituto.name}"
+    },
+    "configTest": {
+      "name": "applitutorielTest",
+      "user": "hornetjs",
+      "password": "",
+      "host": "localhost",
+      "port": "5433",
+      "type": "postgres",
+      "uri": "postgres://${database.configTest.user}:${database.configTest.password}@${database.configTest.host}:${database.configTest.port}/${database.configTest.name}"
+    }
+},
   "server": {
     "route": "js1",
     "port": 8888,
@@ -18,7 +38,7 @@
     "secure": false
     //"alwaysSetCookie": false
   },
-  "themeUrl": "http://localhost:7777/5.0.1/default",
+  "themeUrl": "http://localhost:7777/5.0.0/intranet",
   "security": {
     "enabled": true,
     "hpp": true,

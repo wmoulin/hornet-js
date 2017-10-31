@@ -1,5 +1,5 @@
 module.exports = {
-    type: 'parent',
+    type: "parent",
 
 
     gulpTasks: function (gulp, devModules) {

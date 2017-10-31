@@ -1,5 +1,5 @@
 {
-  "contextPath": "applitutoriel-5.0.1",
+  "contextPath": "applitutoriel-5.0.0",
   "server": {
     "port": 8888,
     "keepAlive": true,
@@ -7,7 +7,7 @@
     "timeout": 300000,
     "uploadFileSize": 1000000
   },
-  "themeUrl": "http://localhost:7777/5.0.1/default",
+  "themeUrl": "http://localhost:7777/5.0.0/intranet",
   "security": {
     "enabled": false,
     "hpp": true,

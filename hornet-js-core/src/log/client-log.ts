@@ -1,8 +1,99 @@
-"use strict";
+/**
+ * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * Ce logiciel est un programme informatique servant à faciliter la création
+ * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
+ * <p/>
+ * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * respectant les principes de diffusion des logiciels libres. Vous pouvez
+ * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+ * sur le site "http://www.cecill.info".
+ * <p/>
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordés par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concédants successifs.
+ * <p/>
+ * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement,  à l'utilisation,  à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur étant
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
+ * avertis possédant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+ * <p/>
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * termes.
+ * <p/>
+ * <p/>
+ * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * This software is a computer program whose purpose is to facilitate creation of
+ * web application in accordance with french general repositories : RGI, RGS and RGAA.
+ * <p/>
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ * <p/>
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
+ * <p/>
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
+ * <p/>
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ *
+ */
 
-import utils = require("hornet-js-utils");
+/**
+ * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
+ *
+ * @author MEAE - Ministère de l'Europe et des Affaires étrangères
+ * @version v5.1.0
+ * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
+ * @license CECILL-2.1
+ */
 
-class ClientLog {
+import { Utils } from "hornet-js-utils";
+
+declare global {
+    interface Window {
+        getHornetLoggerHelp: () => void;
+        getHornetJsLogState: () => void;
+        setHornetJsLogLevel: (level: string) => void;
+        setHornetJsStacksLog: (enableValue: string) => void;
+        setHornetJsLogLayout: (layout: string) => void;
+        setHornetJsRemoteLog: (remote: boolean) => void;
+        setHornetJsRemoteLogLayout: (layout: string, threshold: string, timeout: string) => void;
+        setHornetJsRemoteLogUrl: (url: string) => void;
+    }
+}
+
+export class ClientLog {
 
     static LOCAL_STORAGE_LOGGER_LEVEL_KEY = "hornet-js.logger.level";
     static LOCAL_STORAGE_LOGGER_LAYOUT_KEY = "hornet-js.logger.layout";
@@ -11,14 +102,16 @@ class ClientLog {
     static LOCAL_STORAGE_LOGGER_REMOTE_LAYOUT_THRESHOLD_KEY = "hornet-js.logger.remote.threshold";
     static LOCAL_STORAGE_LOGGER_REMOTE_LAYOUT_TIMEOUT_KEY = "hornet-js.logger.remote.timeout";
     static LOCAL_STORAGE_LOGGER_REMOTE_URL_KEY = "hornet-js.logger.remote.url";
+    static LOCAL_STORAGE_LOGGER_STACK_ENABLED = "hornet-js.logger.stackEnabled";
 
-    static defaultRemote:boolean = false;
-    static defaultLogLevel:string = "ERROR";
-    static defaultLogLayout:string = "BASIC";
-    static defaultRemoteLogLayout:string = "JSON";
-    static defaultRemoteLogThreshold:number = 100;
-    static defaultRemoteLogTimeout:number = 3000;
-    static defaultRemoteUrl:string = utils.buildContextPath("/log");
+    static defaultRemote: boolean = false;
+    static defaultLogLevel: string = "ERROR";
+    static defaultLogLayout: string = "BASIC";
+    static defaultRemoteLogLayout: string = "JSON";
+    static defaultRemoteLogThreshold: number = 100;
+    static defaultRemoteLogTimeout: number = 3000;
+    static defaultRemoteUrl: string = Utils.buildContextPath("/log");
+    static defaultStackLogEnabled: string = "false";
 
     /**
      * Cette fonction retourne la fonction d'initialisation des loggers de l'application côté ClientLog.
@@ -27,7 +120,7 @@ class ClientLog {
      */
     static getLoggerBuilder(logConfig) {
 
-        var appenders = [];
+        let appenders = [];
 
         ClientLog.configHornetLoggerHelp();
         ClientLog.configHornetJsLogState();
@@ -51,24 +144,24 @@ class ClientLog {
         } else {
             console.warn("LOGGER WEB : CONFIGURATION NOT DEFINED");
         }
-        var logLevel = utils.log4js.Level.INFO.toLevel(ClientLog.setHornetJsLogLevel());
-        var remoteLog = ClientLog.setHornetJsRemoteLog();
+        let logLevel = Utils.log4js.Level.INFO.toLevel(ClientLog.setHornetJsLogLevel());
+        let remoteLog = ClientLog.setHornetJsRemoteLog();
 
         if (!appenders.length) {
             console.warn("LOGGER WEB : NONE APPENDER DEFINED, APPLY DEFAULT APPENDER BrowserConsoleAppender");
-            var consoleAppender = new utils.log4js.BrowserConsoleAppender();
-            var logLayout = ClientLog.getConsoleLayout(ClientLog.setHornetJsLogLayout());
+            let consoleAppender = new Utils.log4js.BrowserConsoleAppender();
+            let logLayout = ClientLog.getConsoleLayout(ClientLog.setHornetJsLogLayout());
             consoleAppender.setLayout(logLayout);
             appenders.push(consoleAppender);
         }
 
         return function (category) {
-            this.log4jsLogger = utils.log4js.getLogger(category);
+            this.log4jsLogger = Utils.log4js.getLogger(category);
             this.log4jsLogger.setLevel(logLevel);
 
             appenders.forEach((appender) => {
-                if (!(appender instanceof utils.log4js.AjaxAppender)
-                    || ((appender instanceof utils.log4js.AjaxAppender) && remoteLog)) {
+                if (!(appender instanceof Utils.log4js.AjaxAppender)
+                    || ((appender instanceof Utils.log4js.AjaxAppender) && remoteLog)) {
                     this.log4jsLogger.addAppender(appender);
                 }
             });
@@ -78,26 +171,34 @@ class ClientLog {
     private static configureAjaxConsole(appender) {
         if (appender.layout) {
             if (appender.layout.type === "pattern" && appender.layout.pattern) {
-                ClientLog.defaultRemoteLogLayout = ClientLog.getLoggerKeyValue("AjaxAppender layout.pattern", appender.layout.pattern, ClientLog.defaultRemoteLogLayout);
+                ClientLog.defaultRemoteLogLayout = ClientLog.getLoggerKeyValue(
+                    "AjaxAppender layout.pattern", appender.layout.pattern, ClientLog.defaultRemoteLogLayout);
             } else {
-                ClientLog.defaultRemoteLogLayout = ClientLog.getLoggerKeyValue("AjaxAppender layout.type", appender.layout.type, ClientLog.defaultRemoteLogLayout);
+                ClientLog.defaultRemoteLogLayout = ClientLog.getLoggerKeyValue(
+                    "AjaxAppender layout.type", appender.layout.type, ClientLog.defaultRemoteLogLayout);
             }
         }
-        ClientLog.defaultRemoteLogThreshold = ClientLog.getLoggerKeyValue("AjaxAppender threshold", appender.threshold, ClientLog.defaultRemoteLogThreshold);
-        ClientLog.defaultRemoteLogTimeout = ClientLog.getLoggerKeyValue("AjaxAppender timeout", appender.timeout, ClientLog.defaultRemoteLogTimeout);
+        ClientLog.defaultRemoteLogThreshold = ClientLog.getLoggerKeyValue(
+            "AjaxAppender threshold", appender.threshold, ClientLog.defaultRemoteLogThreshold);
+        ClientLog.defaultRemoteLogTimeout = ClientLog.getLoggerKeyValue(
+            "AjaxAppender timeout", appender.timeout, ClientLog.defaultRemoteLogTimeout);
 
         if (appender.url.indexOf("http") > -1) {
             // On traite les urls complètes, correspond à une url distante autre que celle du serveur d'appli
-            ClientLog.defaultRemoteUrl = ClientLog.getLoggerKeyValue("AjaxAppender url", appender.url, ClientLog.defaultRemoteUrl);
+            ClientLog.defaultRemoteUrl = ClientLog.getLoggerKeyValue(
+                "AjaxAppender url", appender.url, ClientLog.defaultRemoteUrl);
         } else {
             // l'url remote est le serveur applicatif
-            ClientLog.defaultRemoteUrl = ClientLog.getLoggerKeyValue("AjaxAppender url", utils.buildContextPath(appender.url), ClientLog.defaultRemoteUrl);
+            ClientLog.defaultRemoteUrl = ClientLog.getLoggerKeyValue(
+                "AjaxAppender url", Utils.buildContextPath(appender.url), ClientLog.defaultRemoteUrl);
         }
 
-        var remoteLogUrl = ClientLog.setHornetJsRemoteLogUrl(ClientLog.defaultRemoteUrl);
-        var remoteLogLayout = ClientLog.setHornetJsRemoteLogLayout();
+        let remoteLogUrl = ClientLog.setHornetJsRemoteLogUrl(ClientLog.defaultRemoteUrl);
+        let remoteLogLayout = ClientLog.setHornetJsRemoteLogLayout();
 
-        var ajaxAppender = new utils.log4js.AjaxAppender(remoteLogUrl);
+        let remoteStackErrorLog = ClientLog.setHornetJsStacksLog();
+
+        let ajaxAppender = new Utils.log4js.AjaxAppender(remoteLogUrl);
         ajaxAppender.setLayout(ClientLog.getConsoleLayout(remoteLogLayout.layout));
         ajaxAppender.setThreshold(remoteLogLayout.threshold);
         ajaxAppender.setTimeout(remoteLogLayout.timeout);
@@ -107,18 +208,20 @@ class ClientLog {
     private static configureBrowserConsole(appender) {
         if (appender.layout) {
             if (appender.layout.type === "pattern" && appender.layout.pattern) {
-                ClientLog.defaultLogLayout = ClientLog.getLoggerKeyValue("BrowserConsoleAppender layout.pattern", appender.layout.pattern, ClientLog.defaultLogLayout);
+                ClientLog.defaultLogLayout = ClientLog.getLoggerKeyValue(
+                    "BrowserConsoleAppender layout.pattern", appender.layout.pattern, ClientLog.defaultLogLayout);
             } else {
-                ClientLog.defaultLogLayout = ClientLog.getLoggerKeyValue("BrowserConsoleAppender layout.type", appender.layout.type, ClientLog.defaultLogLayout);
+                ClientLog.defaultLogLayout = ClientLog.getLoggerKeyValue(
+                    "BrowserConsoleAppender layout.type", appender.layout.type, ClientLog.defaultLogLayout);
             }
         }
-        var consoleAppender = new utils.log4js.BrowserConsoleAppender();
-        var logLayout = ClientLog.getConsoleLayout(ClientLog.setHornetJsLogLayout());
+        let consoleAppender = new Utils.log4js.BrowserConsoleAppender();
+        let logLayout = ClientLog.getConsoleLayout(ClientLog.setHornetJsLogLayout());
         consoleAppender.setLayout(logLayout);
         return consoleAppender;
     }
 
-    static getLoggerKeyValue(confKey:string, value:any, defaultValue:any):any {
+    static getLoggerKeyValue(confKey: string, value: any, defaultValue: any): any {
         if (!value && String(value) !== "false") {
             console.warn("LOGGER WEB : KEY NOT DEFINED : ", confKey, ", DEFAULT VALUE APPLY : ", defaultValue);
         }
@@ -126,11 +229,9 @@ class ClientLog {
     }
 
     static configHornetLoggerHelp() {
-
-        if (!(<any>window).getHornetLoggerHelp) {
-            (<any>window).getHornetLoggerHelp = function (level:string) {
-
-                var level = "Level : \
+        if (!window.getHornetLoggerHelp) {
+            window.getHornetLoggerHelp = function () {
+                let level = "Level : \
                     \n\t ALL\
                     \n\t TRACE\
                     \n\t DEBUG\
@@ -140,7 +241,7 @@ class ClientLog {
                     \n\t FATAL\
                     \n\t OFF";
 
-                var layout = "\n\n Layout : \
+                let layout = "\n\n Layout : \
                     \n\t BASIC : default\
                     \n\t SIMPLE\
                     \n\t THIN\
@@ -149,7 +250,7 @@ class ClientLog {
                     \n\t HTML\
                     \n\t VOID - eq pattern - see pattern format";
 
-                var pattern = "\n\n Pattern format : \
+                let pattern = "\n\n Pattern format : \
                     \n\t %r - time in toLocaleTimeString format \
                     \n\t %p - log level \
                     \n\t %c - log category\
@@ -168,8 +269,8 @@ class ClientLog {
 
     static configHornetJsLogState() {
 
-        if (!(<any>window).getHornetJsLogState) {
-            (<any>window).getHornetJsLogState = function () {
+        if (!window.getHornetJsLogState) {
+            window.getHornetJsLogState = function () {
                 if (window.localStorage) {
                     console.log(
                         "\n Log Level :", window.localStorage.getItem(ClientLog.LOCAL_STORAGE_LOGGER_LEVEL_KEY) || ClientLog.defaultLogLevel,
@@ -191,16 +292,16 @@ class ClientLog {
                         "\n Remote Url :", ClientLog.defaultRemoteUrl
                     );
                 }
-            }
+            };
         }
     }
 
-    static setHornetJsLogLevel():any {
+    static setHornetJsLogLevel(): any {
         if (window.localStorage) {
-            if (!(<any>window).setHornetJsLogLevel) {
-                (<any>window).setHornetJsLogLevel = function (level:string) {
-                    var logLevel = ClientLog.testParamLocalStorage(level, ClientLog.defaultLogLevel);
-                    var newLogLevel = utils.log4js.Level.INFO.toLevel(logLevel, ClientLog.defaultLogLevel).toString();
+            if (!window.setHornetJsLogLevel) {
+                window.setHornetJsLogLevel = function (level: string) {
+                    let logLevel = ClientLog.testParamLocalStorage(level, ClientLog.defaultLogLevel);
+                    let newLogLevel = Utils.log4js.Level.INFO.toLevel(logLevel, ClientLog.defaultLogLevel).toString();
                     console.log("New log level :", newLogLevel, ". Reload page (F5) to activate");
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_LEVEL_KEY, newLogLevel);
                 };
@@ -212,11 +313,32 @@ class ClientLog {
         }
     }
 
-    static setHornetJsLogLayout():any {
+    /**
+     * Met a disposition une fonction sur le browser (window.setStacksErrorsLogs)
+     * Appelée depuis du code client, cette fonction permet de changer  l'option de paramétrage
+     * pour activer ou désactiver la generation des stacks dans les logs d'erreur
+     * Cette option est stockée dans le navigateur au niveau du localStorage,
+     * elle peut donc aussi être modifié manuellement par l'utilisateur
+     */
+    static setHornetJsStacksLog(): any {
         if (window.localStorage) {
-            if (!(<any>window).setHornetJsLogLayout) {
-                (<any>window).setHornetJsLogLayout = function (layout:string) {
-                    var logLayout = ClientLog.testParamLocalStorage(layout, ClientLog.defaultLogLayout);
+            if (!window.setHornetJsStacksLog) {
+                window.setHornetJsStacksLog = function (enableValue: string) {
+                    let enableStacks: string = (!enableValue || enableValue === "null" || enableValue === "undefined") ? ClientLog.defaultStackLogEnabled : enableValue;
+                    console.log("New value for enableStacksErrorsLog :", enableValue, ". Reload page (F5) to activate");
+                    window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_STACK_ENABLED, enableStacks);
+                };
+            }
+        } else {
+            console.log("ERREUR: Browser doesn't support LocalStorage");
+        }
+    }
+
+    static setHornetJsLogLayout(): any {
+        if (window.localStorage) {
+            if (!window.setHornetJsLogLayout) {
+                window.setHornetJsLogLayout = function (layout: string) {
+                    let logLayout = ClientLog.testParamLocalStorage(layout, ClientLog.defaultLogLayout);
 
                     console.log("New log layout :", logLayout, ". Reload page (F5) to activate");
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_LAYOUT_KEY, logLayout);
@@ -229,11 +351,11 @@ class ClientLog {
         }
     }
 
-    static setHornetJsRemoteLog():boolean {
+    static setHornetJsRemoteLog(): boolean {
         if (window.localStorage) {
-            if (!(<any>window).setHornetJsRemoteLog) {
-                (<any>window).setHornetJsRemoteLog = function (remote:boolean) {
-                    var logRemote = ClientLog.testParamLocalStorage(remote, ClientLog.defaultRemote);
+            if (!window.setHornetJsRemoteLog) {
+                window.setHornetJsRemoteLog = function (remote: boolean) {
+                    let logRemote = ClientLog.testParamLocalStorage(remote, ClientLog.defaultRemote);
 
                     console.log("Remote log (De)Activation :", logRemote, ". Reload page (F5) to activate");
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_REMOTE_KEY, logRemote.toString());
@@ -246,13 +368,13 @@ class ClientLog {
         }
     }
 
-    static setHornetJsRemoteLogLayout():any {
+    static setHornetJsRemoteLogLayout(): any {
         if (window.localStorage) {
-            if (!(<any>window).setHornetJsRemoteLogLayout) {
-                (<any>window).setHornetJsRemoteLogLayout = function (layout:string, threshold:string, timeout:string) {
-                    var logLayout = ClientLog.testParamLocalStorage(layout, ClientLog.defaultRemoteLogLayout);
-                    var logTreshold = parseInt(threshold) || ClientLog.defaultRemoteLogThreshold;
-                    var logTimeout = parseInt(timeout) || ClientLog.defaultRemoteLogTimeout;
+            if (!window.setHornetJsRemoteLogLayout) {
+                window.setHornetJsRemoteLogLayout = function (layout: string, threshold: string, timeout: string) {
+                    let logLayout = ClientLog.testParamLocalStorage(layout, ClientLog.defaultRemoteLogLayout);
+                    let logTreshold = parseInt(threshold) || ClientLog.defaultRemoteLogThreshold;
+                    let logTimeout = parseInt(timeout) || ClientLog.defaultRemoteLogTimeout;
 
                     console.log("New remote log layout :", logLayout, " thresold :", logTreshold, ", logTimeout :", logTimeout, ". Reload page (F5) to activate");
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_REMOTE_LAYOUT_KEY, logLayout.toString());
@@ -275,11 +397,11 @@ class ClientLog {
         }
     }
 
-    static setHornetJsRemoteLogUrl(defaultUrl:string):any {
+    static setHornetJsRemoteLogUrl(defaultUrl: string): any {
         if (window.localStorage) {
-            if (!(<any>window).setHornetJsRemoteLogUrl) {
-                (<any>window).setHornetJsRemoteLogUrl = function (url:string) {
-                    var logRemoteUrl = ClientLog.testParamLocalStorage(url, defaultUrl);
+            if (!window.setHornetJsRemoteLogUrl) {
+                window.setHornetJsRemoteLogUrl = function (url: string) {
+                    let logRemoteUrl = ClientLog.testParamLocalStorage(url, defaultUrl);
 
                     console.log("New remote url :", logRemoteUrl, ". Reload page (F5) to activate");
                     window.localStorage.setItem(ClientLog.LOCAL_STORAGE_LOGGER_REMOTE_URL_KEY, logRemoteUrl.toString());
@@ -292,14 +414,14 @@ class ClientLog {
         }
     }
 
-    static testParamLocalStorage(value:any, defaultValue:any) {
+    static testParamLocalStorage(value: any, defaultValue: any) {
         return (!value || value === "null" || value === "undefined") ? defaultValue : value;
     }
 
-    static getConsoleLayout(logLayout:string):any {
-        var newLayout = new utils.log4js.BasicLayout();
+    static getConsoleLayout(logLayout: string): any {
+        let newLayout = new Utils.log4js.BasicLayout();
         if (logLayout) {
-            var isPatternLayout;
+            let isPatternLayout;
             if (logLayout.indexOf("%") === -1) {
                 // on ne traite pas les patterns
                 logLayout = logLayout.toLocaleUpperCase();
@@ -308,20 +430,20 @@ class ClientLog {
                 isPatternLayout = true;
             }
             if (logLayout === "BASIC") {
-                newLayout = new utils.log4js.BasicLayout();
+                newLayout = new Utils.log4js.BasicLayout();
             } else if (logLayout === "SIMPLE") {
-                newLayout = new utils.log4js.SimpleLayout();
+                newLayout = new Utils.log4js.SimpleLayout();
             } else if (logLayout === "THIN") {
-                newLayout = new utils.log4js.ThinLayout();
+                newLayout = new Utils.log4js.ThinLayout();
             } else if (logLayout === "JSON") {
-                newLayout = new utils.log4js.JSONLayout();
+                newLayout = new Utils.log4js.JSONLayout();
             } else if (logLayout === "XML") {
-                newLayout = new utils.log4js.XMLLayout();
+                newLayout = new Utils.log4js.XMLLayout();
             } else if (logLayout === "HTML") {
-                newLayout = new utils.log4js.HtmlLayout();
+                newLayout = new Utils.log4js.HtmlLayout();
             } else {
                 if (isPatternLayout) {
-                    newLayout = new utils.log4js.PatternLayout(logLayout);
+                    newLayout = new Utils.log4js.PatternLayout(logLayout);
                 } else {
                     newLayout = ClientLog.getDefaultConsoleLayout();
                     console.warn("PATTERN LAYOUT NOT FOUND : '", logLayout, "' APPLY DEFAULT");
@@ -335,7 +457,7 @@ class ClientLog {
     }
 
     static getDefaultConsoleLayout() {
-        var defaultLayout;
+        let defaultLayout;
         if (ClientLog.defaultRemote) {
             defaultLayout = ClientLog.getConsoleLayout(ClientLog.defaultRemoteLogLayout);
         } else {
@@ -344,5 +466,3 @@ class ClientLog {
         return defaultLayout;
     }
 }
-
-export = ClientLog;

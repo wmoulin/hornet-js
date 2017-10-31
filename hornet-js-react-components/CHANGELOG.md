@@ -1,0 +1,434 @@
+# hornet-js-react-components-5.1.0
+-	213330	-	Suppression des getCellTitle sur le datebodycell et yesnobodycell Err:510 inutile niveau accessibilité
+-	213329	-	Complement à la méthode select des tabs
+-	213327	-	Fix propagation deleteAll & select test
+-	213317	-	correction problème grid- incorrect avec groupclass contenant des
+-	213303	-	ajout methode updateClient pour les pages deja rendu
+-	213300	-	refactoring ref
+-	213191	-	Maj regex tsconfig
+-	213188	-	autocomplete comportement qui se rapproche un peu plus du select html natif
+-	213168	-	correction bug reset calendarField
+-	213164	-	correctif bouton reset sur les composants InputField et TextareaField
+-	213158	-	supression des var suite a la montée de version de React-16.0.0
+-	213149	-	correction bouton action en édition
+-	213128	-	suppression var react-16.0.0 + correctif menu contextuel
+-	213124	-	correction commentaire
+-	213121	-	supression var
+-	213116	-	Table: suppression de la propriété alignement
+-	213111	-	correction du disabled sur les action cell des tableau en édition
+-	213054	-	correction toogle
+-	213042	-	corrections de style de colonnes dans la tableau
+-	213026	-	Migration React@16.0.0
+-	213020	-	correction gestion clavier autocomplete multiple
+-	213000	-	style colum + Format
+-	212988	-	Gestion action tableau
+-	212986	-	ajout de doc et de super dans l'autocomplete + clean code mort
+-	212983	-	Correction bug mantis 64253
+-	212982	-	Complement à la méthode select des tabs
+-	212980	-	Refactoring + Format
+-	212889	-	Correction bug sur la petit croix lorsque le champ est desable ou readonly
+-	212865	-	I18N shortcuts
+-	212863	-	Format
+-	212849	-	Ajout d'un option selectAll
+-	212833	-	Correction test qui ne fonctionne plus
+-	212831	-	[hornet-js][Accordions] Ajouts de méthodes exécutées sur ouverture/fermeture des accordions + TU + DOC
+-	212828	-	correction des tests trie qui ne fonctionnaient plus
+-	212827	-	evol event after setState
+-	212787	-	Complement à la méthode select des tabs
+-	212784	-	correction compile 2.5
+-	212765	-	Ajout de getter pour les tabs
+-	212761	-	correction style des cellules dans la table
+-	212755	-	[hornet-js][CalendarField] Test unitaire change value
+-	212752	-	ajout onValueChange
+-	212751	-	suppression d'un log de test
+-	212739	-	ajout onClickclose sur keyDown
+-	212722	-	correction du fonctionnement de l'autocomplete
+-	212693	-	suppression de la validation du choix lors d'un clic sur ENTER dans l'autocomplete
+-	212671	-	[hornet-js][table][mantis 0063987] Prise en compte du 0 pour les cellules number
+-	212669	-	correction setReadOnly abstractform
+-	212662	-	fix autocomple et shift + tab
+-	212651	-	ajout props notificationId et dialogId
+-	208816	-	[5.1.0-final] - fix bug lié aux notifications
+-	208812	-	[5.1.0-final] - Tableau: optimisation perfs tableau
+-	208845	-	ajout button area centrée
+-	208825	-	ajout de la croix de reset sur les champs calendarfield et textarea
+-	208876	-	[hornet-js] Correction affichage colonne
+-	209120	-	[5.1.0-final] - optimisation champs formulaire resettable
+-	209104	-	[5.1.0-final] - uniformisation des picto + optimisation tableau + revue dataSource Err:510 selectedItems
+-	209361	-	[5.1.0-final] - Mise en place tableau editable
+-	209358	-	filtre saisie et gestion errur de format
+-	209359	-	Composant Table: renommage classe et refactoring
+-	209320	-	Suppression code pour les boutons par defaut du form
+-	209418	-	[5.1.0-final] - ajout class datatable-loaded afin d'indiquer le tableau a été chargé
+-	209424	-	[5.1.0-final] - revue mecanisme loaderTable
+-	209364	-	CalendarField: ajout copy paste
+-	209465	-	CalendarField: modif concumber
+-	209507	-	[5.1.0-final] - Tableau editable sur fiche Partenaire
+-	209498	-	Composant Tabs: Ajout d'un onglet asynchrone
+-	209547	-	Composant Tabs: Ajout d'un test pour le composant
+-	209468	-	correction mantis 63546 : positionement picto sticky
+-	209526	-	mantis 0063545: Admin > Liste de secteurs > pas de message de confirmation d'annulation
+-	209585	-	[5.1.0-final] - tableau éditable: ctrl + c sur un champ inputé
+-	209562	-	[5.1.0-final] - tableau éditable: gestion des erreurs dans les accordions
+-	209596	-	[5.1.0-final] - tableau: suppression des style: {width: NaNem }
+-	209553	-	ajout de la local pour le formatage du message (corrige la mantis 63499)
+-	209663	-	[5.1.0-final] - mise en place du mode readOnly des boutons d'action au niveau du header du tableau
+-	209683	-	ajout des traces du spinner
+-	209677	-	test tableau editable
+-	209875	-	Fix de la visibilité dans la props pour les éléments tab
+-	210045	-	Augmentation du throttle 500->1000
+-	210057	-	Correction de la récupération de la valeur input
+-	210013	-	nouvelle feature : ajout et suppression des onglets (hey wouais mec!)
+-	210129	-	blindage autocomplete partie 1
+-	210390	-	63808:00:00 affichage par accordion d'une fiche partenaire VIP sur un F5
+-	210426	-	ajout de tests supplémentaires dans l'autocomplete
+-	210521	-	[hornet-js][266] AutoCompletes liés - déclencher select du master sur résultat null pour slave affichant liste vide
+-	210569	-	[hornet-js][266] AutoCompletes liés - sortie autocomplete avec shift + tab
+-	210635	-	ajout d'une classe de test pour la pagination des tableaux
+-	210598	-	correction US Err:510 notification: impossible de nettoyer warning et messages persos
+-	210729	-	autocomplete + modal: ajout d'une propriété withoutOverflow pour la modal afin de pouvoir y intégrer un autocomplete
+-	210743	-	AutocompleteField: fix private Err:510 protected pour la methode validateSelectedValue
+-	210781	-	Autocomplete private Err:510 protected pour la méthode changeSelectedChoiceWhenOneChoice
+-	210806	-	blindage autocomplete
+-	210789	-	changement du controle clavier keyPress par keyDown
+-	210880	-	- dom-adapter: Passage du multipleElement en protected
+-	211018	-	[hornet-js][282] Test unitaires autocomplete liés
+-   210954	-	Correctif Tableau: comportement checkboxAll
+-   210977	-	Composant Accordion: error sur notification manuelle pas meme format que validation
+-	211114	-	Correction propriété var avec les composants wrappés + autocomplete Err:510 methode filterText
+-	211085	-	Gestion otherKeys
+-	211120	-	skips tests obsolètes
+-	211132	-	Test calendar-field
+-	211067	-	test chart.js
+-	211215	-	CalendarField: Ajout de caractère non autorisé +", "¬ et ´
+-	211266	-	correction bug perte de la pagination courant lorsqu'on change de page
+-	211356	-	[hornet-js][266] Autocompletes liés - fix setCurrentValue
+-	211321	-	FIX test normaux avec skip des tests obsolètes
+-	211323	-	CalendarField: Modification de la règle de contrôle et correction crtl + a/x/v qui
+-	211531	-	ajout methode onBlur et onFocus sur composant InputField
+-	211666	-	TextAreaField: [hornet-js][BFR] fix
+-	211668	-	ajout props title
+-	211667	-	correction role et ajout de title dans les dropdown
+-	211587	-	EVOL : modifier title des boutons de sorte que le nombre de page y figure
+-	211682	-	MAJ onglets
+-	211754	-	correctif textarea
+-	211759	-	Profondeur pour les selectFields
+-	211896	-	AutocompleteField: correctif trackInputFieldFromChildren
+-	211847	-	Gestion du loader sur les onglets cablés avec datasource
+-	211949	-	Ajout d'une classe parametrable
+-	211947	-	correction aria accessibilité
+-	211946	-	Evol ajout du total dans le pager
+-	212064	-	Correctif id préfixé à undefined
+-	212106	-	correction pour tu
+-	212096	-	nouveau dts react
+-	212296	-	ajout ajv keyword
+-	212292	-	ajout heritage props
+-	212264	-	deplacer dans hornet-layout de l'appli
+-	212288	-	Possibilite de surcharger le composant
+-	212294	-	possibilite heritage
+-	212420	-	Ajout condition defaultSort lors du trie
+-	212404	-	correctif checkbox en readonly: ajout class + style
+-	212377	-	correctif edition in line: boutons actions à présent disabled pour la ligne en cours d'édition
+-	212343	-	Correctif layout-switcher Err:510 probleme de resize lié au cache sur les requetes GET: ajout de la propriété nocached: true dans le service
+-	212321	-	Correction bug ie menu qui se ferme pas quand on clic sur un lien
+-	212388	-	correction cycle de vie sur le bouton
+-	212333	-	nettoyage paginate initPaginator
+-	212391	-	retour suite test perf
+-	212400	-	selectField: correctif methode private Err:510 protected
+-	212304	-	suppression donut
+-	212512	-	ajout main index
+-	212508	-	ajout template title
+-	212506	-	coupure ref cicle
+-	212446	-	Fix différents probs autocomplete normal/multiple
+-	212514	-	latest autocomplete fix by mfr
+-   211409	-	Update tsconfig.json: ajout conf src
+-   211570	-	mep config source typescript
+-	212100	-	Update tsconfig.json: typescript src
+
+
+
+# hornet-js-react-components-5.1.0-rc3
+
+-	62208	-	[Autocomplete - fiche partenaire] choix disponibles
+-	62430	-	[accessibilité] plan de page -  revoir le niveau des titres
+-	62433	-	[accessibilité] page creation partenaire - titre
+-	62434	-	[accessibilité] page creation partenaire - satisfaction client
+-	62436	-	[accessibilité] Boutons « Valider » et « Annuler »
+-	62441	-	[accessibilité] redondance attribut role
+-	62539	-	User > Recherche multi-critères > Messages d'erreur > il manque la majuscule du message d'erreur
+-	62539	-	User > Recherche multi-critères > Messages d'erreur > il manque la majuscule du message d'erreur
+-	62543	-	Invité > Menu Hors application > Présence d'un espace en trop dans les info bulle
+-	62544	-	Invité > Menu hors application > Plan de l'application > Info bulle : Terme "application" en double
+-	62544	-	Invité > Menu hors application > Plan de l'application > Info bulle : Terme "application" en double
+-	62545	-	Invité > Menu hors application > Politique d'accessibilité > Manque le "é" au sous titre "Teléchargement"
+-	62546	-	User > Résultat des partenaires > Tri sur la colonne VIP ne fonctionne pas
+-	62548	-	Admin > Fiche partenaire > il manque l'accent au verbe "selectionnés" dans le § Satisfaction client
+-	62550	-	User > impossible de consulter une fiche partenaire
+-	62552	-	Admin > Fiche partenaire en édition > Liste déroulante Nationalité > Autocompletion impossible
+-	62554	-	Admin > Fiche partenaire en édition > § Satisfaction client > fautes d'orthographe "1 item sélectionnés"
+-	62555	-	Admin > Fiche partenaire en édition > le champ date de naissance n'est pas enregistré
+-	62557	-	Accueil > Administration > Secteurs > Liste des secteurs
+-	62558	-	Accueil > Liste (via recherche) > Lister les fournisseurs > KO lors de l'affichage de tous les résultats
+-	62558	-	Accueil > Liste (via recherche) > Lister les fournisseurs > KO lors de l'affichage de tous les résultats
+-	62632	-	Admin > Fiche partenaire en édition > les champs de saisie acceptent les espaces
+-	62634	-	Admin > Recherche date > Format en anglais
+-	62638	-	Admin / Modification fiche partenaire / Faute d'orthographe dans l'Info bulle Informations
+-	62721	-	Gestion des partenaires > Liste : Affichage liste des secteurs sous firefox
+-	62722	-	Administration > Secteurs : modale d'ajout masquée
+-	63065	-	[Retrogradage] Edition de fiche partenaire ne recharge pas tous les champs
+-	62253	-	[WR] Ajout de secteur - Page d'ajout de secteur cassée
+-	63260	-	User > Recherche partenaire > Absence phrase pour tableau vide
+-	63262	-	User > Recherche partenaire > Bouton annulé présent mais non cliquable
+-	HORNET510-174	-	[validation du formulaire]- Controle surface
+-	HORNET510-497	-	Correction Ajout partenaire
+-	HORNET510-163	-	correctif: recherche partenaire
+-	HORNET510-214	-	Applituto-lite: revoir model-dao
+-	HORNET510-215	-	templating cyclique
+-	HORNET510-225	-	autocomplete pays/ville
+-	HORNET510-218	-	Yeoman: Hornet
+-	HORNET510-219	-	Yeoman Hornet-lite
+-	HORNET510-132	-	BATCH: Créer un module à part entière
+-	61981	-	Doc routes
+-	62369	-	[Datasource] Mapping de colonnes dans la datasource d'un tableau non fonctionnel
+-	62370	-	DOC_installation nodejs
+-	62547	-	Admin > Edition d'un partenaire > Absence du fil d'Ariane sur la fiche
+-	62724	-	Champ de type mail : Accessibilité manque format de mail
+-	63028	-	404 sur partenaires/img/logo
+-	62239	-	Erreur serveur interne en actualisant la page de création profil USER
+-	62507	-	[ServiceRequest] Permettre à l'appellant du fetch d'être notifié lors des évènements "progress"
+-	HORNET510-180	-	Mode Mock - adapter middleware
+-	HORNET510-170	-	data-validator
+-	HORNET510-93	-	Utiliser les événement Datasource pour les éléments qui l'utilisent
+-	HORNET510-81	-	EVOL_MODE_MOCK
+-	HORNET510-157	-	COR: Evenement datasource
+-	HORNET510-137	-	DATASOURCE: reload ne fonctionne pas
+-	HORNET510-171	-	reload DataSource
+-	HORNET510-202	-	méthode d'initialisation d'un datasource
+-	HORNET510-64	-	EVOL_MODE_FULL_SPA
+-	HORNET510-229	-	logs nodeJs: préciser le context
+-	HORNET510-228	-	verifier Logs nodeJs
+-	HORNET510-122	-	ENVOI_MAIL
+-	HORNET510-139	-	isAuthenticated: passport-saml
+-	62234	-	[Notification] Permettre un niveau de notification "Alerte"/"Warning"
+-	62368	-	Information de colonne non visible
+-	62428	-	[accessibilité] texte alternatif picto tri colonne tableau
+-	62429	-	[accessibilité] bouton ouvrant une popup - ajout balise aria
+-	62431	-	[accessibilité] tooltip
+-	62432	-	[accessibilité] menu - Le focus ne revient pas sur le burger après saisie de la touche echap
+-	62435	-	[accessibilité] bouton upload
+-	62437	-	[accessibilité]  Title sur les champs d'autocomplétion
+-	62438	-	[accessibilité] attribut aria-describedby sur un label
+-	62439	-	[accessibilité] Notification
+-	62440	-	[accessibilité] redondance de label - formulaire
+-	62442	-	[accessibilité] choix de la langue
+-	62443	-	[accessibilité] Agrandir la page
+-	62444	-	[accessibilité] Tableaux - Titre de tableaux
+-	62445	-	[accessibilité] Tableaux - Utilisation du th
+-	62446	-	[accessibilité] Tableaux - Boutons dans les lignes du tableau
+-	62447	-	[accessibilité] Tableaux - Navigation dans le tableau
+-	62448	-	[accessibilité] Composant accordéon
+-	62528	-	[Tableau] Accès direct première et dernière page
+-	62945	-	Menu option configMenu ne marche plus
+-	62946	-	Tooltip correction option idSpan
+-	62948	-	Notification options titles
+-	62949	-	Layout switcher
+-	62950	-	Tabs suprression de props inutiles
+-	62968	-	[ACCORDION] Probleme d'espace et de cursor
+-	62970	-	[accessibilité] - gestion des erreurs de formulaire
+-	62972	-	[accessibilité] - format particulier des champs de formulaire
+-	63389	-	Sous FireFox,on a 3 petits points qui apparaissent dans le header du tableau lorqu'on selectionne d'afficher toutes les colonnes
+-	62251	-	[WR] Page de création partenaire - Onglet produit cassé
+-	62220	-	[SelectField] navigation clavier a revoir
+-	62222	-	[Switch] style switch
+-	62278	-	[EVOL][listbox] Ajouter une option interdisant le filtrage par saisie utilisateur des select box
+-	54929	-	La date sélectionnée à l'ouverture du calendrier peut être décalée
+-	61856	-	[ Composant Accordéon ] - Revoir la gestion des id
+-	62254	-	[WR] Recherche de partenaire - Le bouton transparent pour remonter en haut de l'écran se superpose au chevron "page suivante"
+-	62295	-	[UploadFile] revoir supression de fichier
+-	61990	-	[React] Key est une propriété unique
+-	HORNET510-170	-	Optimisation redessinement du composant tableau
+-	HORNET510-169	-	Creation colonne edition action
+-	HORNET510-171	-	transition
+-	HORNET510-133	-	add sticky header
+-	HORNET510-168	-	Creation colonne editable
+-	HORNET510-173	-	[RGA] -Gestion de la navigation clavier 
+-	HORNET510-146	-	Suppression lien pour USER
+-	HORNET510-175	-	[Notification]- gestion des message de notification
+-	HORNET510-242	-	[Accesibilité]- CSS
+-	HORNET510-227	-	Gestion du composant Notification depuis le composant table
+-	HORNET510-189	-	créer interface pour les composants
+-	HORNET510-214	-	ajout de l'attribut aria-describedby
+-	HORNET510-221	-	test UL-LI ChoixLangue
+-	HORNET510-201	-	mettre en place attribut aria-describedby
+-	HORNET510-284	-	[Arrow] mise en place Props
+-	HORNET510-317	-	Accéssibilité- navigation clavier dans la pagination et balise aria
+-	HORNET510-329	-	style header disabled
+-	HORNET510-281	-	Fix Bug du clic
+-	HORNET510-316	-	Chevrons début et fin de pagination
+-	HORNET510-315	-	Super Dropdown- input pour saisie de la page à paginer
+-	HORNET510-299	-	Changement Connexion -&gt; dropdown
+-	HORNET510-275	-	Bande blanche dans le header sous le spinner
+-	HORNET510-304	-	masquer le tableau par defaut
+-	HORNET510-300	-	Mettre à jour Doc Dropdown
+-	HORNET510-313	-	Super Dropdown- valeurs par défaut
+-	HORNET510-370	-	doc notification
+-	HORNET510-362	-	doc checkboxfield
+-	HORNET510-366	-	doc tooltip
+-	HORNET510-379	-	doc form
+-	HORNET510-358	-	doc top-button
+-	HORNET510-354	-	doc menu
+-	HORNET510-360	-	doc alert
+-	HORNET510-359	-	doc button
+-	HORNET510-380	-	doc header
+-	HORNET510-367	-	doc table
+-	HORNET510-377	-	doc Layoutswitcher
+-	HORNET510-363	-	doc radiofield
+-	HORNET510-381	-	doc changeLanguage
+-	HORNET510-374	-	doc User
+-	HORNET510-383	-	doc hornet-page
+-	HORNET510-373	-	doc tabs
+-	HORNET510-361	-	doc calendrier
+-	HORNET510-385	-	doc dropdown revoir ordre attr
+-	HORNET510-384	-	doc hornetcomponent
+-	HORNET510-388	-	doc modale
+-	HORNET510-387	-	doc spinner
+-	HORNET510-372	-	doc autocomplete
+-	HORNET510-449	-	Test minimun Dropdown
+-	HORNET510-494	-	Correction Supprimer ligne tableau
+-	HORNET510-536	-	configuration des mails dans application
+-	HORNET510-205	-	Test Karma
+-	HORNET510-167	-	Actions du tableau
+-	HORNET510-92	-	EVOL_UPGRADE_RC_CALENDAR
+-	HORNET510-80	-	EVOL_STICKY_HEADER
+-	HORNET510-18	-	EVOL_TAB_EDITABLE
+-	HORNET510-136	-	style menu
+-	HORNET510-94	-	Naviguer entre deux pages en transmettant des informations
+-	HORNET510-150	-	composant SWITCH
+-	HORNET510-158	-	transmission data entre pages
+-	HORNET510-160	-	autocomplete: i18n
+-	HORNET510-140	-	OVERLAY PAGE
+-	HORNET510-149	-	EVOL: chargement data champs input
+-	HORNET510-151	-	SEQUELIZE : Migration V4
+-	HORNET510-147	-	Menu: alternance couleur
+-	HORNET510-161	-	TABLE: corrections
+-	HORNET510-146	-	Table: evolution pager
+-	HORNET510-162	-	dropdown: correctifs
+-	HORNET510-156	-	TABLE: colonne visible/hidden dynamique
+-	HORNET510-135	-	STICKY_HEADER
+-	HORNET510-165	-	autocomplete &amp; accordion
+-	HORNET510-200	-	scroll en haut de page
+-	HORNET510-216	-	ToggleColumns: déclarer le composant dans le Header
+-	HORNET510-231	-	bouton radio: labelFor ne fonctionne pas
+-	HORNET510-232	-	Table: pouvoir déclarer une keyColumn avec plusieurs niveaux de profondeur
+-	HORNET510-223	-	Checkbox : mettre en fond blanc quand ce n?est pas sélectionné (fiche partenaire)
+-	HORNET510-233	-	dataSource: mettre en place multi-tri tableau
+-	HORNET510-224	-	uniformisation taille pictogramme
+-	HORNET510-240	-	Champ input: action réinitialiser
+-	HORNET510-227	-	accordion: 
+-	HORNET510-235	-	Tableau: navigation clavier/hiddenColumns
+-	HORNET510-234	-	Tableau: expand line
+-	HORNET510-217	-	Design Pager
+-	HORNET510-437	-	mocha class
+
+
+# hornet-js-react-components-5.1.0-rc2
+
+-  0061977  -  hornet-js  -  Framework de validation du formulaire  -  fermé
+-  0062072  -  Hornet.js  -  Navigation: title page absent/incohérent - breadcrumb parfois absent - planAppli incomplet  -  fermé
+-  0062184  -  Hornet.js  -  [TABLE] pas de focus sur le cellules du header (navigation clavier)  -  fermé
+-  0062101  -  Hornet.js  -  [Recherche partenaire] titre tableau  -  fermé
+-  0062275  -  Hornet.js  -  [UploadField] problème de suppression du fichier  -  fermé
+-  0061770  -  applitutoriel-js  -  [ Ecran fiche partenaire] - Redirection vers l'écran de création partenaire inopérant lors de la saisie d'un partenaire  -  fermé
+-  0062276  -  Hornet.js  -  [ergonomie] Utilisation du label technique au lieu du label affiché à l'utilisateur en cas de saisie erronée  -  fermé
+-  0062274  -  Hornet.js  -  [i18n] Mettre à jour  les libellés en fonction de la langue sélectionnée  -  fermé
+-  0062250  -  Hornet.js  -  [WR] Le logo de l'application tutoriel (et le titre) sont invisible mais présents et cliquable (espace blanc)  -  fermé
+-  0061996  -  Hornet.js  -  [Liste secteur] EventEmitter memory leak  -  fermé
+-  0062115  -  applitutoriel-js-lite  -  hornet-lite : nouvelle page de login  -  fermé
+-  0062206  -  Hornet.js  -  [Navigation Page] - imposible de naviguer dans l'application une fois qu'on clique sur le titre  -  fermé
+-  0062277  -  Hornet.js  -  [composant USER] le picto User n'apparaît pas que lorsque la page est chargée sur un F5  -  fermé
+-  0062244  -  Hornet.js  -  "[IHM] bouton ""Choisir un fichier"" incorrect"  -  fermé
+-  0062156  -  Hornet.js  -  [Table] customRowClass  -  fermé
+-  0062157  -  Hornet.js  -  [table] action prioritaires  -  fermé
+-  0062182  -  Hornet.js  -  [Recherche partenaire] CheckBodyCell  -  fermé
+-  0062190  -  Hornet.js  -  [liste secteurs]MenuItem cycle de vie react  -  fermé
+-  0061853  -  hornet-js  -  [ Composant Accordéon ] - revoir graphisme du composant  -  fermé
+-  0062138  -  Hornet.js  -  [Accueil]  -  fermé
+-  0062185  -  Hornet.js  -  [AUTOCOMPLETE] - listes liées  -  fermé
+-  0061828  -  Hornet.js  -  Aspect bouton  -  fermé
+-  0062134  -  Hornet.js  -  [Composant tableau] - positionnement des icones d'action, Css, Ajout de l'icone de trie  -  fermé
+-  0062189  -  Hornet.js  -  [TABLE] - Ajouter l'icone sur la colonne qui est trié par défaut au premier chargement des données.  -  fermé
+-  0062222  -  Hornet.js  -  [Switch] style switch  -  fermé
+-  0062215  -  Hornet.js  -  "[Composant tableau ] - Bordure right visible   -   le titre des colonnes du tableau deborde"  -  fermé
+-  0062221  -  Hornet.js  -  [SelectField] style de la fleche du selectfield  -  fermé
+-  0062219  -  Hornet.js  -  [CheckboxField] espace sous firefox ne marche pas  -  fermé
+-  0062186  -  Hornet.js  -  [FOOTER PAGE] alignement vertical + margin  -  fermé
+-  0061810  -  Hornet.js  -  alignement inline style  -  fermé
+-  0062187  -  Hornet.js  -  [NOTIFICATION] - notification d'erreur - CSS  -  fermé
+-  0062173  -  Hornet.js  -  [TABLE] tri sans data  -  fermé
+-  0062179  -  Hornet.js  -  [table] footer - changement de langue  -  fermé
+-  0062118  -  Hornet.js  -  [RadioField] setState(...): Can only update a mounting...  -  fermé
+-  0062114  -  hornet-js  -  Pagination cote serveur  -  fermé
+-  0062088  -  hornet-js  -  [Composant accordion] - Formulaire en cours d'édition  -  fermé
+-  0062107  -  Hornet.js  -  [Recherche partenaire] style calendar  -  fermé
+-  0062108  -  Hornet.js  -  [Creation partenaire] style autocomplete  -  fermé
+-  0061813  -  Hornet.js  -  Problème d'affichage du footer  -  fermé
+-  0062010  -  Hornet.js  -  [Recherche partenaire] radio-field datasource  -  fermé
+-  0061867  -  hornet-js  -  [ Composant Aide ] : Texte non centré  -  fermé
+-  0061991  -  Hornet.js  -  [React] La méthode render ne doit pas mettre à jour de states  -  fermé
+-  0061993  -  Hornet.js  -  [React] Injection de markup en différence client/server  -  fermé
+-  0061995  -  Hornet.js  -  [React] CalendarField  -  fermé
+-  0061868  -  hornet-js  -  [ Composant Aide ] : Scrollbar non présente  -  fermé
+-  0061989  -  Hornet.js  -  [React] La propriété aria-role est invalid pour la balise <div>  -  fermé
+-  0061950  -  Hornet.js  -  [Fiche partenaire] [autocomplete] erreur dans la console  -  fermé
+-  0061852  -  hornet-js  -  [ Composant Accordéon ] - Problème de centrage du composant  -  fermé
+-  0061956  -  Hornet.js  -  [Fiche partenaire] navigation dans l'autocomplete a l'intérieur d'un accordéon  -  fermé
+-  0061949  -  Hornet.js  -  [Fiche partenaire - editer] problème contenu autocomplete accordéon  -  fermé
+-  0061866  -  hornet-js  -  [ Composant Onglet ] - Les chevrons non visibles lorsque l'onglet est superposé  -  fermé
+-  0061870  -  hornet-js  -  [ Composant Aide ] : Sortie de la modale  -  fermé
+-  0061934  -  Hornet.js  -  [Page liste secteur] Création de secteur  -  fermé
+-  0061922  -  Hornet.js  -  Affichage produit partenaire  -  fermé
+-  0061878  -  hornet-js  -  webPackDevServerMode : supprimer toutes les références  -  fermé
+-  0061851  -  applitutoriel-js  -  Exemple sur le composant Accordeon  -  fermé
+-  0061862  -  Hornet.js  -  Problème champs obligatoire recherche partenaire  -  fermé
+-  0061855  -  applitutoriel-js  -  [ composant Liste déroulante à choix multiple ] : hover pas bien centré  -  fermé
+-  0061678  -  Hornet.js  -  [HeaderComponent] Evolution des props du composant  -  fermé
+-  0061860  -  Hornet.js  -  Numéro de page dans les tableau  -  fermé
+-  0061854  -  hornet-js  -  [ Composant Tooltip ] - cadre du hover  -  fermé
+-  0061833  -  Hornet.js  -  Bouton réinitialiser ne fonctionne pas  -  fermé
+-  0061863  -  hornet-js  -  [ Composant Input ] - Zone de saisie mal cadré  -  fermé
+-  0061861  -  hornet-js  -  [ Composant TextArea ] : marge de droit et du bas non valide  -  fermé
+-  0061865  -  hornet-js  -  [ Création partenaire ] - Titre de la page  -  fermé
+-  0061859  -  hornet-js  -  [ Composant Upload ] - icon non décallé : propriété background-position-x ne fonctionne pas sous firefox  -  fermé
+-  0061858  -  Hornet.js  -  Ajout methode deleteAll dans les datasource  -  fermé
+-  0061771  -  hornet-js  -  Evolution Json5 -> 0.5.1  -  fermé
+-  0061800  -  Hornet.js  -  [hornet-js] Gestion des thêmes  -  fermé
+-  0061727  -  Hornet.js  -  Modification de l'icone des popus d'information  -  fermé
+-  0061769  -  applitutoriel-js  -  [ Ecran fiche partenaire] - satisfaction client en mode vip non modifiable alors qu'il est vide  -  fermé
+-  0061767  -  hornet-js  -  Fermeture menu  -  fermé
+-  0061778  -  hornet-js  -  Mise à jour source-map-support -> 0.4.14  -  fermé
+-  0061775  -  hornet-js  -  Refactoring Moment  -  fermé
+-  0061772  -  hornet-js  -  Dépendance memorystream inutilisée  -  fermé
+-  0061766  -  hornet-js  -  Uniformisation des dépendances bluebird  -  fermé
+-  0061675  -  hornet-man  -  [hornet-man] Documentation du composant user  -  fermé
+-  0061728  -  hornet-js  -  Affichage icône iformation navigation clavier  -  fermé
+-  0061730  -  hornet-js  -  Les boutons des exports des tableaux ne fonctionnent pas  -  fermé
+-  0061721  -  hornet-man  -  Documentation checkbox  -  fermé
+-  0061722  -  hornet-man  -  Documentation tooltip  -  fermé
+-  0061723  -  hornet-man  -  Documentation alert & modal  -  fermé
+-  0061720  -  Hornet.js  -  Affichage des erreurs sur le composant autocomplete  -  fermé
+-  0061692  -  hornet-man  -  Documentation formulaire  -  fermé
+-  0061658  -  hornet-man  -  Documentation uploadFileField  -  fermé
+-  0061674  -  hornet-man  -  [hornet-man] Documentation du composant header  -  fermé
+-  0061672  -  Hornet.js  -  Documentation radioField  -  fermé
+-  0061656  -  hornet-man  -  Documentation navigation  -  fermé
+-  0061653  -  hornet-js  -  Documentation datasource  -  fermé
+-  0061645  -  hornet-js  -  [UserComponent] navigation clavier et RGAA  -  fermé
+-  0061657  -  hornet-man  -  Documentation calendrier  -  fermé
+-  0062135  -  Hornet.js  -  [Full screen] - le passage en, mode full screen redessine le composant tableau  -  affecté
+-  0061869  -  hornet-js  -  [ Composant Aide ] : Bouton de fermeture Blanc  -  affecté
+-  0061981  -  Hornet.js  -  Doc routes  -  affecté
+
+
+# hornet-js 5.1.0
+
+- : [hornet] hornet-js-database : décorateur @Transactional pour la gestion des services transactionels sequelize

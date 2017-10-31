@@ -1,0 +1,51 @@
+{
+  "menu": [
+    {
+      "text": "cas1",
+      "url": "/cas1",
+      "visibleDansMenu": true,
+      "visibleDansPlan": true
+    },
+    {
+      "text": "cas2",
+      "url": "/cas2",
+      "visibleDansMenu": true,
+      "visibleDansPlan": true,
+      "rolesAutorises": ["admin"]
+    },
+    {
+      "text": "cas3",
+      "url": "/cas3",
+      "visibleDansMenu": true,
+      "submenu": [
+        {
+          "text": "cas3.1",
+          "url": "/cas3.1",
+          "visibleDansMenu": true,
+          "visibleDansPlan": true,
+          "rolesAutorises": ["user"]
+        }
+      ]
+    },
+    {
+      "text": "cas4",
+      "url": "/cas4",
+      "rolesAutorises": ["admin"],
+      "visibleDansMenu": true,
+      "submenu": [
+        {
+          "text": "cas4.1",
+          "url": "/cas4.1",
+          "visibleDansMenu": true,
+          "visibleDansPlan": true
+        }
+      ]
+    },
+    {
+      "text": "cas5",
+      "url": "/cas5",
+      "visibleDansMenu": false,
+      "visibleDansPlan": false
+    }
+  ]
+}

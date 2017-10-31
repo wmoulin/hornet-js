@@ -625,6 +625,21 @@
             }
             return false;
         },
+
+        /* Setter stack */
+        setStack: function(stack) {
+            this.stack = stack;
+        },
+
+        /* Setter stack */
+        getStack: function() {
+            return this.stack;
+        },
+
+        isStackLogEnabled: function() {
+            return window.localStorage.getItem("hornet-js.logger.stackEnabled");
+        },
+
         /** logging error messages */
         error: function (message, throwable) {
             if (this.isErrorEnabled()) {
@@ -1405,30 +1420,39 @@
                  func = "log";
              }
 
-             //le test sur firefox est nécessaire car par défaut groupCollapsed est considéré comme group
-             //ce qui rend la lecture des logs illisibles
-             var stack = new Error().stack;
-             if(stack && console.groupCollapsed && navigator.userAgent.indexOf("Firefox/") == -1) {
-                 var callLine = "";
+            // Seules les stacks pour les logs de type FATAL ou ERROR ( si activé via la cmd isStackErrorLogEnabled("true")) doivent être affichées
+            if(func === "error" || func === "fatal" || loggingEvent.logger.isStackLogEnabled() === "true") {
+                var stack = loggingEvent.logger.getStack();
+                if(!stack) {
+                   stack = new Error().stack;
+                }
 
-                 var stackStr = stack.split("\n");
-                 var callCountTotal = 20;
-                 var callCount = 0;
-                 for(var i in stackStr) {
-                     var call = stackStr[i];
-                     if(call.indexOf("Error") != 0  && call.indexOf("Log4js") == -1 && call.indexOf("Logger") == -1) {
-                         callLine += call + "\n";
-                         callCount++;
-                         if(callCount == callCountTotal)
-                             break;
-                     }
-                 }
-                 console.groupCollapsed("%c " + this.layout.format(loggingEvent), style);
-                 console.log(callLine);
-                 console.groupEnd();
-             }else{
-                 console[func].apply(console, ["%c "+this.layout.format(loggingEvent), style]);
-             }
+                //le test sur firefox est nécessaire car par défaut groupCollapsed est considéré comme group
+                //ce qui rend la lecture des logs illisibles
+                if (stack && console.groupCollapsed && navigator.userAgent.indexOf("Firefox/") == -1) {
+                    var callLine = "";
+
+                    var stackStr = stack.split("\n");
+                    var callCountTotal = 20;
+                    var callCount = 0;
+                    for (var i in stackStr) {
+                        var call = stackStr[i];
+                        if (call.indexOf("Error") != 0 && call.indexOf("Log4js") == -1 && call.indexOf("Logger") == -1) {
+                            callLine += call + "\n";
+                            callCount++;
+                            if (callCount == callCountTotal)
+                                break;
+                        }
+                    }
+                    console.groupCollapsed("%c " + this.layout.format(loggingEvent), style);
+                    console.log(callLine);
+                    console.groupEnd();
+                } else {
+                    console[func].apply(console, ["%c " + this.layout.format(loggingEvent), style]);
+                }
+            } else {
+                console[func].apply(console, ["%c " + this.layout.format(loggingEvent), style]);
+            }
         },
 
         /**

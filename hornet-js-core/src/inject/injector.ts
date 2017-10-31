@@ -1,0 +1,194 @@
+/**
+ * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * Ce logiciel est un programme informatique servant à faciliter la création
+ * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
+ * <p/>
+ * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * respectant les principes de diffusion des logiciels libres. Vous pouvez
+ * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+ * sur le site "http://www.cecill.info".
+ * <p/>
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordés par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concédants successifs.
+ * <p/>
+ * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement,  à l'utilisation,  à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur étant
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
+ * avertis possédant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+ * <p/>
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * termes.
+ * <p/>
+ * <p/>
+ * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * This software is a computer program whose purpose is to facilitate creation of
+ * web application in accordance with french general repositories : RGI, RGS and RGAA.
+ * <p/>
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ * <p/>
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
+ * <p/>
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
+ * <p/>
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ *
+ */
+
+/**
+ * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
+ *
+ * @author MEAE - Ministère de l'Europe et des Affaires étrangères
+ * @version v5.1.0
+ * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
+ * @license CECILL-2.1
+ */
+
+import { Class, AbstractClass } from "hornet-js-utils/src/typescript-utils";
+import { Side, Scope } from "src/inject/injectable";
+import { Utils } from "hornet-js-utils";
+import { TechnicalError } from "hornet-js-utils/src/exception/technical-error";
+import { CodesError } from "hornet-js-utils/src/exception/codes-error";
+import { Register } from "hornet-js-utils/src/common-register";
+import * as _ from "lodash";
+
+var logger = Register.getLogger("hornet-js-utils.bean-utils");
+const ID_NAME = "__injectId__";
+
+export const INJECT_METADATA_KEY = "injectParameters";
+
+export class Injector {
+
+    private static registry: {[key: string]: any} = {};
+
+    /**
+     * Retourne la classe enregistrée pour une clé donnée
+     * @param  key {any} clé de stockage
+     * @param  side {Side} complément de clé correspondant au côté d'exécution (Client ou Serveur)
+     * @returns La valeur stockée
+     * */
+    static getRegistered(key:Class<any> | AbstractClass<any> | string, side?:Side): any {
+        if (!side)  {
+            side = Utils.isServer ? Side.SERVER : Side.CLIENT;
+        }
+        let id = key;
+        
+        if (!_.isString(key)) {
+            id = key[ID_NAME];
+        }
+        
+        return Injector.registry[id as string] && Injector.registry[id as string][side];
+    }
+
+    /**
+     * Suppression la classe enregistrée pour une clé donnée
+     * @param  key {any} clé de stockage
+     * @param  side {Side} complément de clé correspondant au côté d'exécution (Client ou Serveur)
+     * */
+    static removeRegistered<T>(key:Class<any> | AbstractClass<any> | string, side?:Side): void {
+        if (!side)  {
+            side = Utils.isServer ? Side.SERVER : Side.CLIENT;
+        }
+
+        let id = key;
+        
+        if (!_.isString(key)) {
+            id = key[ID_NAME];
+        }
+
+        if (!id) {
+            logger.error("Error: Injector Bean " + key + " must be registered before remove.");
+            throw new TechnicalError('ERR_TECH_' + CodesError.INJECT_NOT_DEFINED_ERROR, {errorMessage: CodesError.DEFAULT_ERROR_MSG});
+        }
+        
+        delete Injector.registry[id as string][side];
+    }
+
+    /**
+     * Enregistre une classe suivant une clé
+     * @param  key {any} clé de stockage
+     * @param  side {Side} complément de clé correspondant au côté d'exécution (Client ou Serveur)
+     * @returns La valeur stockée
+     * */
+    static register(key:Class<any> | AbstractClass<any> | string, value: any, scope:Scope=Scope.VALUE, side?:Side) {
+        
+        if (!side)  {
+            side = Utils.isServer ? Side.SERVER : Side.CLIENT;
+        } else if ((side as Side == Side.SERVER && Utils.isServer) || (side == Side.CLIENT && !Utils.isServer)) {
+            logger.trace("Error: Injector Key <" + key + "> scope <" + scope + "> wrong Side <" + (side == Side.CLIENT ? "client" : "server") + ">");
+        }
+
+        let id = key;
+        
+        if (!_.isString(key)) {
+            id = key[ID_NAME];
+        }
+
+        if (!id) {
+            id = key[ID_NAME] = _.uniqueId();
+        }
+        
+        let registered = Injector.registry[id as string] && Injector.registry[id as string][side];
+        if (registered) {
+            logger.error("Error: Injector Bean " + key + " is already registered.");
+            throw new TechnicalError('ERR_TECH_' + CodesError.INJECT_ALREADY_DEFINED_ERROR, {errorMessage: CodesError.DEFAULT_ERROR_MSG});
+        }
+
+        registered = Injector.registry[id as string];
+        if (!registered) {
+            Injector.registry[id as string] = {};
+        }
+        try {
+            switch(scope) {
+                case Scope.VALUE:
+                    Injector.registry[id as string][side] = value;
+                    break;
+                case Scope.SINGLETON:
+                    Injector.registry[id as string][side] = new value();
+                    break;
+                case Scope.PROTOTYPE:
+                    Object.defineProperty(Injector.registry[id as string], side+"", {
+                        get : () => { return new value(); }, configurable: true})
+                    break;
+            }
+        } catch (e) {
+            logger.error("Error: Injector Key <" + key + "> scope <" + scope + ">. cause :", e);
+            throw new TechnicalError('ERR_TECH_' + CodesError.INJECT_ERROR, {errorMessage: CodesError.DEFAULT_ERROR_MSG});
+        }
+    }
+
+}

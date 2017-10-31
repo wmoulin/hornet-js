@@ -1,0 +1,33 @@
+{
+  "contextPath": "applitutoriel",
+  "welcomePage": "/accueil",
+  "database": {
+    "configTest": {
+      "basename": "sequelizeOne",
+      "username": "test",
+      "password": "test",
+      "options": {
+        "dialect": "sqlite",
+        "pool": {
+          "max": 15,
+          "min": 0,
+          "idle": 1000
+        }
+      }
+    },
+    "configTestBis": {
+      "basename": "sequelizeTwo",
+      "username": "test",
+      "password": "test",
+      "options": {
+        "dialect": "sqlite",
+        "pool": {
+          "max": 15,
+          "min": 0,
+          "idle": 1000
+        }
+      }
+
+    }
+  }
+}
