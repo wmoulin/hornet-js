@@ -1,0 +1,27 @@
+title Rendu d'une page
+
+participant Client as client
+participant RouterPage (client) as router_page_client
+participant Vue (client) as vue_client
+participant RouterData (node) as router_data
+participant Action (node) as action_node
+participant API as api
+
+
+
+
+client->+router_page_client: Appel sur '/{route}'
+router_page_client->+vue_client: Chargement composant Page
+vue_client->+router_data: prepareClient
+router_data->+action_node: <<execution>>
+
+activate action_node
+
+action_node->api: <<appel>>
+api->action_node: <<retour données>>
+
+action_node->router_data: <<fin execution>>
+router_data->vue_client: <<retourne données>>
+
+
+end

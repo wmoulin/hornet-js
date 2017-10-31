@@ -1,0 +1,25 @@
+title Rendu d'une page côté serveur
+
+participant Client as client
+participant Routeur (srv) as routeur_srv
+participant Vue (srv) as vue_srv
+
+
+client->+routeur_srv: Appel sur '/xxx'
+
+
+
+
+
+deactivate action_srv
+
+routeur_srv->vue_srv: <<rendu>>
+activate vue_srv
+vue_srv->vue_srv: Rendu composant
+
+vue_srv->routeur_srv: <<fin rendu>>
+deactivate vue_srv
+
+routeur_srv->routeur_srv: insertion dans page
+
+routeur_srv->client: <<rendu HTML>>
