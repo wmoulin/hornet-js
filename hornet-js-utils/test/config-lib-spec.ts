@@ -116,7 +116,7 @@ describe("ConfigLib", () => {
     });
     it("should find point value", () => {
         expect(conf.get("themeUrl"))
-            .to.be.equal("http://localhost:7777/5.0.0/intranet");
+            .to.be.equal("http://localhost:7777/5.1.0/intranet");
 
     });
     it("should throw error on inexistant direct value", () => {
@@ -161,6 +161,6 @@ describe("ConfigLib", () => {
         let realValue = conf.getOrDefault("themeUrl", notExpectedValue);
 
         // Assert
-        expect(realValue).to.be.equals("http://localhost:7777/5.0.0/intranet");
+        expect(realValue).to.be.equals("http://localhost:7777/5.1.0/intranet");
     });
 });

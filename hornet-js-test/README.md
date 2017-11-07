@@ -122,7 +122,7 @@ Logger.prototype.buildLogger = TestLogger.getLoggerBuilder({
 });
 import { Utils } from "hornet-js-utils";
 Utils.setConfigObj({
-    "themeName": "hornet-themes-intranet",
+    "themeName": "hornet-themes",
 });
 
 

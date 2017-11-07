@@ -38,7 +38,7 @@
     "secure": false
     //"alwaysSetCookie": false
   },
-  "themeUrl": "http://localhost:7777/5.0.0/intranet",
+  "themeUrl": "http://localhost:7777/5.1.0/intranet",
   "security": {
     "enabled": true,
     "hpp": true,
