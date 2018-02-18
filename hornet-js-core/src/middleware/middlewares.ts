@@ -154,6 +154,8 @@ export class AbstractHornetMiddleware {
     static APP_CONFIG: ServerConfiguration;
     protected prefix: string;
     protected middlewareFunction: ErrorRequestHandler | RequestHandler;
+    protected config: ServerConfiguration;
+    
 
     /**
      * Constructeur
@@ -161,9 +163,10 @@ export class AbstractHornetMiddleware {
      * @param middlewareFunction
      * @param prefix
      */
-    constructor(middlewareFunction?: ErrorRequestHandler | RequestHandler, prefix?: string) {
+    constructor(middlewareFunction?: ErrorRequestHandler | RequestHandler, prefix?: string, config?: ServerConfiguration) {
         this.prefix = prefix;
         this.middlewareFunction = middlewareFunction;
+        this.config = config;
     }
 
     /**
@@ -176,6 +179,18 @@ export class AbstractHornetMiddleware {
             app.use(this.prefix, this.middlewareFunction);
         } else {
             app.use(this.middlewareFunction);
+        }
+    }
+
+}
+
+export class AbstractHornetSubMiddleware extends AbstractHornetMiddleware {
+
+    public insertRouterMiddleware(router: express.Router){
+        if (this.prefix !== null && this.prefix !== undefined) {
+            router.use(this.prefix, this.middlewareFunction as any);
+        } else {
+            router.use(this.middlewareFunction as any);
         }
     }
 }
@@ -209,6 +224,22 @@ export class HornetContextInitializerMiddleware extends AbstractHornetMiddleware
             });
         });
     }
+}
+
+
+export class HornetContextInitializerSubMiddleware extends AbstractHornetSubMiddleware {
+
+    
+    constructor(config: ServerConfiguration, prefix) {
+        let dataPathPrefix: string = Utils.buildContextPath("/" + prefix + (config || AbstractHornetMiddleware.APP_CONFIG).routesDataContext);
+        super((req, res, next) => {
+            
+            Utils.setCls("hornet.routeType",
+            parseUrl.original(req).pathname.indexOf(dataPathPrefix) === 0 ? RouteType.DATA : RouteType.PAGE);
+            next();
+        }, null, config);
+    }
+
 }
 
 // ------------------------------------------------------------------------------------------------------------------- //
@@ -658,10 +689,10 @@ export class InternationalizationMiddleware extends AbstractHornetMiddleware {
 
     private static logger: Logger = Utils.getLogger("hornet-js-core.middlewares.InternationalizationMiddleware");
 
-    constructor() {
+    constructor(config?: ServerConfiguration) {
 
         super((req, res, next: Function) => {
-            let appConfig = AbstractHornetMiddleware.APP_CONFIG;
+            let appConfig = this.config || AbstractHornetMiddleware.APP_CONFIG;
 
             let isI18nInSession: boolean = req.session && req.session.i18n;
             let localeI18n: II18n = (isI18nInSession) ? req.session.i18n : Utils.config.getOrDefault("localeI18n", {});
@@ -684,7 +715,7 @@ export class InternationalizationMiddleware extends AbstractHornetMiddleware {
             }
 
             next();
-        });
+        }, null, config);
     }
 }
 
@@ -783,15 +814,31 @@ import { RouterServer } from "src/routes/router-server";
 export class RouterServerMiddleware extends AbstractHornetMiddleware {
     private router: RouterServer;
 
-    constructor() {
-        super();
-        let appConfig = AbstractHornetMiddleware.APP_CONFIG;
+    constructor(config: ServerConfiguration) {
+        super(null, null, config);
+        let appConfig = this.config || AbstractHornetMiddleware.APP_CONFIG;
         this.router = new RouterServer(appConfig.defaultRoutesClass, appConfig.routesLoaderfn, appConfig.routesLoaderPaths, appConfig.routesDataContext);
     }
 
     public insertMiddleware(app) {
         app.use(this.router.pageMiddleware());
         app.use(Utils.config.getOrDefault("fullSpa.name", AbstractHornetMiddleware.APP_CONFIG.routesDataContext), this.router.dataMiddleware());
+    }
+
+}
+
+export class RouterServerSubMiddleware extends AbstractHornetSubMiddleware {
+    private router: RouterServer;
+
+    constructor(config: ServerConfiguration) {
+        super(null, null, config);
+        let appConfig = this.config || AbstractHornetMiddleware.APP_CONFIG;
+        this.router = new RouterServer(appConfig.defaultRoutesClass, appConfig.routesLoaderfn, appConfig.routesLoaderPaths, appConfig.routesDataContext);
+    }
+
+    public insertRouterMiddleware(router: express.Router) {
+        router.use(this.router.pageMiddleware());
+        router.use(Utils.config.getOrDefault("fullSpa.name", (this.config || AbstractHornetMiddleware.APP_CONFIG).routesDataContext), this.router.dataMiddleware());
     }
 }
 
@@ -919,6 +966,79 @@ export class DataRenderingMiddleware extends AbstractHornetMiddleware {
     }
 }
 
+export class DataRenderingSubMiddleware extends AbstractHornetSubMiddleware {
+    private static logger: Logger = Utils.getLogger("hornet-js-core.middlewares.DataRenderingMiddleware");
+
+    constructor() {
+        super((req: Request, res: Response, next: Function) => {
+            try {
+                let routeInfos: RouteInfos = Utils.getCls("hornet.routeInfos");
+
+                // route de type 'DATA' uniquement
+                if (Utils.getCls("hornet.routeType") === RouteType.DATA) {
+
+                    let dataRouteInfos = routeInfos as DataRouteInfos;
+
+                    if (!dataRouteInfos) {
+                        let mess = "DataRouteInfos inexistant pour l'url : " + req.originalUrl;
+                        DataRenderingSubMiddleware.logger.warn(mess);
+                        throw new TechnicalError("ERR_TECH_UNKNOWN", {errorMessage: mess, httpStatus: 200});
+
+                    } else {
+
+                        let executor = new AsyncExecutor();
+                        executor.addElement(new AsyncElement((next: (err?: any, data?: any) => void) => {
+                            let action = new (dataRouteInfos.getAction())();
+                            action.req = req;
+                            action.res = res;
+                            action.attributes = routeInfos.getAttributes();
+                            if (dataRouteInfos.getService()) {
+                                action.service = new (dataRouteInfos.getService() as Class<any>)();
+                            }
+
+                            let validator = action.getDataValidator();
+                            if (validator) {
+                                let data = _.cloneDeep(action.getPayload());
+
+                                let validationRes = validator.validate(data);
+
+                                if (!validationRes.valid) {
+                                    DataRenderingSubMiddleware.logger.warn("Données invalides (la validation aurait dû être effectuée côté client) : ", validationRes.errors);
+                                    throw new ValidationError();
+                                }
+                            }
+
+                            let exec: Promise<any> = action.execute();
+
+                            exec.then((result: any | HornetResult) => {
+                                let newResult: HornetResult = (result instanceof HornetResult) ? result : new ResultJSON({data: result});
+                                return newResult.manageResponse(res);
+                            }).then((send) => {
+                                if (send) {
+                                    res.end();
+                                }
+                            }).catch((error) => {
+                                DataRenderingSubMiddleware.logger.error("Erreur de service..." + error);
+                                next(error);
+                            });
+                        }));
+
+                        executor.on("end", (err) => {
+                            if (err) {
+                                next(err);
+                            }
+                        });
+                        executor.execute();
+                    }
+                }
+
+            } catch (e) {
+                next(e);
+            }
+        });
+    }
+}
+
 import { BaseError } from "hornet-js-utils/src/exception/base-error";
 import { BusinessError } from "hornet-js-utils/src/exception/business-error";
 import { TechnicalError } from "hornet-js-utils/src/exception/technical-error";
@@ -1001,6 +1121,13 @@ export const DEFAULT_HORNET_MIDDLEWARES: Array<Class<AbstractHornetMiddleware>> 
     UnmanagedDataErrorMiddleware
 ];
 
+
+export const DEFAULT_HORNET_MODULE_MIDDLEWARES: Array<Class<AbstractHornetSubMiddleware>> = [
+    HornetContextInitializerSubMiddleware,
+    RouterServerSubMiddleware,
+    DataRenderingSubMiddleware
+];
+
 export class HornetMiddlewareList {
 
     public list = [];
@@ -1018,6 +1145,16 @@ export class HornetMiddlewareList {
                 ">> impossible d'insérer le nouveau middleware avant.");
         }
         this.list.splice(idx, 0, newMiddleware);
+        return this;
+    }
+
+    addRouterBefore(router: HornetRouter, middleware: Class<AbstractHornetMiddleware>) {
+        let idx = this.list.indexOf(middleware);
+        if (idx === -1) {
+            throw new Error("Le middleware de base n'a pas été trouvé dans le tableau de middlewares " +
+                ">> impossible d'insérer le nouveau middleware avant.");
+        }
+        this.list.splice(idx, 0, router);
         return this;
     }
 
@@ -1039,5 +1176,11 @@ export class HornetMiddlewareList {
         }
         this.list.splice(idx, 1);
         return this;
+    }
+}
+
+export class HornetRouter {
+    constructor(public prefix: string, public router:express.Router) {
+
     }
 }

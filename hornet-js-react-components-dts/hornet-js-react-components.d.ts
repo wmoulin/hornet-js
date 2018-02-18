@@ -159,14 +159,15 @@ declare module "hornet-js-react-components/src/img/picto" {
 }
 
 declare module "hornet-js-react-components/src/middleware/component-middleware" {
-	import { AbstractHornetMiddleware } from "hornet-js-core/src/middleware/middlewares";
-	export class PageRenderingMiddleware extends AbstractHornetMiddleware {
+	import { AbstractHornetSubMiddleware } from "hornet-js-core/src/middleware/middlewares";
+	import { ServerConfiguration } from "hornet-js-core/src/server-conf";
+	export class PageRenderingMiddleware extends AbstractHornetSubMiddleware {
 	    private static logger;
-	    constructor();
+	    constructor(config: ServerConfiguration);
 	}
-	export class UnmanagedViewErrorMiddleware extends AbstractHornetMiddleware {
+	export class UnmanagedViewErrorMiddleware extends AbstractHornetSubMiddleware {
 	    private static logger;
-	    constructor();
+	    constructor(config: ServerConfiguration);
 	}
 	
 }
@@ -1514,6 +1515,191 @@ declare module "hornet-js-react-components/src/widget/footer/footer-page" {
 	        workingZoneWidth: string;
 	    };
 	    constructor(props: FooterPageProps, context?: any);
+	    /**
+	     * @inheritDoc
+	     */
+	    render(): JSX.Element;
+	}
+	
+}
+
+declare module "hornet-js-react-components/src/widget/group/abstract-group-component" {
+	/**
+	 * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
+	 * <p/>
+	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+	 * <p/>
+	 * Ce logiciel est un programme informatique servant à faciliter la création
+	 * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
+	 * <p/>
+	 * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+	 * respectant les principes de diffusion des logiciels libres. Vous pouvez
+	 * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+	 * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+	 * sur le site "http://www.cecill.info".
+	 * <p/>
+	 * En contrepartie de l'accessibilité au code source et des droits de copie,
+	 * de modification et de redistribution accordés par cette licence, il n'est
+	 * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+	 * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+	 * titulaire des droits patrimoniaux et les concédants successifs.
+	 * <p/>
+	 * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+	 * associés au chargement,  à l'utilisation,  à la modification et/ou au
+	 * développement et à la reproduction du logiciel par l'utilisateur étant
+	 * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+	 * manipuler et qui le réserve donc à des développeurs et des professionnels
+	 * avertis possédant  des  connaissances  informatiques approfondies.  Les
+	 * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+	 * logiciel à leurs besoins dans des conditions permettant d'assurer la
+	 * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+	 * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+	 * <p/>
+	 * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+	 * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+	 * termes.
+	 * <p/>
+	 * <p/>
+	 * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
+	 * <p/>
+	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+	 * <p/>
+	 * This software is a computer program whose purpose is to facilitate creation of
+	 * web application in accordance with french general repositories : RGI, RGS and RGAA.
+	 * <p/>
+	 * This software is governed by the CeCILL license under French law and
+	 * abiding by the rules of distribution of free software.  You can  use,
+	 * modify and/ or redistribute the software under the terms of the CeCILL
+	 * license as circulated by CEA, CNRS and INRIA at the following URL
+	 * "http://www.cecill.info".
+	 * <p/>
+	 * As a counterpart to the access to the source code and  rights to copy,
+	 * modify and redistribute granted by the license, users are provided only
+	 * with a limited warranty  and the software's author,  the holder of the
+	 * economic rights,  and the successive licensors  have only  limited
+	 * liability.
+	 * <p/>
+	 * In this respect, the user's attention is drawn to the risks associated
+	 * with loading,  using,  modifying and/or developing or reproducing the
+	 * software by the user in light of its specific status of free software,
+	 * that may mean  that it is complicated to manipulate,  and  that  also
+	 * therefore means  that it is reserved for developers  and  experienced
+	 * professionals having in-depth computer knowledge. Users are therefore
+	 * encouraged to load and test the software's suitability as regards their
+	 * requirements in conditions enabling the security of their systems and/or
+	 * data to be ensured and,  more generally, to use and operate it in the
+	 * same conditions as regards security.
+	 * <p/>
+	 * The fact that you are presently reading this means that you have had
+	 * knowledge of the CeCILL license and that you accept its terms.
+	 *
+	 */
+	/**
+	 * hornet-js-react-components - Ensemble des composants web React de base de hornet-js
+	 *
+	 * @author MEAE - Ministère de l'Europe et des Affaires étrangères
+	 * @version v5.1.0
+	 * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
+	 * @license CECILL-2.1
+	 */
+	import { HornetComponentProps } from "hornet-js-components/src/component/ihornet-component";
+	import { HornetComponent }  from "hornet-js-react-components/src/widget/component/hornet-component";
+	export interface GroupComponentProps extends HornetComponentProps {
+	    id: any;
+	    key?: any;
+	}
+	export class GroupComponent<P extends GroupComponentProps, S extends GroupComponentProps> extends HornetComponent<P, S> {
+	    constructor(props?: P, context?: any);
+	    static generateKey(object: any, defaultKey?: string): string;
+	}
+	
+}
+
+declare module "hornet-js-react-components/src/widget/header/header-page" {
+	import { HornetComponentProps } from "hornet-js-components/src/component/ihornet-component";
+	import { HornetComponent }  from "hornet-js-react-components/src/widget/component/hornet-component";
+	export interface HeaderPageProps extends HornetComponentProps {
+	    /**
+	     * number
+	     * Hauteur en pixel du header en props pour afficher
+	     * la class css 'sticky'
+	     */
+	    scrollHeight?: number;
+	}
+	export class HeaderPage extends HornetComponent<HeaderPageProps, any> {
+	    /** ref */
+	    header?: any;
+	    height?: any;
+	    constructor(props: HeaderPageProps, context?: any);
+	    componentDidMount(): void;
+	    componentWillUnmount(): void;
+	    /**
+	     * @inheritDoc
+	     */
+	    render(): JSX.Element;
+	    /**
+	     *
+	     * @param element
+	     * @returns {boolean}
+	     */
+	    isInView(element: any): boolean;
+	    /**
+	     *
+	     * @param e
+	     */
+	    handleScroll: (e: any) => void;
+	}
+	
+}
+
+declare module "hornet-js-react-components/src/widget/icon/icon" {
+	import { HornetComponentProps } from "hornet-js-components/src/component/ihornet-component";
+	import { HornetComponent }  from "hornet-js-react-components/src/widget/component/hornet-component";
+	/**
+	 * Propriétés d'une icône
+	 */
+	export interface IconProps extends HornetComponentProps {
+	    /** Url de l'image */
+	    src: string;
+	    /** Texte alternatif */
+	    alt: string;
+	    /** Identifiant HTML de l'image rendue */
+	    idImg?: string;
+	    /** Class CSS de l'image */
+	    classImg?: string;
+	    /** Url du lien */
+	    url?: string;
+	    /** Texte d'infobulle du lien */
+	    title: string;
+	    /** Identifiant HTML du lien */
+	    idLink?: string;
+	    /** Classe CSS du lien */
+	    classLink?: string;
+	    /** Cible du lien */
+	    target?: string;
+	    /** Fonction déclenchée lorsque le bouton correspondant à l'icône est pressé ou cliqué */
+	    action?: () => void;
+	    /** Valeur de l'attribut HTML tabIndex à affecter au lien ou bouton correspondant à l'icône*/
+	    tabIndex?: number;
+	    /** Indicateur d'ouverture d'un popup suite à clic sur bouton */
+	    hasPopUp?: boolean;
+	}
+	/** Valeur de l'url par défaut lorsque la propriété url est vide */
+	export const EMPTY_URL: string;
+	/**
+	 * Composant Icône
+	 */
+	export class Icon extends HornetComponent<IconProps, any> {
+	    static defaultProps: {
+	        url: string;
+	    };
+	    /**
+	     * Retire le focus de l'élément une fois cliqué de façon à permettre de scroller ou mettre le focus sur les
+	     * notifications éventuellement présentées suite à l'action.
+	     * @param event évènement
+	     * @private
+	     */
+	    private iconOnClick(event);
 	    /**
 	     * @inheritDoc
 	     */
@@ -3892,191 +4078,6 @@ declare module "hornet-js-react-components/src/widget/form/upload-file-field" {
 	
 }
 
-declare module "hornet-js-react-components/src/widget/group/abstract-group-component" {
-	/**
-	 * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
-	 * <p/>
-	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
-	 * <p/>
-	 * Ce logiciel est un programme informatique servant à faciliter la création
-	 * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
-	 * <p/>
-	 * Ce logiciel est régi par la licence CeCILL soumise au droit français et
-	 * respectant les principes de diffusion des logiciels libres. Vous pouvez
-	 * utiliser, modifier et/ou redistribuer ce programme sous les conditions
-	 * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
-	 * sur le site "http://www.cecill.info".
-	 * <p/>
-	 * En contrepartie de l'accessibilité au code source et des droits de copie,
-	 * de modification et de redistribution accordés par cette licence, il n'est
-	 * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-	 * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-	 * titulaire des droits patrimoniaux et les concédants successifs.
-	 * <p/>
-	 * A cet égard  l'attention de l'utilisateur est attirée sur les risques
-	 * associés au chargement,  à l'utilisation,  à la modification et/ou au
-	 * développement et à la reproduction du logiciel par l'utilisateur étant
-	 * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
-	 * manipuler et qui le réserve donc à des développeurs et des professionnels
-	 * avertis possédant  des  connaissances  informatiques approfondies.  Les
-	 * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-	 * logiciel à leurs besoins dans des conditions permettant d'assurer la
-	 * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
-	 * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
-	 * <p/>
-	 * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
-	 * pris connaissance de la licence CeCILL, et que vous en avez accepté les
-	 * termes.
-	 * <p/>
-	 * <p/>
-	 * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
-	 * <p/>
-	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
-	 * <p/>
-	 * This software is a computer program whose purpose is to facilitate creation of
-	 * web application in accordance with french general repositories : RGI, RGS and RGAA.
-	 * <p/>
-	 * This software is governed by the CeCILL license under French law and
-	 * abiding by the rules of distribution of free software.  You can  use,
-	 * modify and/ or redistribute the software under the terms of the CeCILL
-	 * license as circulated by CEA, CNRS and INRIA at the following URL
-	 * "http://www.cecill.info".
-	 * <p/>
-	 * As a counterpart to the access to the source code and  rights to copy,
-	 * modify and redistribute granted by the license, users are provided only
-	 * with a limited warranty  and the software's author,  the holder of the
-	 * economic rights,  and the successive licensors  have only  limited
-	 * liability.
-	 * <p/>
-	 * In this respect, the user's attention is drawn to the risks associated
-	 * with loading,  using,  modifying and/or developing or reproducing the
-	 * software by the user in light of its specific status of free software,
-	 * that may mean  that it is complicated to manipulate,  and  that  also
-	 * therefore means  that it is reserved for developers  and  experienced
-	 * professionals having in-depth computer knowledge. Users are therefore
-	 * encouraged to load and test the software's suitability as regards their
-	 * requirements in conditions enabling the security of their systems and/or
-	 * data to be ensured and,  more generally, to use and operate it in the
-	 * same conditions as regards security.
-	 * <p/>
-	 * The fact that you are presently reading this means that you have had
-	 * knowledge of the CeCILL license and that you accept its terms.
-	 *
-	 */
-	/**
-	 * hornet-js-react-components - Ensemble des composants web React de base de hornet-js
-	 *
-	 * @author MEAE - Ministère de l'Europe et des Affaires étrangères
-	 * @version v5.1.0
-	 * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
-	 * @license CECILL-2.1
-	 */
-	import { HornetComponentProps } from "hornet-js-components/src/component/ihornet-component";
-	import { HornetComponent }  from "hornet-js-react-components/src/widget/component/hornet-component";
-	export interface GroupComponentProps extends HornetComponentProps {
-	    id: any;
-	    key?: any;
-	}
-	export class GroupComponent<P extends GroupComponentProps, S extends GroupComponentProps> extends HornetComponent<P, S> {
-	    constructor(props?: P, context?: any);
-	    static generateKey(object: any, defaultKey?: string): string;
-	}
-	
-}
-
-declare module "hornet-js-react-components/src/widget/header/header-page" {
-	import { HornetComponentProps } from "hornet-js-components/src/component/ihornet-component";
-	import { HornetComponent }  from "hornet-js-react-components/src/widget/component/hornet-component";
-	export interface HeaderPageProps extends HornetComponentProps {
-	    /**
-	     * number
-	     * Hauteur en pixel du header en props pour afficher
-	     * la class css 'sticky'
-	     */
-	    scrollHeight?: number;
-	}
-	export class HeaderPage extends HornetComponent<HeaderPageProps, any> {
-	    /** ref */
-	    header?: any;
-	    height?: any;
-	    constructor(props: HeaderPageProps, context?: any);
-	    componentDidMount(): void;
-	    componentWillUnmount(): void;
-	    /**
-	     * @inheritDoc
-	     */
-	    render(): JSX.Element;
-	    /**
-	     *
-	     * @param element
-	     * @returns {boolean}
-	     */
-	    isInView(element: any): boolean;
-	    /**
-	     *
-	     * @param e
-	     */
-	    handleScroll: (e: any) => void;
-	}
-	
-}
-
-declare module "hornet-js-react-components/src/widget/icon/icon" {
-	import { HornetComponentProps } from "hornet-js-components/src/component/ihornet-component";
-	import { HornetComponent }  from "hornet-js-react-components/src/widget/component/hornet-component";
-	/**
-	 * Propriétés d'une icône
-	 */
-	export interface IconProps extends HornetComponentProps {
-	    /** Url de l'image */
-	    src: string;
-	    /** Texte alternatif */
-	    alt: string;
-	    /** Identifiant HTML de l'image rendue */
-	    idImg?: string;
-	    /** Class CSS de l'image */
-	    classImg?: string;
-	    /** Url du lien */
-	    url?: string;
-	    /** Texte d'infobulle du lien */
-	    title: string;
-	    /** Identifiant HTML du lien */
-	    idLink?: string;
-	    /** Classe CSS du lien */
-	    classLink?: string;
-	    /** Cible du lien */
-	    target?: string;
-	    /** Fonction déclenchée lorsque le bouton correspondant à l'icône est pressé ou cliqué */
-	    action?: () => void;
-	    /** Valeur de l'attribut HTML tabIndex à affecter au lien ou bouton correspondant à l'icône*/
-	    tabIndex?: number;
-	    /** Indicateur d'ouverture d'un popup suite à clic sur bouton */
-	    hasPopUp?: boolean;
-	}
-	/** Valeur de l'url par défaut lorsque la propriété url est vide */
-	export const EMPTY_URL: string;
-	/**
-	 * Composant Icône
-	 */
-	export class Icon extends HornetComponent<IconProps, any> {
-	    static defaultProps: {
-	        url: string;
-	    };
-	    /**
-	     * Retire le focus de l'élément une fois cliqué de façon à permettre de scroller ou mettre le focus sur les
-	     * notifications éventuellement présentées suite à l'action.
-	     * @param event évènement
-	     * @private
-	     */
-	    private iconOnClick(event);
-	    /**
-	     * @inheritDoc
-	     */
-	    render(): JSX.Element;
-	}
-	
-}
-
 declare module "hornet-js-react-components/src/widget/language/change-language" {
 	import { HornetComponentProps } from "hornet-js-components/src/component/ihornet-component";
 	import { HornetComponent }  from "hornet-js-react-components/src/widget/component/hornet-component";
@@ -5489,6 +5490,57 @@ declare module "hornet-js-react-components/src/widget/tab/tabs" {
 	
 }
 
+declare module "hornet-js-react-components/src/widget/tool-tip/tool-tip" {
+	import { HornetComponentProps } from "hornet-js-components/src/component/ihornet-component";
+	import { HornetComponent }  from "hornet-js-react-components/src/widget/component/hornet-component";
+	/**
+	 * Propriétés du ToolTip
+	 */
+	export interface ToolTipProps extends HornetComponentProps {
+	    src?: string;
+	    icoToolTip?: string;
+	    alt: string;
+	    idImg?: string;
+	    classImg?: string;
+	    idSpan: string;
+	    classSpan?: string;
+	}
+	/**
+	 * Composant ToolTip
+	 */
+	export class ToolTip extends HornetComponent<ToolTipProps, any> {
+	    static defaultProps: {
+	        classImg: string;
+	        classSpan: string;
+	        icoToolTip: string;
+	    };
+	    /**
+	     * @inheritDoc
+	     */
+	    render(): JSX.Element;
+	    /**
+	     * @inheritDoc
+	     */
+	    componentDidMount(): void;
+	    /**
+	     * @inheritDoc
+	     */
+	    componentWillUnmount(): void;
+	    /**
+	     * Gestion des touches du clavier
+	     * @param event
+	     */
+	    private handleKeyDown(event);
+	    /**
+	     * Fonction déclenchée lorsque le champ de saisie libre perd le focus
+	     * @param event
+	     */
+	    private hideTip(event);
+	    private showTip(event);
+	}
+	
+}
+
 declare module "hornet-js-react-components/src/widget/table/action-button" {
 	import * as React from "react";
 	import { Button, ButtonProps, ButtonState }  from "hornet-js-react-components/src/widget/button/button";
@@ -6696,57 +6748,6 @@ declare module "hornet-js-react-components/src/widget/table/toggle-columns-butto
 	     * @returns {boolean}
 	     */
 	    protected isAllChecked(): boolean;
-	}
-	
-}
-
-declare module "hornet-js-react-components/src/widget/tool-tip/tool-tip" {
-	import { HornetComponentProps } from "hornet-js-components/src/component/ihornet-component";
-	import { HornetComponent }  from "hornet-js-react-components/src/widget/component/hornet-component";
-	/**
-	 * Propriétés du ToolTip
-	 */
-	export interface ToolTipProps extends HornetComponentProps {
-	    src?: string;
-	    icoToolTip?: string;
-	    alt: string;
-	    idImg?: string;
-	    classImg?: string;
-	    idSpan: string;
-	    classSpan?: string;
-	}
-	/**
-	 * Composant ToolTip
-	 */
-	export class ToolTip extends HornetComponent<ToolTipProps, any> {
-	    static defaultProps: {
-	        classImg: string;
-	        classSpan: string;
-	        icoToolTip: string;
-	    };
-	    /**
-	     * @inheritDoc
-	     */
-	    render(): JSX.Element;
-	    /**
-	     * @inheritDoc
-	     */
-	    componentDidMount(): void;
-	    /**
-	     * @inheritDoc
-	     */
-	    componentWillUnmount(): void;
-	    /**
-	     * Gestion des touches du clavier
-	     * @param event
-	     */
-	    private handleKeyDown(event);
-	    /**
-	     * Fonction déclenchée lorsque le champ de saisie libre perd le focus
-	     * @param event
-	     */
-	    private hideTip(event);
-	    private showTip(event);
 	}
 	
 }

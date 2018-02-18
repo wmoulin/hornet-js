@@ -83,27 +83,28 @@ import * as path from "path";
 import { JSONLoader } from "hornet-js-utils/src/json-loader";
 import * as _ from "lodash";
 
+import { I18nLoader, II18n } from "src/i18n/i18n-loader";
+
 /**
  * Classe utilisée uniquement côté serveur.
  */
-export class I18nLoader {
-    
+export class I18nLoaderSubDirectory extends I18nLoader {
+
     messagesLang = {};
     allLocales: Array<{langShort: string, locale: string, langLabel:string}>;
 
-    constructor(public pathLang?: string, init:boolean=true) {
-        if (!pathLang) {
-            this.pathLang = path.join(path.parse(require.main.filename).dir, "src", "resources");
+    constructor(public pathsLang?: Array<string>) {
+        super(null, false);
+        if (!pathsLang) {
+            this.pathsLang = [path.join(path.parse(require.main.filename).dir, "src", "resources")];
         }
-        if(init) {
-            this.loadMessages();
-        }
+        this.loadSubDirectoryMessages();
     }
 
-        /** Méthode qui retourne la langue selectionné
+    /** Méthode qui retourne la langue selectionné
      * @returns {string[]}
      */
-    loadMessages(): any {
+    loadSubDirectoryMessages(locales?: Array<II18n>): any {
         /**
          *  Extraits les messages de fichiers, de base de données....
          *  Doit retourner un flux JSON conforme au module react-intl.
@@ -112,10 +113,20 @@ export class I18nLoader {
         this.messagesLang["default"] = {locale: undefined, lang: "", messages: require("./hornet-messages-components.json")};
 
         /** chargement des fichiers 'message.json' */
-        if (fs.existsSync(path.join(this.pathLang, "messages.json"))) {
-            _.merge(this.messagesLang["default"].messages, require(path.join(this.pathLang, "messages.json")));
-        }
+        this.pathsLang.forEach((pathLAng)=>{
+            this.getFilesRecursive(pathLAng, "messages.json", this.messagesLang["default"].messages);
+        })
 
+
+        /** verifier sur localeI18n dans defaut.json existe */
+        if (locales && locales.length > 0) {
+            locales.forEach((locale) => {
+                this.pathsLang.forEach((pathLAng)=>{
+                    this.messagesLang[locale.locale] = {locale: locale.locale, lang: locale.lang, messages: _.merge({}, this.messagesLang["default"].messages)};
+                    this.getFilesRecursive(pathLAng, "messages-" + locale.locale + ".json", this.messagesLang[locale.locale].messages);
+                });
+            });  
+        }
     }
 
     /** Méthode qui retourne la langue selectionné
@@ -125,8 +136,11 @@ export class I18nLoader {
 
         /**
          *  Extraits les messages de fichiers, de base de données....
-         *  Doit retourner un flux JSON conform au module react-intl.
+         *  Do        if(!locales) {
+            return this.messagesLang["default"];
+        }it retourner un flux JSON conforme au module react-intl.
          */
+
         if(this.messagesLang[locales.locale]) {
             return this.messagesLang[locales.locale];
         }
@@ -135,51 +149,99 @@ export class I18nLoader {
             return this.messagesLang["default"];
         }
 
-        let messages = _.merge({}, this.messagesLang["default"].messages);
-        
+        let localMessage = {};
+        _.merge(localMessage, this.messagesLang["default"]);
+
         /** verifier sur localeI18n dans defaut.json existe */
-        if (locales) {
-            /** la variable localeI18n.locale existe */
-            if (locales.locale) {
-                /** si le fichier de langue correspondant existe */
-                if (fs.existsSync(path.join(this.pathLang, "messages-" + locales.locale + ".json"))) {
-                    _.merge(messages, require(path.join(this.pathLang, "messages-" + locales.locale + ".json")));
-                }
-            }
-            return {locale: locales.locale, lang: locales.lang, messages: messages};
+        if (locales && locales.locale) {
+            this.pathsLang.forEach((pathLAng)=>{
+                this.getFilesRecursive(pathLAng, "messages-" + locales.locale + ".json", localMessage);
+            })
         }
+        this.messagesLang[locales.locale] = {locale: locales.locale, lang: locales.lang, messages: localMessage};
+        return this.messagesLang[locales.locale];
     }
 
     /** Méthode qui liste les langues disponibles dans le dossier resources
      * @returns {string[]}
      */
     getLocales(): Array<{langShort: string, locale: string, langLabel: string}> {
-
+        
         if(!this.allLocales) {
 
+            let locales = {};
             this.allLocales = [];
 
-            let listFiles = fs.readdirSync(this.pathLang);
-            let testarray = [];
-            for (let file of listFiles) {
-                let regx = /-[a-zA-Z\-]*/;
-                let array = file.match(regx);
-                if (array != null) {
-                    let jsonMessage = JSONLoader.load(path.join(this.pathLang, file), "UTF-8");
-                    let listShort = array[0].substring(1, array[0].length).split("-");
-                    this.allLocales.push({
-                        langShort: listShort[1],
-                        locale: array[0].substring(1, array[0].length),
-                        langLabel: jsonMessage.labelLanguage || listShort[1]
-                    });
-                }
+            this.pathsLang.forEach((folder)=>{
+                this.getLocalesRecusive(folder, locales as [string, {langShort: string, locale: string, langLabel:string}]);
+            });
+
+            for(let locale in locales) {
+                this.allLocales.push(locales[locale]);
             }
         }
+
         return this.allLocales;
     }
+
+    /** Méthode qui liste les langues disponibles dans le dossier resources
+     * @returns {string[]}
+     */
+    protected getLocalesRecusive(folder: string, locales: [string, {langShort: string, locale: string, langLabel:string}]): void {
+            
+        let regx = /^messages-([a-zA-Z\-]+)\.json$/;
+        
+        if(fs.existsSync(folder)) {
+            let childDirs = [];
+            var fileContents = fs.readdirSync(folder),
+                stats;
+        
+            fileContents.forEach((fileName) => {
+                stats = fs.lstatSync(folder + '/' + fileName);
+        
+                if (stats.isDirectory()) {
+                    this.getLocalesRecusive(path.join(folder, fileName), locales)
+                } else {
+                    let match = fileName.match(regx);
+                    if(match) {
+                        let jsonMessage = JSONLoader.load(path.join(folder, fileName), "UTF-8");
+                        let listShort = match[1].split("-");
+                        if(!locales[match[1]]) {
+                            locales[match[1]] = {};
+                        }
+                        _.merge(locales[match[1]], {
+                            langShort: listShort[1],
+                            locale: match[1],
+                            langLabel: jsonMessage.labelLanguage || listShort[1]
+                        });
+                    }
+                }
+
+            });
+        }
+
+    }
+
+    getFilesRecursive(folder: string, searchFileName: string, messages: {}) {
+        if(fs.existsSync(folder)) {
+            let childDirs = [];
+            var fileContents = fs.readdirSync(folder),
+                stats;
+        
+            fileContents.forEach((fileName) => {
+                stats = fs.lstatSync(folder + '/' + fileName);
+        
+                if (stats.isDirectory()) {
+                    childDirs.push( path.join(folder, fileName));
+                } else {
+                    if(fileName == searchFileName) {
+                        _.merge(messages, require(path.join(folder, fileName)));
+                    }
+                }
+
+                childDirs.forEach((childDir)=> {this.getFilesRecursive(childDir, searchFileName, messages)});
+            });
+        }
+    };
 }
 
-export interface II18n {
-    lang: string;
-    locale: string;
-}

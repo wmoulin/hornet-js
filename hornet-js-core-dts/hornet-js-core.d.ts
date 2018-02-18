@@ -323,10 +323,11 @@ declare module "hornet-js-core/src/server-conf" {
 }
 
 declare module "hornet-js-core/src/server" {
+	import * as express from "express";
 	import { ServerConfiguration }  from "hornet-js-core/src/server-conf";
 	import { HornetMiddlewareList }  from "hornet-js-core/src/middleware/middlewares";
 	export class Server {
-	    private app;
+	    app: express.Express;
 	    private server;
 	    private monitor;
 	    private keepAlive;
@@ -391,100 +392,6 @@ declare module "hornet-js-core/src/cache/hornet-cache" {
 	     * @param key clé de la valeur en cache
 	     */
 	    clearCacheAsynchrone(key: string): Promise<any>;
-	}
-	
-}
-
-declare module "hornet-js-core/src/data/file" {
-	/**
-	 * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
-	 * <p/>
-	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
-	 * <p/>
-	 * Ce logiciel est un programme informatique servant à faciliter la création
-	 * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
-	 * <p/>
-	 * Ce logiciel est régi par la licence CeCILL soumise au droit français et
-	 * respectant les principes de diffusion des logiciels libres. Vous pouvez
-	 * utiliser, modifier et/ou redistribuer ce programme sous les conditions
-	 * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
-	 * sur le site "http://www.cecill.info".
-	 * <p/>
-	 * En contrepartie de l'accessibilité au code source et des droits de copie,
-	 * de modification et de redistribution accordés par cette licence, il n'est
-	 * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-	 * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-	 * titulaire des droits patrimoniaux et les concédants successifs.
-	 * <p/>
-	 * A cet égard  l'attention de l'utilisateur est attirée sur les risques
-	 * associés au chargement,  à l'utilisation,  à la modification et/ou au
-	 * développement et à la reproduction du logiciel par l'utilisateur étant
-	 * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
-	 * manipuler et qui le réserve donc à des développeurs et des professionnels
-	 * avertis possédant  des  connaissances  informatiques approfondies.  Les
-	 * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-	 * logiciel à leurs besoins dans des conditions permettant d'assurer la
-	 * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
-	 * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
-	 * <p/>
-	 * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
-	 * pris connaissance de la licence CeCILL, et que vous en avez accepté les
-	 * termes.
-	 * <p/>
-	 * <p/>
-	 * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
-	 * <p/>
-	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
-	 * <p/>
-	 * This software is a computer program whose purpose is to facilitate creation of
-	 * web application in accordance with french general repositories : RGI, RGS and RGAA.
-	 * <p/>
-	 * This software is governed by the CeCILL license under French law and
-	 * abiding by the rules of distribution of free software.  You can  use,
-	 * modify and/ or redistribute the software under the terms of the CeCILL
-	 * license as circulated by CEA, CNRS and INRIA at the following URL
-	 * "http://www.cecill.info".
-	 * <p/>
-	 * As a counterpart to the access to the source code and  rights to copy,
-	 * modify and redistribute granted by the license, users are provided only
-	 * with a limited warranty  and the software's author,  the holder of the
-	 * economic rights,  and the successive licensors  have only  limited
-	 * liability.
-	 * <p/>
-	 * In this respect, the user's attention is drawn to the risks associated
-	 * with loading,  using,  modifying and/or developing or reproducing the
-	 * software by the user in light of its specific status of free software,
-	 * that may mean  that it is complicated to manipulate,  and  that  also
-	 * therefore means  that it is reserved for developers  and  experienced
-	 * professionals having in-depth computer knowledge. Users are therefore
-	 * encouraged to load and test the software's suitability as regards their
-	 * requirements in conditions enabling the security of their systems and/or
-	 * data to be ensured and,  more generally, to use and operate it in the
-	 * same conditions as regards security.
-	 * <p/>
-	 * The fact that you are presently reading this means that you have had
-	 * knowledge of the CeCILL license and that you accept its terms.
-	 *
-	 */
-	/**
-	 * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
-	 *
-	 * @author MEAE - Ministère de l'Europe et des Affaires étrangères
-	 * @version v5.1.0
-	 * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
-	 * @license CECILL-2.1
-	 */
-	/**
-	 * Représente un fichier uploadé
-	 */
-	export class UploadedFile {
-	    id: number;
-	    originalname: string;
-	    name: string;
-	    mimeType: string;
-	    encoding: string;
-	    size: number;
-	    buffer: Array<number>;
 	}
 	
 }
@@ -627,6 +534,100 @@ declare module "hornet-js-core/src/component/sort-data" {
 	     * @param {SortDirection} dir Sens du tri
 	     */
 	    constructor(key: string, dir?: SortDirection);
+	}
+	
+}
+
+declare module "hornet-js-core/src/data/file" {
+	/**
+	 * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
+	 * <p/>
+	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+	 * <p/>
+	 * Ce logiciel est un programme informatique servant à faciliter la création
+	 * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
+	 * <p/>
+	 * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+	 * respectant les principes de diffusion des logiciels libres. Vous pouvez
+	 * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+	 * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+	 * sur le site "http://www.cecill.info".
+	 * <p/>
+	 * En contrepartie de l'accessibilité au code source et des droits de copie,
+	 * de modification et de redistribution accordés par cette licence, il n'est
+	 * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+	 * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+	 * titulaire des droits patrimoniaux et les concédants successifs.
+	 * <p/>
+	 * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+	 * associés au chargement,  à l'utilisation,  à la modification et/ou au
+	 * développement et à la reproduction du logiciel par l'utilisateur étant
+	 * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+	 * manipuler et qui le réserve donc à des développeurs et des professionnels
+	 * avertis possédant  des  connaissances  informatiques approfondies.  Les
+	 * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+	 * logiciel à leurs besoins dans des conditions permettant d'assurer la
+	 * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+	 * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+	 * <p/>
+	 * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+	 * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+	 * termes.
+	 * <p/>
+	 * <p/>
+	 * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
+	 * <p/>
+	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+	 * <p/>
+	 * This software is a computer program whose purpose is to facilitate creation of
+	 * web application in accordance with french general repositories : RGI, RGS and RGAA.
+	 * <p/>
+	 * This software is governed by the CeCILL license under French law and
+	 * abiding by the rules of distribution of free software.  You can  use,
+	 * modify and/ or redistribute the software under the terms of the CeCILL
+	 * license as circulated by CEA, CNRS and INRIA at the following URL
+	 * "http://www.cecill.info".
+	 * <p/>
+	 * As a counterpart to the access to the source code and  rights to copy,
+	 * modify and redistribute granted by the license, users are provided only
+	 * with a limited warranty  and the software's author,  the holder of the
+	 * economic rights,  and the successive licensors  have only  limited
+	 * liability.
+	 * <p/>
+	 * In this respect, the user's attention is drawn to the risks associated
+	 * with loading,  using,  modifying and/or developing or reproducing the
+	 * software by the user in light of its specific status of free software,
+	 * that may mean  that it is complicated to manipulate,  and  that  also
+	 * therefore means  that it is reserved for developers  and  experienced
+	 * professionals having in-depth computer knowledge. Users are therefore
+	 * encouraged to load and test the software's suitability as regards their
+	 * requirements in conditions enabling the security of their systems and/or
+	 * data to be ensured and,  more generally, to use and operate it in the
+	 * same conditions as regards security.
+	 * <p/>
+	 * The fact that you are presently reading this means that you have had
+	 * knowledge of the CeCILL license and that you accept its terms.
+	 *
+	 */
+	/**
+	 * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
+	 *
+	 * @author MEAE - Ministère de l'Europe et des Affaires étrangères
+	 * @version v5.1.0
+	 * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
+	 * @license CECILL-2.1
+	 */
+	/**
+	 * Représente un fichier uploadé
+	 */
+	export class UploadedFile {
+	    id: number;
+	    originalname: string;
+	    name: string;
+	    mimeType: string;
+	    encoding: string;
+	    size: number;
+	    buffer: Array<number>;
 	}
 	
 }
@@ -896,13 +897,24 @@ declare module "hornet-js-core/src/executor/async-executor" {
 	
 }
 
-declare module "hornet-js-core/src/i18n/i18n-loader" {
+declare module "hornet-js-core/src/i18n/i18n-loader-sub-directory" {
+	import { I18nLoader, II18n }  from "hornet-js-core/src/i18n/i18n-loader";
 	/**
 	 * Classe utilisée uniquement côté serveur.
 	 */
-	export class I18nLoader {
-	    pathLang: string;
-	    constructor(pathLang?: string);
+	export class I18nLoaderSubDirectory extends I18nLoader {
+	    pathsLang: Array<string>;
+	    messagesLang: {};
+	    allLocales: Array<{
+	        langShort: string;
+	        locale: string;
+	        langLabel: string;
+	    }>;
+	    constructor(pathsLang?: Array<string>);
+	    /** Méthode qui retourne la langue selectionné
+	     * @returns {string[]}
+	     */
+	    loadSubDirectoryMessages(locales?: Array<II18n>): any;
 	    /** Méthode qui retourne la langue selectionné
 	     * @returns {string[]}
 	     */
@@ -910,7 +922,53 @@ declare module "hornet-js-core/src/i18n/i18n-loader" {
 	    /** Méthode qui liste les langues disponibles dans le dossier resources
 	     * @returns {string[]}
 	     */
-	    getLocales(): Array<string>;
+	    getLocales(): Array<{
+	        langShort: string;
+	        locale: string;
+	        langLabel: string;
+	    }>;
+	    /** Méthode qui liste les langues disponibles dans le dossier resources
+	     * @returns {string[]}
+	     */
+	    protected getLocalesRecusive(folder: string, locales: [string, {
+	        langShort: string;
+	        locale: string;
+	        langLabel: string;
+	    }]): void;
+	    getFilesRecursive(folder: string, searchFileName: string, messages: {}): void;
+	}
+	
+}
+
+declare module "hornet-js-core/src/i18n/i18n-loader" {
+	/**
+	 * Classe utilisée uniquement côté serveur.
+	 */
+	export class I18nLoader {
+	    pathLang: string;
+	    messagesLang: {};
+	    allLocales: Array<{
+	        langShort: string;
+	        locale: string;
+	        langLabel: string;
+	    }>;
+	    constructor(pathLang?: string, init?: boolean);
+	    /** Méthode qui retourne la langue selectionné
+	 * @returns {string[]}
+	 */
+	    loadMessages(): any;
+	    /** Méthode qui retourne la langue selectionné
+	     * @returns {string[]}
+	     */
+	    getMessages(locales?: II18n): any;
+	    /** Méthode qui liste les langues disponibles dans le dossier resources
+	     * @returns {string[]}
+	     */
+	    getLocales(): Array<{
+	        langShort: string;
+	        locale: string;
+	        langLabel: string;
+	    }>;
 	}
 	export interface II18n {
 	    lang: string;
@@ -1473,21 +1531,28 @@ declare module "hornet-js-core/src/middleware/middlewares" {
 	    static APP_CONFIG: ServerConfiguration;
 	    protected prefix: string;
 	    protected middlewareFunction: ErrorRequestHandler | RequestHandler;
+	    protected config: ServerConfiguration;
 	    /**
 	     * Constructeur
 	     *
 	     * @param middlewareFunction
 	     * @param prefix
 	     */
-	    constructor(middlewareFunction?: ErrorRequestHandler | RequestHandler, prefix?: string);
+	    constructor(middlewareFunction?: ErrorRequestHandler | RequestHandler, prefix?: string, config?: ServerConfiguration);
 	    /**
 	     * Méthode appelée automatiquement lors de l'initialisation du serveur afin d'ajouter un middleware
 	     * @param app
 	     */
 	    insertMiddleware(app: express.Express): void;
 	}
+	export class AbstractHornetSubMiddleware extends AbstractHornetMiddleware {
+	    insertRouterMiddleware(router: express.Router): void;
+	}
 	export class HornetContextInitializerMiddleware extends AbstractHornetMiddleware {
 	    constructor();
+	}
+	export class HornetContextInitializerSubMiddleware extends AbstractHornetSubMiddleware {
+	    constructor(config: ServerConfiguration, prefix: any);
 	}
 	export class LoggerTIDMiddleware extends AbstractHornetMiddleware {
 	    constructor();
@@ -1571,7 +1636,7 @@ declare module "hornet-js-core/src/middleware/middlewares" {
 	}
 	export class InternationalizationMiddleware extends AbstractHornetMiddleware {
 	    private static logger;
-	    constructor();
+	    constructor(config?: ServerConfiguration);
 	}
 	export class ChangeI18nLocaleMiddleware extends AbstractHornetMiddleware {
 	    private static logger;
@@ -1587,8 +1652,13 @@ declare module "hornet-js-core/src/middleware/middlewares" {
 	}
 	export class RouterServerMiddleware extends AbstractHornetMiddleware {
 	    private router;
-	    constructor();
+	    constructor(config: ServerConfiguration);
 	    insertMiddleware(app: any): void;
+	}
+	export class RouterServerSubMiddleware extends AbstractHornetSubMiddleware {
+	    private router;
+	    constructor(config: ServerConfiguration);
+	    insertRouterMiddleware(router: express.Router): void;
 	}
 	export class UserAccessSecurityMiddleware extends AbstractHornetMiddleware {
 	    private static logger;
@@ -1601,6 +1671,10 @@ declare module "hornet-js-core/src/middleware/middlewares" {
 	    private static logger;
 	    constructor();
 	}
+	export class DataRenderingSubMiddleware extends AbstractHornetSubMiddleware {
+	    private static logger;
+	    constructor();
+	}
 	import { RequestHandler } from "express";
 	import { ErrorRequestHandler } from "express";
 	export class UnmanagedDataErrorMiddleware extends AbstractHornetMiddleware {
@@ -1608,12 +1682,19 @@ declare module "hornet-js-core/src/middleware/middlewares" {
 	    constructor();
 	}
 	export const DEFAULT_HORNET_MIDDLEWARES: Array<Class<AbstractHornetMiddleware>>;
+	export const DEFAULT_HORNET_MODULE_MIDDLEWARES: Array<Class<AbstractHornetSubMiddleware>>;
 	export class HornetMiddlewareList {
 	    list: any[];
 	    constructor(middlewares?: Array<Class<AbstractHornetMiddleware>>);
 	    addBefore(newMiddleware: Class<AbstractHornetMiddleware>, middleware: Class<AbstractHornetMiddleware>): this;
+	    addRouterBefore(router: HornetRouter, middleware: Class<AbstractHornetMiddleware>): this;
 	    addAfter(newMiddleware: Class<AbstractHornetMiddleware>, middleware: Class<AbstractHornetMiddleware>): this;
 	    remove(middleware: Class<AbstractHornetMiddleware>): this;
+	}
+	export class HornetRouter {
+	    prefix: string;
+	    router: express.Router;
+	    constructor(prefix: string, router: express.Router);
 	}
 	
 }
@@ -1905,544 +1986,6 @@ declare module "hornet-js-core/src/protocol/media-type" {
 	     * @return MediaTypes or MediaTypes.JSON si non pris en charge
 	     */
 	    static fromMime(accept: string): MediaType;
-	}
-	
-}
-
-declare module "hornet-js-core/src/routes/abstract-routes" {
-	import { Class, AbstractClass } from "hornet-js-utils/src/typescript-utils";
-	import { UserInformations } from "hornet-js-utils/src/authentication-utils";
-	import { IHornetPage } from "hornet-js-components/src/component/ihornet-page";
-	import { DataValidator }  from "hornet-js-core/src/validation/data-validator";
-	import { Request } from "express";
-	import { Response } from "express";
-	import { IService }  from "hornet-js-core/src/services/service-api";
-	import { MediaType }  from "hornet-js-core/src/protocol/media-type";
-	/** DirectorClientConfiguration */
-	export interface DirectorClientConfiguration {
-	    html5history?: boolean;
-	    strict?: boolean;
-	    convert_hash_in_init?: boolean;
-	    recurse?: boolean;
-	    notfound?: Function;
-	}
-	/** Routes type */
-	export const RouteType: {
-	    PAGE: string;
-	    DATA: string;
-	};
-	/** Routes Authorizations */
-	export type RouteAuthorization = Array<string>;
-	export const PUBLIC_ROUTE: RouteAuthorization;
-	export const PRIVATE_ROUTE: RouteAuthorization;
-	export const DEFAULT_AUTHORIZATION: RouteAuthorization;
-	/** Routes Method */
-	export type RouteMethod = "get" | "post" | "delete" | "put" | "patch";
-	export const DEFAULT_METHOD: RouteMethod;
-	export type RouteHandler<T extends RouteInfos> = (...params: Array<string>) => T;
-	export type Routes<T extends RouteInfos> = {
-	    [key: string]: {
-	        [key: string]: {
-	            authorization: RouteAuthorization;
-	            handler: RouteHandler<T>;
-	        };
-	    };
-	};
-	export type PageRouteHandler = RouteHandler<PageRouteInfos>;
-	export type PageRoutes = Routes<PageRouteInfos>;
-	export type DataRouteHandler = RouteHandler<DataRouteInfos>;
-	export type DataRoutes = Routes<DataRouteInfos>;
-	export type LazyRoutes = {
-	    [key: string]: string;
-	};
-	export type LazyRoutesClassResolver = (name: string) => Class<AbstractRoutes>;
-	export type LazyRoutesAsyncClassResolver = (name: string, callback: (routesClass: Class<AbstractRoutes>) => void) => void;
-	/** Routes Informations */
-	export type RouteAttributes = {
-	    [key: string]: any;
-	};
-	export abstract class RouteAction<A extends RouteAttributes> {
-	    /** Requête en cours */
-	    req: Request;
-	    /** Réponse en cours */
-	    res: Response;
-	    /** Attributs de la route déclenchant l'action */
-	    attributes: A;
-	    service: IService;
-	    /** Utilisateur connecté */
-	    user: UserInformations;
-	    /** Exécute l'action */
-	    abstract execute(): Promise<any>;
-	    /**
-	     * Renvoie l'objet contenant les éléments nécessaires à la validation des données transmises à cette action.
-	     * Renvoie null par défaut : à surcharger éventuellement dans la classe action implémentée.
-	     * @returns {null} une instance de ActionValidation ou null
-	     */
-	    getDataValidator(): DataValidator;
-	    /**
-	     * Renvoie les données entrantes éventuelles, récupérées par défaut directement dans le corps de la requête.
-	     * A sucharger si nécessaire.
-	     * @return {any} un objet contenant les données transmises à cette action
-	     */
-	    getPayload(): any;
-	    /**
-	     * Renvoie le MediaType issu de l'entête de la requête.
-	     * @return {any} un objet contenant les données transmises à cette action
-	     */
-	    getMediaType(): MediaType;
-	}
-	export abstract class RouteActionService<A extends RouteAttributes, B extends IService> extends RouteAction<A> {
-	    getService(): B;
-	}
-	export abstract class RouteInfos {
-	    private type;
-	    private attributes;
-	    private service;
-	    constructor(type: string, attributes?: RouteAttributes, service?: Class<IService> | AbstractClass<IService>);
-	    getRouteType(): string;
-	    getAttributes(): RouteAttributes;
-	    getService(): Class<IService> | AbstractClass<IService>;
-	}
-	export class PageRouteInfos extends RouteInfos {
-	    private viewComponent;
-	    constructor(viewComponent: Class<IHornetPage<any, any>>, attributes?: RouteAttributes, service?: Class<IService> | AbstractClass<IService>);
-	    getViewComponent(): Class<IHornetPage<any, any>>;
-	}
-	export class DataRouteInfos extends RouteInfos {
-	    private action;
-	    constructor(action: Class<RouteAction<any>>, attributes?: RouteAttributes, service?: Class<IService>);
-	    getAction(): Class<RouteAction<any>>;
-	}
-	/** Routes Declaration */
-	export abstract class AbstractRoutes {
-	    private pageRoutes;
-	    private dataRoutes;
-	    private lazyRoutes;
-	    private resolveAuthorizationAndMethod(authorizationOrMethod, method);
-	    addPageRoute(path: string, handler: PageRouteHandler, authorization?: RouteAuthorization): void;
-	    addDataRoute(path: string, handler: DataRouteHandler): any;
-	    addDataRoute(path: string, handler: DataRouteHandler, authorization: RouteAuthorization): any;
-	    addDataRoute(path: string, handler: DataRouteHandler, method: RouteMethod): any;
-	    addDataRoute(path: string, handler: DataRouteHandler, authorization: RouteAuthorization, method: RouteMethod): any;
-	    addLazyRoutes(path: string, subRoutesFile: string): void;
-	    getPageRoutes(): PageRoutes;
-	    getDataRoutes(): DataRoutes;
-	    getLazyRoutes(): LazyRoutes;
-	    /**
-	     * Permet de charger les routes depuis une liste de répertoires
-	     * @param paths
-	     * @returns route module
-	     */
-	    getDefaultRouteLoader(paths: Array<string>): (name: string) => any;
-	}
-	
-}
-
-declare module "hornet-js-core/src/routes/actions-chain-data" {
-	/**
-	 * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
-	 * <p/>
-	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
-	 * <p/>
-	 * Ce logiciel est un programme informatique servant à faciliter la création
-	 * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
-	 * <p/>
-	 * Ce logiciel est régi par la licence CeCILL soumise au droit français et
-	 * respectant les principes de diffusion des logiciels libres. Vous pouvez
-	 * utiliser, modifier et/ou redistribuer ce programme sous les conditions
-	 * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
-	 * sur le site "http://www.cecill.info".
-	 * <p/>
-	 * En contrepartie de l'accessibilité au code source et des droits de copie,
-	 * de modification et de redistribution accordés par cette licence, il n'est
-	 * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-	 * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-	 * titulaire des droits patrimoniaux et les concédants successifs.
-	 * <p/>
-	 * A cet égard  l'attention de l'utilisateur est attirée sur les risques
-	 * associés au chargement,  à l'utilisation,  à la modification et/ou au
-	 * développement et à la reproduction du logiciel par l'utilisateur étant
-	 * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
-	 * manipuler et qui le réserve donc à des développeurs et des professionnels
-	 * avertis possédant  des  connaissances  informatiques approfondies.  Les
-	 * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-	 * logiciel à leurs besoins dans des conditions permettant d'assurer la
-	 * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
-	 * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
-	 * <p/>
-	 * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
-	 * pris connaissance de la licence CeCILL, et que vous en avez accepté les
-	 * termes.
-	 * <p/>
-	 * <p/>
-	 * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
-	 * <p/>
-	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
-	 * <p/>
-	 * This software is a computer program whose purpose is to facilitate creation of
-	 * web application in accordance with french general repositories : RGI, RGS and RGAA.
-	 * <p/>
-	 * This software is governed by the CeCILL license under French law and
-	 * abiding by the rules of distribution of free software.  You can  use,
-	 * modify and/ or redistribute the software under the terms of the CeCILL
-	 * license as circulated by CEA, CNRS and INRIA at the following URL
-	 * "http://www.cecill.info".
-	 * <p/>
-	 * As a counterpart to the access to the source code and  rights to copy,
-	 * modify and redistribute granted by the license, users are provided only
-	 * with a limited warranty  and the software's author,  the holder of the
-	 * economic rights,  and the successive licensors  have only  limited
-	 * liability.
-	 * <p/>
-	 * In this respect, the user's attention is drawn to the risks associated
-	 * with loading,  using,  modifying and/or developing or reproducing the
-	 * software by the user in light of its specific status of free software,
-	 * that may mean  that it is complicated to manipulate,  and  that  also
-	 * therefore means  that it is reserved for developers  and  experienced
-	 * professionals having in-depth computer knowledge. Users are therefore
-	 * encouraged to load and test the software's suitability as regards their
-	 * requirements in conditions enabling the security of their systems and/or
-	 * data to be ensured and,  more generally, to use and operate it in the
-	 * same conditions as regards security.
-	 * <p/>
-	 * The fact that you are presently reading this means that you have had
-	 * knowledge of the CeCILL license and that you accept its terms.
-	 *
-	 */
-	/**
-	 * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
-	 *
-	 * @author MEAE - Ministère de l'Europe et des Affaires étrangères
-	 * @version v5.1.0
-	 * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
-	 * @license CECILL-2.1
-	 */
-	/**
-	 * Type d'objet qui est transféré d'une action à une autre (d'une promise à une autre)
-	 * Les chaines d'actions peuvent étendre cette classe pour ajouter des attributs spécifiques.
-	 *
-	 */
-	import * as superagent from "superagent";
-	export class ActionsChainData {
-	    /**
-	     * Le mimeType demandé par le client
-	     */
-	    requestMimeType: string;
-	    /**
-	     * Le MimeType du résultat à retourner au client
-	     */
-	    responseMimeType: string;
-	    /**
-	     * Le résultat à retourner au client.
-	     * Si ce champ est valorisé, il sera prioritaire sur les autres rendus (composant / json)
-	     */
-	    result: any;
-	    /**
-	     * La dernière erreur technique produite
-	     * Si ce champ est valorisé, il sera prioritaire sur les autres rendus (composant / json)
-	     */
-	    lastError: any;
-	    /**
-	     * Les erreurs présentes dans un formulaire
-	     * Si ce champ est valorisé, il sera prioritaire sur les autres rendus (composant / json)
-	     */
-	    formError: any;
-	    /**
-	     * Boolean indiquant que l'accès à la ressource courante n'est pas autorisé pour l'utilisateur courant
-	     * @type {boolean}
-	     */
-	    isAccessForbidden: boolean;
-	    parseResponse(res: superagent.Response): this;
-	    withBody(body: any): this;
-	    withResponseMimeType(responseMimeType: string): this;
-	}
-	
-}
-
-declare module "hornet-js-core/src/routes/router-client-async-elements" {
-	import { Class } from "hornet-js-utils/src/typescript-utils";
-	import { AsyncElement }  from "hornet-js-core/src/executor/async-element";
-	import { HornetEvent }  from "hornet-js-core/src/event/hornet-event";
-	import { IHornetPage } from "hornet-js-components/src/component/ihornet-page";
-	export class ContextInitializerElement extends AsyncElement {
-	    private authorization;
-	    private handler;
-	    private params;
-	    constructor(authorization: any, handler: any, params: any);
-	    execute(next: any): void;
-	}
-	export var PAGE_READY_EVENT: HornetEvent<{}>;
-	export interface UrlChangeEventDetail {
-	    newUrl: string;
-	    newPath: string;
-	}
-	export var URL_CHANGE_EVENT: HornetEvent<UrlChangeEventDetail>;
-	export class UrlChangeElement extends AsyncElement {
-	    execute(next: any): void;
-	}
-	export class UserAccessSecurityElement extends AsyncElement {
-	    private static logger;
-	    execute(next: any): void;
-	}
-	export interface ComponentChangeEventDetail {
-	    newComponent: Class<IHornetPage<any, any>>;
-	    data: any;
-	}
-	export var COMPONENT_CHANGE_EVENT: HornetEvent<ComponentChangeEventDetail>;
-	export class ViewRenderingElement extends AsyncElement {
-	    private static logger;
-	    private appComponent;
-	    constructor(appComponent: any);
-	    execute(next: any): void;
-	}
-	export class UnmanagedViewErrorElement extends AsyncElement {
-	    private static logger;
-	    private errorComponent;
-	    constructor(errorComponent: any);
-	    execute(next: any, resolvedError: any): void;
-	}
-	
-}
-
-declare module "hornet-js-core/src/routes/router-client" {
-	import { DirectorRouterConfiguration } from "director";
-	import { AbstractRoutes, RouteHandler, RouteInfos, LazyRoutesAsyncClassResolver, RouteAuthorization }  from "hornet-js-core/src/routes/abstract-routes";
-	global  {
-	    interface Window {
-	        setHornetJsGenerationServer: (enableValue: string) => void;
-	    }
-	}
-	export type DirectorClientRoutesDesc = {
-	    [key: string]: (...arg) => void;
-	};
-	export class RouterClient {
-	    private appComponent;
-	    private errorComponent;
-	    private pageRoutes;
-	    private appRoutes;
-	    private directorPage;
-	    private directorClientConfiguration;
-	    private lazyRoutesClassResolver;
-	    constructor(appComponent: any, errorComponent: any, appRoutes: AbstractRoutes, lazyRoutesClassResolver: LazyRoutesAsyncClassResolver, directorClientConfiguration?: DirectorRouterConfiguration);
-	    private computeRoutes(routesObj?, prefix?, directorRoutes?);
-	    private parseRoutes<T>(declaredRoutes, internalObj, prefix);
-	    private buildRouteHandler<T>(declaredRoutes, path, method);
-	    private parseLazyRoute(internalObj, prefix, routesClassPath);
-	    private loadLazyRoutes(originalRoute, prefix, routesClassPath, done);
-	    protected handleRoute<T extends RouteInfos>(done: any, authorization: RouteAuthorization, handler: RouteHandler<T>, params: Array<string>): void;
-	    /**
-	     * Méthode utilisée par la partie cliente pour initialiser le routeur
-	     */
-	    startRouter(baseElement?: Document | Element): void;
-	    /**
-	     * Demande un changement d'url dans la barre d'adresse du navigateur (et donc un changement de route) mais sans recharger la page
-	     */
-	    setRoute(route: string, pageReady?: () => void): void;
-	    /**
-	     * Monte les routes dans director
-	     * @param newRoutes
-	     */
-	    mountRoutes(newRoutes: DirectorClientRoutesDesc): void;
-	    /**
-	     * Retourne un objet contenant les paramètres présents dans l'url. Exemple: page?param1=XX&param2=YY => {param1:XX, param2:YY}
-	     * @param url L'URL à parser
-	     * @returns {{}}
-	     */
-	    static getUrlParameters(url: string): any;
-	    static LOCAL_STORAGE_ENABLE_GENERATION_SERVER_KEY: string;
-	    static defaultGenerationServerEnabled: string;
-	    /**
-	     * mantis 0055411
-	     * Met a disposition une fonction sur le browser (window.setHornetJsGenerationServer)
-	     * Appellée depuis du code client, cette fonction permet de changer  l'option de paramétrage
-	     * pour activer ou désactiver la generation des pages côté serveur (cf usage getHornetJsGenerationServer)
-	     * Cette option est stockée dans le navigateur au niveau du localStorage,
-	     * elle peut donc aussi être modifié manuellement par l'utilisateur
-	     *
-	     * Attention, ne pas activer l'option en mode fullSpa
-	     * (elle n'a d'interet qu'avec le serveur node)
-	     */
-	    static setHornetJsGenerationServer(): void;
-	    /**
-	     * Getter pour récuperer la valeur de l'option de paramétrage "hornet-js.enable.generation.server"
-	     * Cette option true/false permet d'activer ou désactiver la generation des pages côté serveur
-	     * Lecture du localStorage d'abord (si supporté et contient la valeur), et sinon valeur par défaut (false)
-	     *
-	     * @returns {any}
-	     */
-	    static getHornetJsGenerationServer(): any;
-	}
-	
-}
-
-declare module "hornet-js-core/src/routes/router-server" {
-	import { AbstractRoutes, RouteHandler, RouteInfos, LazyRoutesClassResolver, RouteAuthorization }  from "hornet-js-core/src/routes/abstract-routes";
-	export class RouterServer {
-	    private dataRoutes;
-	    private pageRoutes;
-	    private appRoutes;
-	    private directorData;
-	    private directorPage;
-	    private lazyRoutesClassResolver;
-	    private dataContext;
-	    constructor(appRoutes: AbstractRoutes, lazyRoutesClassResolver: LazyRoutesClassResolver, routesPaths: Array<string>, routesDataContext?: String);
-	    /**
-	     * Méthode utilisée par la partie serveur pour initialiser le routeur.
-	     * Note: Fourni un middleware Express
-	     */
-	    dataMiddleware(): (req: Express.Request, res: Express.Response, next: any) => any;
-	    pageMiddleware(): (req: Express.Request, res: Express.Response, next: any) => any;
-	    private computeRoutes(routesObj?, prefix?);
-	    private computeAuthorizationsRoutes(pageRoutes, dataRoutes, prefix);
-	    private parseRoutes<T>(declaredRoutes, internalObj, prefix);
-	    private buildRouteHandler<T>(declaredRoutes, path, method);
-	    private parseLazyRoutes(lazyRoutes, prefix);
-	    protected handleRoute<T extends RouteInfos>(authorization: RouteAuthorization, handler: RouteHandler<T>, method: any, params: Array<string>): void;
-	}
-	
-}
-
-declare module "hornet-js-core/src/security/client-antivirus-connexion" {
-	export interface ClientAntivirusConnexionProps {
-	    /**
-	     *port du serveur clamav
-	    */
-	    port: number;
-	    /**
-	     * ip du serveur clamav
-	     */
-	    host: string;
-	    /**
-	     * port du serveur clamav
-	     */
-	    timeout: number;
-	    /**
-	     * fonctionné à appeler à la fin du traitement.
-	     */
-	    complete: Function;
-	}
-	/**
-	 * Classe de connexion entre le client et le serveur
-	 */
-	export class ClientAntivirusConnexion {
-	    /**
-	     * port du serveur clamav
-	     */
-	    port: number;
-	    /**
-	     * ip du serveur clamav
-	     */
-	    host: string;
-	    /**
-	     * port du serveur clamav
-	     */
-	    timeout: number;
-	    /**
-	     * fonctionné à appeler à la fin du traitement.
-	     */
-	    complete: Function;
-	    constructor(options?: ClientAntivirusConnexionProps);
-	    /**
-	     *
-	     * @param stream le flux du fichier
-	     * @returns {Promise<Buffer>|Promise}
-	     */
-	    scan(stream: any): Promise<{}>;
-	}
-	
-}
-
-declare module "hornet-js-core/src/security/client-input-channel" {
-	/**
-	 * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
-	 * <p/>
-	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
-	 * <p/>
-	 * Ce logiciel est un programme informatique servant à faciliter la création
-	 * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
-	 * <p/>
-	 * Ce logiciel est régi par la licence CeCILL soumise au droit français et
-	 * respectant les principes de diffusion des logiciels libres. Vous pouvez
-	 * utiliser, modifier et/ou redistribuer ce programme sous les conditions
-	 * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
-	 * sur le site "http://www.cecill.info".
-	 * <p/>
-	 * En contrepartie de l'accessibilité au code source et des droits de copie,
-	 * de modification et de redistribution accordés par cette licence, il n'est
-	 * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-	 * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-	 * titulaire des droits patrimoniaux et les concédants successifs.
-	 * <p/>
-	 * A cet égard  l'attention de l'utilisateur est attirée sur les risques
-	 * associés au chargement,  à l'utilisation,  à la modification et/ou au
-	 * développement et à la reproduction du logiciel par l'utilisateur étant
-	 * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
-	 * manipuler et qui le réserve donc à des développeurs et des professionnels
-	 * avertis possédant  des  connaissances  informatiques approfondies.  Les
-	 * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-	 * logiciel à leurs besoins dans des conditions permettant d'assurer la
-	 * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
-	 * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
-	 * <p/>
-	 * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
-	 * pris connaissance de la licence CeCILL, et que vous en avez accepté les
-	 * termes.
-	 * <p/>
-	 * <p/>
-	 * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
-	 * <p/>
-	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
-	 * <p/>
-	 * This software is a computer program whose purpose is to facilitate creation of
-	 * web application in accordance with french general repositories : RGI, RGS and RGAA.
-	 * <p/>
-	 * This software is governed by the CeCILL license under French law and
-	 * abiding by the rules of distribution of free software.  You can  use,
-	 * modify and/ or redistribute the software under the terms of the CeCILL
-	 * license as circulated by CEA, CNRS and INRIA at the following URL
-	 * "http://www.cecill.info".
-	 * <p/>
-	 * As a counterpart to the access to the source code and  rights to copy,
-	 * modify and redistribute granted by the license, users are provided only
-	 * with a limited warranty  and the software's author,  the holder of the
-	 * economic rights,  and the successive licensors  have only  limited
-	 * liability.
-	 * <p/>
-	 * In this respect, the user's attention is drawn to the risks associated
-	 * with loading,  using,  modifying and/or developing or reproducing the
-	 * software by the user in light of its specific status of free software,
-	 * that may mean  that it is complicated to manipulate,  and  that  also
-	 * therefore means  that it is reserved for developers  and  experienced
-	 * professionals having in-depth computer knowledge. Users are therefore
-	 * encouraged to load and test the software's suitability as regards their
-	 * requirements in conditions enabling the security of their systems and/or
-	 * data to be ensured and,  more generally, to use and operate it in the
-	 * same conditions as regards security.
-	 * <p/>
-	 * The fact that you are presently reading this means that you have had
-	 * knowledge of the CeCILL license and that you accept its terms.
-	 *
-	 */
-	/**
-	 * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
-	 *
-	 * @author MEAE - Ministère de l'Europe et des Affaires étrangères
-	 * @version v5.1.0
-	 * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
-	 * @license CECILL-2.1
-	 */
-	/**
-	 * Created by framarc on 8/28/17.
-	 */
-	import stream = require("stream");
-	/**
-	 * Classe permettant de préparer la request au serveur antivius
-	 */
-	export class ClientInputChannel extends stream.Transform {
-	    _inBody: boolean;
-	    constructor(options?: any);
-	    _transform(chunk: any, encoding: string, callback: Function): void;
-	    _flush(callback: any): void;
 	}
 	
 }
@@ -3166,6 +2709,544 @@ declare module "hornet-js-core/src/result/result-stream" {
 	    constructor(options: any, mime: string);
 	    protected compute(): Promise<any>;
 	    protected configure(res: Response): boolean;
+	}
+	
+}
+
+declare module "hornet-js-core/src/routes/abstract-routes" {
+	import { Class, AbstractClass } from "hornet-js-utils/src/typescript-utils";
+	import { UserInformations } from "hornet-js-utils/src/authentication-utils";
+	import { IHornetPage } from "hornet-js-components/src/component/ihornet-page";
+	import { DataValidator }  from "hornet-js-core/src/validation/data-validator";
+	import { Request } from "express";
+	import { Response } from "express";
+	import { IService }  from "hornet-js-core/src/services/service-api";
+	import { MediaType }  from "hornet-js-core/src/protocol/media-type";
+	/** DirectorClientConfiguration */
+	export interface DirectorClientConfiguration {
+	    html5history?: boolean;
+	    strict?: boolean;
+	    convert_hash_in_init?: boolean;
+	    recurse?: boolean;
+	    notfound?: Function;
+	}
+	/** Routes type */
+	export const RouteType: {
+	    PAGE: string;
+	    DATA: string;
+	};
+	/** Routes Authorizations */
+	export type RouteAuthorization = Array<string>;
+	export const PUBLIC_ROUTE: RouteAuthorization;
+	export const PRIVATE_ROUTE: RouteAuthorization;
+	export const DEFAULT_AUTHORIZATION: RouteAuthorization;
+	/** Routes Method */
+	export type RouteMethod = "get" | "post" | "delete" | "put" | "patch";
+	export const DEFAULT_METHOD: RouteMethod;
+	export type RouteHandler<T extends RouteInfos> = (...params: Array<string>) => T;
+	export type Routes<T extends RouteInfos> = {
+	    [key: string]: {
+	        [key: string]: {
+	            authorization: RouteAuthorization;
+	            handler: RouteHandler<T>;
+	        };
+	    };
+	};
+	export type PageRouteHandler = RouteHandler<PageRouteInfos>;
+	export type PageRoutes = Routes<PageRouteInfos>;
+	export type DataRouteHandler = RouteHandler<DataRouteInfos>;
+	export type DataRoutes = Routes<DataRouteInfos>;
+	export type LazyRoutes = {
+	    [key: string]: string;
+	};
+	export type LazyRoutesClassResolver = (name: string) => Class<AbstractRoutes>;
+	export type LazyRoutesAsyncClassResolver = (name: string, callback: (routesClass: Class<AbstractRoutes>) => void) => void;
+	/** Routes Informations */
+	export type RouteAttributes = {
+	    [key: string]: any;
+	};
+	export abstract class RouteAction<A extends RouteAttributes> {
+	    /** Requête en cours */
+	    req: Request;
+	    /** Réponse en cours */
+	    res: Response;
+	    /** Attributs de la route déclenchant l'action */
+	    attributes: A;
+	    service: IService;
+	    /** Utilisateur connecté */
+	    user: UserInformations;
+	    /** Exécute l'action */
+	    abstract execute(): Promise<any>;
+	    /**
+	     * Renvoie l'objet contenant les éléments nécessaires à la validation des données transmises à cette action.
+	     * Renvoie null par défaut : à surcharger éventuellement dans la classe action implémentée.
+	     * @returns {null} une instance de ActionValidation ou null
+	     */
+	    getDataValidator(): DataValidator;
+	    /**
+	     * Renvoie les données entrantes éventuelles, récupérées par défaut directement dans le corps de la requête.
+	     * A sucharger si nécessaire.
+	     * @return {any} un objet contenant les données transmises à cette action
+	     */
+	    getPayload(): any;
+	    /**
+	     * Renvoie le MediaType issu de l'entête de la requête.
+	     * @return {any} un objet contenant les données transmises à cette action
+	     */
+	    getMediaType(): MediaType;
+	}
+	export abstract class RouteActionService<A extends RouteAttributes, B extends IService> extends RouteAction<A> {
+	    getService(): B;
+	}
+	export abstract class RouteInfos {
+	    private type;
+	    private attributes;
+	    private service;
+	    constructor(type: string, attributes?: RouteAttributes, service?: Class<IService> | AbstractClass<IService>);
+	    getRouteType(): string;
+	    getAttributes(): RouteAttributes;
+	    getService(): Class<IService> | AbstractClass<IService>;
+	}
+	export class PageRouteInfos extends RouteInfos {
+	    private viewComponent;
+	    constructor(viewComponent: Class<IHornetPage<any, any>>, attributes?: RouteAttributes, service?: Class<IService> | AbstractClass<IService>);
+	    getViewComponent(): Class<IHornetPage<any, any>>;
+	}
+	export class DataRouteInfos extends RouteInfos {
+	    private action;
+	    constructor(action: Class<RouteAction<any>>, attributes?: RouteAttributes, service?: Class<IService>);
+	    getAction(): Class<RouteAction<any>>;
+	}
+	/** Routes Declaration */
+	export abstract class AbstractRoutes {
+	    private pageRoutes;
+	    private dataRoutes;
+	    private lazyRoutes;
+	    private resolveAuthorizationAndMethod(authorizationOrMethod, method);
+	    addPageRoute(path: string, handler: PageRouteHandler, authorization?: RouteAuthorization): void;
+	    addDataRoute(path: string, handler: DataRouteHandler): any;
+	    addDataRoute(path: string, handler: DataRouteHandler, authorization: RouteAuthorization): any;
+	    addDataRoute(path: string, handler: DataRouteHandler, method: RouteMethod): any;
+	    addDataRoute(path: string, handler: DataRouteHandler, authorization: RouteAuthorization, method: RouteMethod): any;
+	    addLazyRoutes(path: string, subRoutesFile: string): void;
+	    getPageRoutes(): PageRoutes;
+	    getDataRoutes(): DataRoutes;
+	    getLazyRoutes(): LazyRoutes;
+	    /**
+	     * Permet de charger les routes depuis une liste de répertoires
+	     * @param paths
+	     * @returns route module
+	     */
+	    getDefaultRouteLoader(paths: Array<string>): (name: string) => any;
+	}
+	
+}
+
+declare module "hornet-js-core/src/routes/actions-chain-data" {
+	/**
+	 * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
+	 * <p/>
+	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+	 * <p/>
+	 * Ce logiciel est un programme informatique servant à faciliter la création
+	 * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
+	 * <p/>
+	 * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+	 * respectant les principes de diffusion des logiciels libres. Vous pouvez
+	 * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+	 * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+	 * sur le site "http://www.cecill.info".
+	 * <p/>
+	 * En contrepartie de l'accessibilité au code source et des droits de copie,
+	 * de modification et de redistribution accordés par cette licence, il n'est
+	 * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+	 * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+	 * titulaire des droits patrimoniaux et les concédants successifs.
+	 * <p/>
+	 * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+	 * associés au chargement,  à l'utilisation,  à la modification et/ou au
+	 * développement et à la reproduction du logiciel par l'utilisateur étant
+	 * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+	 * manipuler et qui le réserve donc à des développeurs et des professionnels
+	 * avertis possédant  des  connaissances  informatiques approfondies.  Les
+	 * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+	 * logiciel à leurs besoins dans des conditions permettant d'assurer la
+	 * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+	 * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+	 * <p/>
+	 * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+	 * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+	 * termes.
+	 * <p/>
+	 * <p/>
+	 * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
+	 * <p/>
+	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+	 * <p/>
+	 * This software is a computer program whose purpose is to facilitate creation of
+	 * web application in accordance with french general repositories : RGI, RGS and RGAA.
+	 * <p/>
+	 * This software is governed by the CeCILL license under French law and
+	 * abiding by the rules of distribution of free software.  You can  use,
+	 * modify and/ or redistribute the software under the terms of the CeCILL
+	 * license as circulated by CEA, CNRS and INRIA at the following URL
+	 * "http://www.cecill.info".
+	 * <p/>
+	 * As a counterpart to the access to the source code and  rights to copy,
+	 * modify and redistribute granted by the license, users are provided only
+	 * with a limited warranty  and the software's author,  the holder of the
+	 * economic rights,  and the successive licensors  have only  limited
+	 * liability.
+	 * <p/>
+	 * In this respect, the user's attention is drawn to the risks associated
+	 * with loading,  using,  modifying and/or developing or reproducing the
+	 * software by the user in light of its specific status of free software,
+	 * that may mean  that it is complicated to manipulate,  and  that  also
+	 * therefore means  that it is reserved for developers  and  experienced
+	 * professionals having in-depth computer knowledge. Users are therefore
+	 * encouraged to load and test the software's suitability as regards their
+	 * requirements in conditions enabling the security of their systems and/or
+	 * data to be ensured and,  more generally, to use and operate it in the
+	 * same conditions as regards security.
+	 * <p/>
+	 * The fact that you are presently reading this means that you have had
+	 * knowledge of the CeCILL license and that you accept its terms.
+	 *
+	 */
+	/**
+	 * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
+	 *
+	 * @author MEAE - Ministère de l'Europe et des Affaires étrangères
+	 * @version v5.1.0
+	 * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
+	 * @license CECILL-2.1
+	 */
+	/**
+	 * Type d'objet qui est transféré d'une action à une autre (d'une promise à une autre)
+	 * Les chaines d'actions peuvent étendre cette classe pour ajouter des attributs spécifiques.
+	 *
+	 */
+	import * as superagent from "superagent";
+	export class ActionsChainData {
+	    /**
+	     * Le mimeType demandé par le client
+	     */
+	    requestMimeType: string;
+	    /**
+	     * Le MimeType du résultat à retourner au client
+	     */
+	    responseMimeType: string;
+	    /**
+	     * Le résultat à retourner au client.
+	     * Si ce champ est valorisé, il sera prioritaire sur les autres rendus (composant / json)
+	     */
+	    result: any;
+	    /**
+	     * La dernière erreur technique produite
+	     * Si ce champ est valorisé, il sera prioritaire sur les autres rendus (composant / json)
+	     */
+	    lastError: any;
+	    /**
+	     * Les erreurs présentes dans un formulaire
+	     * Si ce champ est valorisé, il sera prioritaire sur les autres rendus (composant / json)
+	     */
+	    formError: any;
+	    /**
+	     * Boolean indiquant que l'accès à la ressource courante n'est pas autorisé pour l'utilisateur courant
+	     * @type {boolean}
+	     */
+	    isAccessForbidden: boolean;
+	    parseResponse(res: superagent.Response): this;
+	    withBody(body: any): this;
+	    withResponseMimeType(responseMimeType: string): this;
+	}
+	
+}
+
+declare module "hornet-js-core/src/routes/router-client-async-elements" {
+	import { Class } from "hornet-js-utils/src/typescript-utils";
+	import { AsyncElement }  from "hornet-js-core/src/executor/async-element";
+	import { HornetEvent }  from "hornet-js-core/src/event/hornet-event";
+	import { IHornetPage } from "hornet-js-components/src/component/ihornet-page";
+	export class ContextInitializerElement extends AsyncElement {
+	    private authorization;
+	    private handler;
+	    private params;
+	    constructor(authorization: any, handler: any, params: any);
+	    execute(next: any): void;
+	}
+	export var PAGE_READY_EVENT: HornetEvent<{}>;
+	export interface UrlChangeEventDetail {
+	    newUrl: string;
+	    newPath: string;
+	}
+	export var URL_CHANGE_EVENT: HornetEvent<UrlChangeEventDetail>;
+	export class UrlChangeElement extends AsyncElement {
+	    execute(next: any): void;
+	}
+	export class UserAccessSecurityElement extends AsyncElement {
+	    private static logger;
+	    execute(next: any): void;
+	}
+	export interface ComponentChangeEventDetail {
+	    newComponent: Class<IHornetPage<any, any>>;
+	    data: any;
+	}
+	export var COMPONENT_CHANGE_EVENT: HornetEvent<ComponentChangeEventDetail>;
+	export class ViewRenderingElement extends AsyncElement {
+	    private static logger;
+	    private appComponent;
+	    constructor(appComponent: any);
+	    execute(next: any): void;
+	}
+	export class UnmanagedViewErrorElement extends AsyncElement {
+	    private static logger;
+	    private errorComponent;
+	    constructor(errorComponent: any);
+	    execute(next: any, resolvedError: any): void;
+	}
+	
+}
+
+declare module "hornet-js-core/src/routes/router-client" {
+	import { DirectorRouterConfiguration } from "director";
+	import { AbstractRoutes, RouteHandler, RouteInfos, LazyRoutesAsyncClassResolver, RouteAuthorization }  from "hornet-js-core/src/routes/abstract-routes";
+	global  {
+	    interface Window {
+	        setHornetJsGenerationServer: (enableValue: string) => void;
+	    }
+	}
+	export type DirectorClientRoutesDesc = {
+	    [key: string]: (...arg) => void;
+	};
+	export class RouterClient {
+	    private appComponent;
+	    private errorComponent;
+	    private pageRoutes;
+	    private appRoutes;
+	    private directorPage;
+	    private directorClientConfiguration;
+	    private lazyRoutesClassResolver;
+	    constructor(appComponent: any, errorComponent: any, appRoutes: AbstractRoutes, lazyRoutesClassResolver: LazyRoutesAsyncClassResolver, directorClientConfiguration?: DirectorRouterConfiguration);
+	    private computeRoutes(routesObj?, prefix?, directorRoutes?);
+	    private parseRoutes<T>(declaredRoutes, internalObj, prefix);
+	    private buildRouteHandler<T>(declaredRoutes, path, method);
+	    private parseLazyRoute(internalObj, prefix, routesClassPath);
+	    private loadLazyRoutes(originalRoute, prefix, routesClassPath, done);
+	    protected handleRoute<T extends RouteInfos>(done: any, authorization: RouteAuthorization, handler: RouteHandler<T>, params: Array<string>): void;
+	    /**
+	     * Méthode utilisée par la partie cliente pour initialiser le routeur
+	     */
+	    startRouter(baseElement?: Document | Element): void;
+	    /**
+	     * Demande un changement d'url dans la barre d'adresse du navigateur (et donc un changement de route) mais sans recharger la page
+	     */
+	    setRoute(route: string, pageReady?: () => void): void;
+	    /**
+	     * Monte les routes dans director
+	     * @param newRoutes
+	     */
+	    mountRoutes(newRoutes: DirectorClientRoutesDesc): void;
+	    /**
+	     * Retourne un objet contenant les paramètres présents dans l'url. Exemple: page?param1=XX&param2=YY => {param1:XX, param2:YY}
+	     * @param url L'URL à parser
+	     * @returns {{}}
+	     */
+	    static getUrlParameters(url: string): any;
+	    static LOCAL_STORAGE_ENABLE_GENERATION_SERVER_KEY: string;
+	    static defaultGenerationServerEnabled: string;
+	    /**
+	     * mantis 0055411
+	     * Met a disposition une fonction sur le browser (window.setHornetJsGenerationServer)
+	     * Appellée depuis du code client, cette fonction permet de changer  l'option de paramétrage
+	     * pour activer ou désactiver la generation des pages côté serveur (cf usage getHornetJsGenerationServer)
+	     * Cette option est stockée dans le navigateur au niveau du localStorage,
+	     * elle peut donc aussi être modifié manuellement par l'utilisateur
+	     *
+	     * Attention, ne pas activer l'option en mode fullSpa
+	     * (elle n'a d'interet qu'avec le serveur node)
+	     */
+	    static setHornetJsGenerationServer(): void;
+	    /**
+	     * Getter pour récuperer la valeur de l'option de paramétrage "hornet-js.enable.generation.server"
+	     * Cette option true/false permet d'activer ou désactiver la generation des pages côté serveur
+	     * Lecture du localStorage d'abord (si supporté et contient la valeur), et sinon valeur par défaut (false)
+	     *
+	     * @returns {any}
+	     */
+	    static getHornetJsGenerationServer(): any;
+	}
+	
+}
+
+declare module "hornet-js-core/src/routes/router-server" {
+	import { AbstractRoutes, RouteHandler, RouteInfos, LazyRoutesClassResolver, RouteAuthorization }  from "hornet-js-core/src/routes/abstract-routes";
+	export class RouterServer {
+	    private dataRoutes;
+	    private pageRoutes;
+	    private appRoutes;
+	    private directorData;
+	    private directorPage;
+	    private lazyRoutesClassResolver;
+	    private dataContext;
+	    constructor(appRoutes: AbstractRoutes, lazyRoutesClassResolver: LazyRoutesClassResolver, routesPaths: Array<string>, routesDataContext?: String);
+	    /**
+	     * Méthode utilisée par la partie serveur pour initialiser le routeur.
+	     * Note: Fourni un middleware Express
+	     */
+	    dataMiddleware(): (req: Express.Request, res: Express.Response, next: any) => any;
+	    pageMiddleware(): (req: Express.Request, res: Express.Response, next: any) => any;
+	    private computeRoutes(routesObj?, prefix?);
+	    private computeAuthorizationsRoutes(pageRoutes, dataRoutes, prefix);
+	    private parseRoutes<T>(declaredRoutes, internalObj, prefix);
+	    private buildRouteHandler<T>(declaredRoutes, path, method);
+	    private parseLazyRoutes(lazyRoutes, prefix);
+	    protected handleRoute<T extends RouteInfos>(authorization: RouteAuthorization, handler: RouteHandler<T>, method: any, params: Array<string>): void;
+	}
+	
+}
+
+declare module "hornet-js-core/src/security/client-antivirus-connexion" {
+	export interface ClientAntivirusConnexionProps {
+	    /**
+	     *port du serveur clamav
+	    */
+	    port: number;
+	    /**
+	     * ip du serveur clamav
+	     */
+	    host: string;
+	    /**
+	     * port du serveur clamav
+	     */
+	    timeout: number;
+	    /**
+	     * fonctionné à appeler à la fin du traitement.
+	     */
+	    complete: Function;
+	}
+	/**
+	 * Classe de connexion entre le client et le serveur
+	 */
+	export class ClientAntivirusConnexion {
+	    /**
+	     * port du serveur clamav
+	     */
+	    port: number;
+	    /**
+	     * ip du serveur clamav
+	     */
+	    host: string;
+	    /**
+	     * port du serveur clamav
+	     */
+	    timeout: number;
+	    /**
+	     * fonctionné à appeler à la fin du traitement.
+	     */
+	    complete: Function;
+	    constructor(options?: ClientAntivirusConnexionProps);
+	    /**
+	     *
+	     * @param stream le flux du fichier
+	     * @returns {Promise<Buffer>|Promise}
+	     */
+	    scan(stream: any): Promise<{}>;
+	}
+	
+}
+
+declare module "hornet-js-core/src/security/client-input-channel" {
+	/**
+	 * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
+	 * <p/>
+	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+	 * <p/>
+	 * Ce logiciel est un programme informatique servant à faciliter la création
+	 * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
+	 * <p/>
+	 * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+	 * respectant les principes de diffusion des logiciels libres. Vous pouvez
+	 * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+	 * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+	 * sur le site "http://www.cecill.info".
+	 * <p/>
+	 * En contrepartie de l'accessibilité au code source et des droits de copie,
+	 * de modification et de redistribution accordés par cette licence, il n'est
+	 * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+	 * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+	 * titulaire des droits patrimoniaux et les concédants successifs.
+	 * <p/>
+	 * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+	 * associés au chargement,  à l'utilisation,  à la modification et/ou au
+	 * développement et à la reproduction du logiciel par l'utilisateur étant
+	 * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+	 * manipuler et qui le réserve donc à des développeurs et des professionnels
+	 * avertis possédant  des  connaissances  informatiques approfondies.  Les
+	 * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+	 * logiciel à leurs besoins dans des conditions permettant d'assurer la
+	 * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+	 * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+	 * <p/>
+	 * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+	 * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+	 * termes.
+	 * <p/>
+	 * <p/>
+	 * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
+	 * <p/>
+	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+	 * <p/>
+	 * This software is a computer program whose purpose is to facilitate creation of
+	 * web application in accordance with french general repositories : RGI, RGS and RGAA.
+	 * <p/>
+	 * This software is governed by the CeCILL license under French law and
+	 * abiding by the rules of distribution of free software.  You can  use,
+	 * modify and/ or redistribute the software under the terms of the CeCILL
+	 * license as circulated by CEA, CNRS and INRIA at the following URL
+	 * "http://www.cecill.info".
+	 * <p/>
+	 * As a counterpart to the access to the source code and  rights to copy,
+	 * modify and redistribute granted by the license, users are provided only
+	 * with a limited warranty  and the software's author,  the holder of the
+	 * economic rights,  and the successive licensors  have only  limited
+	 * liability.
+	 * <p/>
+	 * In this respect, the user's attention is drawn to the risks associated
+	 * with loading,  using,  modifying and/or developing or reproducing the
+	 * software by the user in light of its specific status of free software,
+	 * that may mean  that it is complicated to manipulate,  and  that  also
+	 * therefore means  that it is reserved for developers  and  experienced
+	 * professionals having in-depth computer knowledge. Users are therefore
+	 * encouraged to load and test the software's suitability as regards their
+	 * requirements in conditions enabling the security of their systems and/or
+	 * data to be ensured and,  more generally, to use and operate it in the
+	 * same conditions as regards security.
+	 * <p/>
+	 * The fact that you are presently reading this means that you have had
+	 * knowledge of the CeCILL license and that you accept its terms.
+	 *
+	 */
+	/**
+	 * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
+	 *
+	 * @author MEAE - Ministère de l'Europe et des Affaires étrangères
+	 * @version v5.1.0
+	 * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
+	 * @license CECILL-2.1
+	 */
+	/**
+	 * Created by framarc on 8/28/17.
+	 */
+	import stream = require("stream");
+	/**
+	 * Classe permettant de préparer la request au serveur antivius
+	 */
+	export class ClientInputChannel extends stream.Transform {
+	    _inBody: boolean;
+	    constructor(options?: any);
+	    _transform(chunk: any, encoding: string, callback: Function): void;
+	    _flush(callback: any): void;
 	}
 	
 }
@@ -3999,197 +4080,6 @@ declare module "hornet-js-core/src/services/superagent-hornet-plugins" {
 	
 }
 
-declare module "hornet-js-core/src/upload/custom-store-engine" {
-	/**
-	 * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
-	 * <p/>
-	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
-	 * <p/>
-	 * Ce logiciel est un programme informatique servant à faciliter la création
-	 * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
-	 * <p/>
-	 * Ce logiciel est régi par la licence CeCILL soumise au droit français et
-	 * respectant les principes de diffusion des logiciels libres. Vous pouvez
-	 * utiliser, modifier et/ou redistribuer ce programme sous les conditions
-	 * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
-	 * sur le site "http://www.cecill.info".
-	 * <p/>
-	 * En contrepartie de l'accessibilité au code source et des droits de copie,
-	 * de modification et de redistribution accordés par cette licence, il n'est
-	 * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-	 * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-	 * titulaire des droits patrimoniaux et les concédants successifs.
-	 * <p/>
-	 * A cet égard  l'attention de l'utilisateur est attirée sur les risques
-	 * associés au chargement,  à l'utilisation,  à la modification et/ou au
-	 * développement et à la reproduction du logiciel par l'utilisateur étant
-	 * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
-	 * manipuler et qui le réserve donc à des développeurs et des professionnels
-	 * avertis possédant  des  connaissances  informatiques approfondies.  Les
-	 * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-	 * logiciel à leurs besoins dans des conditions permettant d'assurer la
-	 * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
-	 * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
-	 * <p/>
-	 * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
-	 * pris connaissance de la licence CeCILL, et que vous en avez accepté les
-	 * termes.
-	 * <p/>
-	 * <p/>
-	 * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
-	 * <p/>
-	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
-	 * <p/>
-	 * This software is a computer program whose purpose is to facilitate creation of
-	 * web application in accordance with french general repositories : RGI, RGS and RGAA.
-	 * <p/>
-	 * This software is governed by the CeCILL license under French law and
-	 * abiding by the rules of distribution of free software.  You can  use,
-	 * modify and/ or redistribute the software under the terms of the CeCILL
-	 * license as circulated by CEA, CNRS and INRIA at the following URL
-	 * "http://www.cecill.info".
-	 * <p/>
-	 * As a counterpart to the access to the source code and  rights to copy,
-	 * modify and redistribute granted by the license, users are provided only
-	 * with a limited warranty  and the software's author,  the holder of the
-	 * economic rights,  and the successive licensors  have only  limited
-	 * liability.
-	 * <p/>
-	 * In this respect, the user's attention is drawn to the risks associated
-	 * with loading,  using,  modifying and/or developing or reproducing the
-	 * software by the user in light of its specific status of free software,
-	 * that may mean  that it is complicated to manipulate,  and  that  also
-	 * therefore means  that it is reserved for developers  and  experienced
-	 * professionals having in-depth computer knowledge. Users are therefore
-	 * encouraged to load and test the software's suitability as regards their
-	 * requirements in conditions enabling the security of their systems and/or
-	 * data to be ensured and,  more generally, to use and operate it in the
-	 * same conditions as regards security.
-	 * <p/>
-	 * The fact that you are presently reading this means that you have had
-	 * knowledge of the CeCILL license and that you accept its terms.
-	 *
-	 */
-	/**
-	 * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
-	 *
-	 * @author MEAE - Ministère de l'Europe et des Affaires étrangères
-	 * @version v5.1.0
-	 * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
-	 * @license CECILL-2.1
-	 */
-	/****
-	 * https://github.com/yongtang/clamav.js/blob/master/README.md
-	 * Fork
-	 */
-	import multer = require("multer");
-	/**
-	 * Classe qui permet d'appeler clamav
-	 */
-	export class CustomStoreEngine implements multer.StorageEngine {
-	    constructor();
-	    /**
-	     * Fonction qui envoie un flux au serveur Clamav et qui analyse la reponse
-	     * s'il n'y a pas d'erreur ou que le fichier n'est pas infecté, le traitement est passant.
-	     * @param {HttpRequest} req la requête
-	     * @param {File} file le fichier à transférer
-	     * @param {Function} cb la callback
-	     * @private
-	     */
-	    _handleFile: (req: any, file: any, cb: any) => void;
-	    /**
-	    *  Permet la suppression d'un
-	    * @param {HttpRequest} req la requête
-	    * @param {File} file le fichier à transférer
-	    * @param {Function} cb la callback
-	    * @private
-	    */
-	    _removeFile: (req: any, file: any, cb: any) => void;
-	}
-	
-}
-
-declare module "hornet-js-core/src/validation/data-validator" {
-	/**
-	 *  Propriétés d'une classe de validation customisée d'un formulaire
-	 */
-	export interface ICustomValidation {
-	    /**
-	     * Méthode de validation customisée d'un formulaire : méthode générique appelée automatiquement depuis le composant
-	     * form.tsx si sa propriété customValidation est valorisée
-	     * @param data données de formulaire
-	     * @return les résultats de validation
-	     * */
-	    validate(data: any): IValidationResult;
-	}
-	/**
-	 * Résultat de validation
-	 */
-	export interface IValidationResult {
-	    /** Indique si les données sont valides */
-	    valid: boolean;
-	    /** Tableau d'erreurs de validation éventuelles */
-	    errors: Array<ajv.ErrorObject>;
-	}
-	/**
-	 * Contient tous les éléments nécessaires à une validation de données
-	 */
-	export class DataValidator {
-	    /**
-	     * Options de validation ajv par défaut, utilisables côté client et serveur (les dates sont supposées être des
-	     * chaînes de caractères au format ISO 8601)
-	     */
-	    static DEFAULT_VALIDATION_OPTIONS: ajv.Options;
-	    /** Schéma de validation au format json-schema */
-	    schema: any;
-	    /** Options de validation ajv (cf. http://epoberezkin.github.io/ajv/#options) */
-	    options: ajv.Options;
-	    /**
-	     * Valideurs customisés : permettent d'implémenter et de chaîner des règles de validation difficiles à mettre
-	     * en oeuvre simplement avec un schéma json-schema. Ils sont appliqués après la validation basée sur le schéma
-	     * de validation, donc les données du formulaire ont déjà éventuellement bénéficié de la coercition de types. */
-	    customValidators: ICustomValidation[];
-	    constructor(schema?: any, customValidators?: ICustomValidation[], options?: ajv.Options);
-	    /**
-	     * Exécute la validation
-	     * @param data données à valider
-	     * @return {IValidationResult} résultat de la validation
-	     */
-	    validate(data: any): IValidationResult;
-	    /**
-	     * Transforme le schéma de validation indiqué en un schéma JSON-Schema valide. Dans le schéma passé en paramètre,
-	     * le mot clé "required" peut-être spécifié par champ de type string.
-	     * En sortie les noms champs obligatoires sont regroupés dans un tableau, conformément à la spécification JSON-Schema
-	     * et le mot-clé "minLength" est utilisé pour les champs obligatoires.
-	     * Exemple :
-	     * {
-	     *  "$schema": "http://json-schema.org/schema#",
-	     *  "type": "object",
-	     *  "properties": {
-	     *      "champ1": {"type": "string", "required": true},
-	     *      "champ2": {"type": "number"}
-	     *  }
-	     * }
-	     *
-	     * devient :
-	     * {
-	     *  "$schema": "http://json-schema.org/schema#",
-	     *  "type": "object",
-	     *  "properties": {
-	     *      "champ1": {"type": "string", "minLength": 1},
-	     *      "champ2": {"type": "number"}
-	     *  },
-	     *  "required": ["champ1"]
-	     * }
-	     *
-	     * @param hornetSchema schéma de validation
-	     * @return un schéma json-schema valide
-	     */
-	    static transformRequiredStrings(hornetSchema: any): any;
-	}
-	
-}
-
 declare module "hornet-js-core/src/session/cookie-manager" {
 	import { IncomingMessage, ServerResponse } from "http";
 	export interface CookieManagerOption {
@@ -4439,6 +4329,197 @@ declare module "hornet-js-core/src/session/store" {
 	     * @returns {boolean}
 	     */
 	    isTouchImplemented(): boolean;
+	}
+	
+}
+
+declare module "hornet-js-core/src/upload/custom-store-engine" {
+	/**
+	 * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
+	 * <p/>
+	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+	 * <p/>
+	 * Ce logiciel est un programme informatique servant à faciliter la création
+	 * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
+	 * <p/>
+	 * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+	 * respectant les principes de diffusion des logiciels libres. Vous pouvez
+	 * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+	 * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+	 * sur le site "http://www.cecill.info".
+	 * <p/>
+	 * En contrepartie de l'accessibilité au code source et des droits de copie,
+	 * de modification et de redistribution accordés par cette licence, il n'est
+	 * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+	 * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+	 * titulaire des droits patrimoniaux et les concédants successifs.
+	 * <p/>
+	 * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+	 * associés au chargement,  à l'utilisation,  à la modification et/ou au
+	 * développement et à la reproduction du logiciel par l'utilisateur étant
+	 * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+	 * manipuler et qui le réserve donc à des développeurs et des professionnels
+	 * avertis possédant  des  connaissances  informatiques approfondies.  Les
+	 * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+	 * logiciel à leurs besoins dans des conditions permettant d'assurer la
+	 * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+	 * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+	 * <p/>
+	 * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+	 * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+	 * termes.
+	 * <p/>
+	 * <p/>
+	 * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
+	 * <p/>
+	 * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+	 * <p/>
+	 * This software is a computer program whose purpose is to facilitate creation of
+	 * web application in accordance with french general repositories : RGI, RGS and RGAA.
+	 * <p/>
+	 * This software is governed by the CeCILL license under French law and
+	 * abiding by the rules of distribution of free software.  You can  use,
+	 * modify and/ or redistribute the software under the terms of the CeCILL
+	 * license as circulated by CEA, CNRS and INRIA at the following URL
+	 * "http://www.cecill.info".
+	 * <p/>
+	 * As a counterpart to the access to the source code and  rights to copy,
+	 * modify and redistribute granted by the license, users are provided only
+	 * with a limited warranty  and the software's author,  the holder of the
+	 * economic rights,  and the successive licensors  have only  limited
+	 * liability.
+	 * <p/>
+	 * In this respect, the user's attention is drawn to the risks associated
+	 * with loading,  using,  modifying and/or developing or reproducing the
+	 * software by the user in light of its specific status of free software,
+	 * that may mean  that it is complicated to manipulate,  and  that  also
+	 * therefore means  that it is reserved for developers  and  experienced
+	 * professionals having in-depth computer knowledge. Users are therefore
+	 * encouraged to load and test the software's suitability as regards their
+	 * requirements in conditions enabling the security of their systems and/or
+	 * data to be ensured and,  more generally, to use and operate it in the
+	 * same conditions as regards security.
+	 * <p/>
+	 * The fact that you are presently reading this means that you have had
+	 * knowledge of the CeCILL license and that you accept its terms.
+	 *
+	 */
+	/**
+	 * hornet-js-core - Ensemble des composants qui forment le coeur de hornet-js
+	 *
+	 * @author MEAE - Ministère de l'Europe et des Affaires étrangères
+	 * @version v5.1.0
+	 * @link git+https://github.com/diplomatiegouvfr/hornet-js.git
+	 * @license CECILL-2.1
+	 */
+	/****
+	 * https://github.com/yongtang/clamav.js/blob/master/README.md
+	 * Fork
+	 */
+	import multer = require("multer");
+	/**
+	 * Classe qui permet d'appeler clamav
+	 */
+	export class CustomStoreEngine implements multer.StorageEngine {
+	    constructor();
+	    /**
+	     * Fonction qui envoie un flux au serveur Clamav et qui analyse la reponse
+	     * s'il n'y a pas d'erreur ou que le fichier n'est pas infecté, le traitement est passant.
+	     * @param {HttpRequest} req la requête
+	     * @param {File} file le fichier à transférer
+	     * @param {Function} cb la callback
+	     * @private
+	     */
+	    _handleFile: (req: any, file: any, cb: any) => void;
+	    /**
+	    *  Permet la suppression d'un
+	    * @param {HttpRequest} req la requête
+	    * @param {File} file le fichier à transférer
+	    * @param {Function} cb la callback
+	    * @private
+	    */
+	    _removeFile: (req: any, file: any, cb: any) => void;
+	}
+	
+}
+
+declare module "hornet-js-core/src/validation/data-validator" {
+	/**
+	 *  Propriétés d'une classe de validation customisée d'un formulaire
+	 */
+	export interface ICustomValidation {
+	    /**
+	     * Méthode de validation customisée d'un formulaire : méthode générique appelée automatiquement depuis le composant
+	     * form.tsx si sa propriété customValidation est valorisée
+	     * @param data données de formulaire
+	     * @return les résultats de validation
+	     * */
+	    validate(data: any): IValidationResult;
+	}
+	/**
+	 * Résultat de validation
+	 */
+	export interface IValidationResult {
+	    /** Indique si les données sont valides */
+	    valid: boolean;
+	    /** Tableau d'erreurs de validation éventuelles */
+	    errors: Array<ajv.ErrorObject>;
+	}
+	/**
+	 * Contient tous les éléments nécessaires à une validation de données
+	 */
+	export class DataValidator {
+	    /**
+	     * Options de validation ajv par défaut, utilisables côté client et serveur (les dates sont supposées être des
+	     * chaînes de caractères au format ISO 8601)
+	     */
+	    static DEFAULT_VALIDATION_OPTIONS: ajv.Options;
+	    /** Schéma de validation au format json-schema */
+	    schema: any;
+	    /** Options de validation ajv (cf. http://epoberezkin.github.io/ajv/#options) */
+	    options: ajv.Options;
+	    /**
+	     * Valideurs customisés : permettent d'implémenter et de chaîner des règles de validation difficiles à mettre
+	     * en oeuvre simplement avec un schéma json-schema. Ils sont appliqués après la validation basée sur le schéma
+	     * de validation, donc les données du formulaire ont déjà éventuellement bénéficié de la coercition de types. */
+	    customValidators: ICustomValidation[];
+	    constructor(schema?: any, customValidators?: ICustomValidation[], options?: ajv.Options);
+	    /**
+	     * Exécute la validation
+	     * @param data données à valider
+	     * @return {IValidationResult} résultat de la validation
+	     */
+	    validate(data: any): IValidationResult;
+	    /**
+	     * Transforme le schéma de validation indiqué en un schéma JSON-Schema valide. Dans le schéma passé en paramètre,
+	     * le mot clé "required" peut-être spécifié par champ de type string.
+	     * En sortie les noms champs obligatoires sont regroupés dans un tableau, conformément à la spécification JSON-Schema
+	     * et le mot-clé "minLength" est utilisé pour les champs obligatoires.
+	     * Exemple :
+	     * {
+	     *  "$schema": "http://json-schema.org/schema#",
+	     *  "type": "object",
+	     *  "properties": {
+	     *      "champ1": {"type": "string", "required": true},
+	     *      "champ2": {"type": "number"}
+	     *  }
+	     * }
+	     *
+	     * devient :
+	     * {
+	     *  "$schema": "http://json-schema.org/schema#",
+	     *  "type": "object",
+	     *  "properties": {
+	     *      "champ1": {"type": "string", "minLength": 1},
+	     *      "champ2": {"type": "number"}
+	     *  },
+	     *  "required": ["champ1"]
+	     * }
+	     *
+	     * @param hornetSchema schéma de validation
+	     * @return un schéma json-schema valide
+	     */
+	    static transformRequiredStrings(hornetSchema: any): any;
 	}
 	
 }
@@ -5216,7 +5297,7 @@ declare module "hornet-js-core/src/component/datasource/paginate-datasource" {
 	    filter(config: any, cancelFilterHistory?: boolean): void;
 	    /***
 	     * Ajout un élément ou des éléments au result du datasource
-	     * cette action déclenche l'évènement add.
+	     * cette action déclenche l'évènement pagination.
 	     * @param {Boolean} triggerFetch déclenche un évènement "fetch" après l'opération si true.
 	     * @param {(T|T[])[]} items correspond aux données à ajouter, un appel à la méthode {@link DataSource#transformData} sera effectué
 	     * @example
@@ -5237,7 +5318,7 @@ declare module "hornet-js-core/src/component/datasource/paginate-datasource" {
 	    protected deleteData(triggerFetch?: boolean, ...items: (T | T[])[]): Promise<Array<any>>;
 	    /***
 	     * enlève un élément ou des éléments au result du datasource
-	     * cette action déclenche l'évènement delete
+	     * cette action déclenche l'évènement pagination
 	     * @param {Boolean} triggerFetch déclenche un évènement "fetch" après l'opération si true.
 	     * @param {(T|T[])[]} items correspond aux données à ajouter, un appel à la méthode {@link DataSource#transformData} sera effectué
 	     * @void

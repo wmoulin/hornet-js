@@ -97,7 +97,7 @@ import * as express from "express";
 import * as expressState from "express-state";
 import { ServerConfiguration } from "src/server-conf";
 import { KeyStoreBuilder } from "hornet-js-utils/src/key-store-helper";
-import { HornetMiddlewareList, AbstractHornetMiddleware } from "src/middleware/middlewares";
+import { HornetMiddlewareList, AbstractHornetMiddleware, HornetRouter } from "src/middleware/middlewares";
 import { Monitor } from "src/monitoring/monitor";
 import { TechnicalError } from "hornet-js-utils/src/exception/technical-error";
 import { BaseError } from "hornet-js-utils/src/exception/base-error";
@@ -130,7 +130,7 @@ process.on("rejectionHandled", function(promise) {
 
 export class Server {
 
-    private app: express.Express;
+    public app: express.Express;
     private server;
     private monitor: Monitor;
     private keepAlive: boolean;
@@ -266,8 +266,12 @@ export class Server {
                 logger.warn("Un middleware de valeur '" + middleware + "' a été trouvé dans le tableau des middlewares.");
             } else {
                 try {
-                    var inst = new middleware();
-                    inst.insertMiddleware(app);
+                    if(middleware instanceof HornetRouter) {
+                        app.use((middleware as HornetRouter).prefix, (middleware as HornetRouter).router);
+                    } else {
+                        var inst = new middleware();
+                        inst.insertMiddleware(app);
+                    }
                 } catch (e) {
                     logger.error("Une erreur a été levée lors de l'instanciation d'un middleware > erreur:", e);
                     throw e;

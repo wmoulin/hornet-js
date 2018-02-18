@@ -316,7 +316,7 @@ export abstract class AbstractRoutes {
                 try {
                     return require.main.require(path + name);
                 } catch(e) {
-                    throw new TechnicalError('ERR_TECH_' + CodesError.ROUTE_ERROR, {errorMessage: e.message});
+                    //throw new TechnicalError('ERR_TECH_' + CodesError.ROUTE_ERROR, {errorMessage: e.message});
                 }
             });
             if (index == -1) {
